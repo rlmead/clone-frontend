@@ -1,8 +1,11 @@
 import Nav from './Nav.js';
 import { useState, useEffect } from 'react';
 import { Row, Col, Button } from 'reactstrap';
+import { useParams } from 'react-router-dom';
 
 function Profile(props) {
+    let { userId } = useParams();
+
     return (
         <>
             <Nav />
@@ -14,7 +17,7 @@ function Profile(props) {
                     <Button className='mt-3'>change pic</Button>
                 </Col>
                 <Col sm='9'>
-                    <h1>name</h1>
+                    <h1>{userId}</h1>
                     <h3>about</h3>
                     <p></p>
                     <h3>bio</h3>

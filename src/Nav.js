@@ -1,24 +1,24 @@
 import { Navbar, Row, Col, Button } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
-function Nav(props) {
+function Nav() {
     return (
         <Navbar
             fixed='true'>
             <Row>
-                <Col xs='4'>
-                    <Button>
-                        my profile
-                    </Button>
+                <Col xs='6'>
+                    <Link to="users/0">
+                        <Button>
+                            my profile
+                        </Button>
+                    </Link>
                 </Col>
-                <Col xs='4'>
-                    <Button>
-                        all heroes
-                    </Button>
-                </Col>
-                <Col xs='4'>
-                    <Button>
-                        log out
-                    </Button>
+                <Col xs='6'>
+                    <Link to="/">
+                        <Button>
+                            log out
+                        </Button>
+                    </Link>
                 </Col>
             </Row>
         </Navbar>

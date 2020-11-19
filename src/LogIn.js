@@ -1,27 +1,26 @@
 import Nav from './Nav.js';
 import { useState } from 'react';
 import { Row, Col, Input, Button } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 function LogIn(props) {
     const [userNameExisting, setUserNameExisting] = useState('');
 
     return (
-        <>
-            <Nav />
-            <Row>
-                <Col sm='6'>
-                    <Input
-                        type="text"
-                        placeholder="existing username"
-                        onChange={(e) => setUserNameExisting(e.target.value)} />
+        <Row>
+            <Col sm='6'>
+                <Input
+                    type="text"
+                    placeholder="existing username"
+                    onChange={(e) => setUserNameExisting(e.target.value)} />
+                <Link to={`/users/${userNameExisting}`}>
                     <Button
-                        onClick={() => alert(userNameExisting)}
                         disabled={userNameExisting.length === 0}>
                         log in!
-                </Button>
-                </Col>
-            </Row>
-        </>
+                    </Button>
+                </Link>
+            </Col>
+        </Row>
     )
 }
 
