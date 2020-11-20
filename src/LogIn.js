@@ -1,15 +1,17 @@
+import React from 'react';
 import Header from './Header.js';
 import { useState } from 'react';
 import { Row, Col, Input, Button } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 
 function LogIn(props) {
     const [emailAddress, setEmailAddress] = useState('');
     const [password, setPassword] = useState('');
 
+    let history = useHistory();
+
     function handleSubmit() {
-        console.log(emailAddress, password);
         const headers = {
             Accept: "application/json",
             "Content-Type": "application/json; charset=utf-8"
@@ -29,6 +31,7 @@ function LogIn(props) {
         })
             .then(response => {
                 console.log(response);
+                history.push('/users/31');
             })
             .catch(error => console.log(error))
     }
