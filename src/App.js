@@ -8,10 +8,28 @@ import SignUp from './SignUp.js';
 import Profile from './Profile.js';
 
 function App() {
-  // const [JSONData, setJSONData] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
 
-  const API_URL = 'http://localhost:8000';
+  async function getData(path, data) {
+    const apiUrl = 'http://localhost:8000';
+    const headers = {
+      Accept: "application/json",
+      "Content-Type": "application/json; charset=utf-8"
+    };
+    console.log(JSON.stringify(data));
+    return await axios({
+      method: 'post',
+      url: `${apiUrl}${path}`,
+      data: JSON.stringify(data),
+      headers
+    })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
   // useEffect(() => {
   //     axios.get(API_URL)
@@ -19,26 +37,16 @@ function App() {
   //       .catch(e => console.log(e))
   //   }, [])
 
-  //   <p>
-  //   {JSONData ?
-  //     JSONData
-  //     : "loading"}
-  //  </p>
-
-  // const API_Post = () => {
-  //   const data = { 'id': 5 };
-  //   axios.post(API_URL + '/delete', data)
-  //     .then(res => console.log(res))
-  //     .catch(e => console.log(e))
-  // }
-
   return (
     <div className="App">
       <Container>
         <Router>
           <Switch>
             <Route exact path="/">
-              <LogIn currentUser={currentUser} />
+              <LogIn
+                currentUser={currentUser}
+                setCurrentUser={setCurrentUser}
+                getData={getData} />
             </Route>
             <Route path="/signup">
               <SignUp />

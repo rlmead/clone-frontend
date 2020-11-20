@@ -27,8 +27,16 @@ function LogIn(props) {
             },
             headers
         })
-            .then(response => console.log(response))
+            .then(response => {
+                console.log(response);
+            })
             .catch(error => console.log(error))
+    }
+
+    async function getId(emailAddress) {
+        let response = await props.getData('/users/get_id', { 'email': emailAddress });
+        console.log(response);
+        // props.setCurrentUser(response.data.id);
     }
 
     return (
@@ -51,11 +59,31 @@ function LogIn(props) {
                 </Button>
                 </Col>
                 <Col sm='6'>
-                    <Link to="users">
-                        <Button>
-                            browse anonymously
-                    </Button>
-                    </Link>
+                    <Row>
+                        <Col>
+                            <Button onClick={() => getId(emailAddress)}>
+                                get user id
+                            </Button>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Link to="signup">
+                                <Button>
+                                    sign up
+                                </Button>
+                            </Link>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Link to="users">
+                                <Button>
+                                    browse anonymously
+                                </Button>
+                            </Link>
+                        </Col>
+                    </Row>
                 </Col>
             </Row>
         </>

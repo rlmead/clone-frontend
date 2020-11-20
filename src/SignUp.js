@@ -10,13 +10,16 @@ function SignUp(props) {
                 <Col sm='6'>
                     <Input
                         type="text"
-                        placeholder="new username" />
+                        placeholder="email address" />
                     <Input
                         type="text"
-                        placeholder="about you" />
+                        placeholder="name" />
                     <Input
                         type="text"
-                        placeholder="biography" />
+                        placeholder="username" />
+                    <Input
+                        type="password"
+                        placeholder="password" />
 
                     <Button>
                         create account!
