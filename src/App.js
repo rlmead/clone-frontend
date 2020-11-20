@@ -1,6 +1,6 @@
+import { React, useState, useEffect } from 'react';
 import './App.css';
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Container } from 'reactstrap';
 import LogIn from './LogIn.js';
@@ -31,12 +31,6 @@ function App() {
       });
   }
 
-  // useEffect(() => {
-  //     axios.get(API_URL)
-  //       .then(result => setJSONData(result.data))
-  //       .catch(e => console.log(e))
-  //   }, [])
-
   return (
     <div className="App">
       <Container>
@@ -46,7 +40,7 @@ function App() {
               <LogIn
                 currentUser={currentUser}
                 setCurrentUser={setCurrentUser}
-                getData={getData} />
+                getData={getData}/>
             </Route>
             <Route path="/signup">
               <SignUp />
