@@ -6,7 +6,7 @@ import axios from 'axios';
 
 function LogIn(props) {
     const [emailAddress, setEmailAddress] = useState('');
-    const [password, setpassword] = useState('');
+    const [password, setPassword] = useState('');
 
     function handleSubmit() {
         console.log(emailAddress, password);
@@ -51,7 +51,7 @@ function LogIn(props) {
                     <Input
                         type="password"
                         placeholder="password"
-                        onChange={(e) => setpassword(e.target.value)} />
+                        onChange={(e) => setPassword(e.target.value)} />
                     <Button
                         onClick={() => handleSubmit()}
                         disabled={emailAddress.length === 0 || password.length === 0}>
