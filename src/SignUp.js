@@ -1,11 +1,11 @@
-import Nav from './Nav.js';
+import Header from './Header.js';
 import { useState } from 'react';
 import { Row, Col, Input, Button } from 'reactstrap';
 
 function SignUp(props) {
     return (
         <>
-            <Nav />
+            <Header />
             <Row>
                 <Col sm='6'>
                     <Input

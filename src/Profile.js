@@ -1,4 +1,4 @@
-import Nav from './Nav.js';
+import Header from './Header.js';
 import { useState, useEffect } from 'react';
 import { Row, Col, Button } from 'reactstrap';
 import { useParams } from 'react-router-dom';
@@ -8,7 +8,7 @@ function Profile(props) {
 
     return (
         <>
-            <Nav />
+            <Header currentUser={props.currentUser} />
             <Row>
                 <Col sm='3'>
                     <img

@@ -1,4 +1,4 @@
-import Nav from './Nav.js';
+import Header from './Header.js';
 import { useState } from 'react';
 import { Row, Col, Input, Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
@@ -6,10 +6,10 @@ import axios from 'axios';
 
 function LogIn(props) {
     const [emailAddress, setEmailAddress] = useState('');
-    const [passWord, setPassWord] = useState('');
+    const [password, setpassword] = useState('');
 
     function handleSubmit() {
-        console.log(emailAddress, passWord);
+        console.log(emailAddress, password);
         const headers = {
             Accept: "application/json",
             "Content-Type": "application/json; charset=utf-8"
@@ -21,7 +21,7 @@ function LogIn(props) {
                 grant_type: "password",
                 client_id: '2',
                 client_secret: "iOgp23lMwnBdyHOmpglk56acuSMGIEAJAmNCPXGq",
-                password: passWord,
+                password: password,
                 username: emailAddress,
                 scope: ""
             },
@@ -32,23 +32,33 @@ function LogIn(props) {
     }
 
     return (
-        <Row>
-            <Col sm='6'>
-                <Input
-                    type="text"
-                    placeholder="email address"
-                    onChange={(e) => setEmailAddress(e.target.value)} />
-                <Input
-                    type="password"
-                    placeholder="password"
-                    onChange={(e) => setPassWord(e.target.value)} />
-                <Button
-                    onClick={() => handleSubmit()}
-                    disabled={emailAddress.length === 0 || passWord.length === 0}>
-                    log in!
+        <>
+            <Header />
+            <Row>
+                <Col sm='6'>
+                    <Input
+                        type="text"
+                        placeholder="email address"
+                        onChange={(e) => setEmailAddress(e.target.value)} />
+                    <Input
+                        type="password"
+                        placeholder="password"
+                        onChange={(e) => setpassword(e.target.value)} />
+                    <Button
+                        onClick={() => handleSubmit()}
+                        disabled={emailAddress.length === 0 || password.length === 0}>
+                        log in!
                 </Button>
-            </Col>
-        </Row>
+                </Col>
+                <Col sm='6'>
+                    <Link to="users">
+                        <Button>
+                            browse anonymously
+                    </Button>
+                    </Link>
+                </Col>
+            </Row>
+        </>
     )
 }
 
