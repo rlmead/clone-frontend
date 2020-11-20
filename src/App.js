@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from 'react';
+import { React, useState } from 'react';
 import './App.css';
 import axios from 'axios';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
@@ -16,7 +16,6 @@ function App() {
       Accept: "application/json",
       "Content-Type": "application/json; charset=utf-8"
     };
-    console.log(JSON.stringify(data));
     return await axios({
       method: 'post',
       url: `${apiUrl}${path}`,
@@ -24,7 +23,7 @@ function App() {
       headers
     })
       .then(function (response) {
-        console.log(response);
+        return response;
       })
       .catch(function (error) {
         console.log(error);

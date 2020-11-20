@@ -11,7 +11,13 @@ function LogIn(props) {
 
     let history = useHistory();
 
-    function handleSubmit() {
+    async function logIn(emailAddress) {
+        let result = await props.getData('/users/get_id', { 'email': emailAddress });
+        props.setCurrentUser(result.data);
+        history.push(`/users/${result.data}`);
+    }
+
+    async function authenticateUser() {
         const headers = {
             Accept: "application/json",
             "Content-Type": "application/json; charset=utf-8"
@@ -29,18 +35,11 @@ function LogIn(props) {
             },
             headers
         })
-            .then(response => {
-                console.log(response);
-                history.push('/users/31');
-            })
+            .then(await logIn(emailAddress))
             .catch(error => console.log(error))
     }
 
-    async function getId(emailAddress) {
-        let response = await props.getData('/users/get_id', { 'email': emailAddress });
-        console.log(response);
-        // props.setCurrentUser(response.data.id);
-    }
+
 
     return (
         <>
@@ -56,19 +55,12 @@ function LogIn(props) {
                         placeholder="password"
                         onChange={(e) => setPassword(e.target.value)} />
                     <Button
-                        onClick={() => handleSubmit()}
+                        onClick={() => authenticateUser()}
                         disabled={emailAddress.length === 0 || password.length === 0}>
                         log in!
                 </Button>
                 </Col>
                 <Col sm='6'>
-                    <Row>
-                        <Col>
-                            <Button onClick={() => getId(emailAddress)}>
-                                get user id
-                            </Button>
-                        </Col>
-                    </Row>
                     <Row>
                         <Col>
                             <Link to="signup">
