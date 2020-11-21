@@ -1,19 +1,22 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Header from '../components/Header.js';
 import { useState } from 'react';
 import { Row, Col, Input, Button } from 'reactstrap';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
+import AppContext from '../utilities/AppContext.js';
 
-function LogIn(props) {
+function LogIn() {
     const [emailAddress, setEmailAddress] = useState('');
     const [password, setPassword] = useState('');
+    
+    const context = useContext(AppContext);
 
     let history = useHistory();
 
     async function logIn(emailAddress) {
-        let result = await props.getData('/users/get_id', { 'email': emailAddress });
-        props.setCurrentUser(result.data);
+        let result = await context.getData('/users/get_id', { 'email': emailAddress });
+        context.setCurrentUser(result.data);
         history.push(`/users/${result.data}`);
     }
 
@@ -43,9 +46,7 @@ function LogIn(props) {
 
     return (
         <>
-            <Header
-                currentUser={props.currentUser}
-                setCurrentUser={props.setCurrentUser} />
+            <Header/>
             <Row>
                 <Col sm='6'>
                     <Input

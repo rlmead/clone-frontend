@@ -3,13 +3,14 @@ import './App.css';
 import axios from 'axios';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Container } from 'reactstrap';
+import { AppProvider } from './utilities/AppContext.js';
 import LogIn from './components/LogIn.js';
 import SignUp from './components/SignUp.js';
 import Profile from './components/Profile.js';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
-  console.log(currentUser);
+
   async function getData(path, data) {
     const apiUrl = 'http://localhost:8000';
     const headers = {
@@ -30,30 +31,27 @@ function App() {
       });
   }
 
+  const initialContext = { 'currentUser': currentUser, 'setCurrentUser': setCurrentUser, 'getData': getData};
+
   return (
     <div className="App">
-      <Container>
-        <Router>
-          <Switch>
-            <Route exact path="/">
-              <LogIn
-                currentUser={currentUser}
-                setCurrentUser={setCurrentUser}
-                getData={getData} />
-            </Route>
-            <Route path="/signup">
-              <SignUp
-                currentUser={currentUser}
-                setCurrentUser={setCurrentUser} />
-            </Route>
-            <Route path={`/users/:userId`}>
-              <Profile
-                currentUser={currentUser}
-                setCurrentUser={setCurrentUser} />
-            </Route>
-          </Switch>
-        </Router>
-      </Container>
+      <AppProvider value={initialContext}>
+        <Container>
+          <Router>
+            <Switch>
+              <Route exact path="/">
+                <LogIn/>
+              </Route>
+              <Route path="/signup">
+                <SignUp/>
+              </Route>
+              <Route path={`/users/:userId`}>
+                <Profile/>
+              </Route>
+            </Switch>
+          </Router>
+        </Container>
+      </AppProvider>
     </div>
   );
 }

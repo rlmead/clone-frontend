@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Row, Col, Input, Button } from 'reactstrap';
 import axios from 'axios';
 
-function SignUp(props) {
+function SignUp() {
     const [emailAddress, setEmailAddress] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
@@ -35,9 +35,7 @@ function SignUp(props) {
 
     return (
         <>
-            <Header
-                currentUser={props.currentUser}
-                setCurrentUser={props.setCurrentUser} />
+            <Header/>
             <Row>
                 <Col sm='6'>
                     <Input

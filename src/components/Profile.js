@@ -3,14 +3,12 @@ import Header from '../components/Header.js';
 import { Row, Col, Button } from 'reactstrap';
 import { useParams } from 'react-router-dom';
 
-function Profile(props) {
+function Profile() {
     let { userId } = useParams();
 
     return (
         <>
-            <Header
-                currentUser={props.currentUser}
-                setCurrentUser={props.setCurrentUser} />
+            <Header/>
             <Row>
                 <Col sm='3'>
                     <img

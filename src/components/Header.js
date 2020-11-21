@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
     Collapse,
     Navbar,
@@ -9,8 +9,11 @@ import {
     NavLink
 } from 'reactstrap';
 import { Link, useHistory } from 'react-router-dom';
+import AppContext from '../utilities/AppContext.js';
 
-function Header(props) {
+function Header() {
+    const context = useContext(AppContext);
+
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
 
@@ -22,13 +25,13 @@ function Header(props) {
                 <NavbarBrand>Idea Network</NavbarBrand>
             </Link>
             {
-                props.currentUser &&
+                context.currentUser &&
                 <>
                     <NavbarToggler onClick={toggle} />
                     <Collapse isOpen={isOpen} navbar>
                         <Nav className="mr-auto" navbar>
                             <NavItem>
-                                <Link to={`users/${props.currentUser}`}>
+                                <Link to={`users/${context.currentUser}`}>
                                     <NavLink>
                                         my profile
                                     </NavLink>
@@ -37,7 +40,7 @@ function Header(props) {
                             <NavItem>
                                 <NavLink
                                     onClick={() => {
-                                        props.setCurrentUser(null);
+                                        context.setCurrentUser(null);
                                         history.push('/')
                                     }}>
                                     log out
