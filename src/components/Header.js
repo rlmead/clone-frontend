@@ -18,7 +18,9 @@ function Header(props) {
 
     return (
         <Navbar color="dark" expand="md" fixed="true">
-            <NavbarBrand href="/">Idea Network</NavbarBrand>
+            <Link to="/">
+                <NavbarBrand>Idea Network</NavbarBrand>
+            </Link>
             {
                 props.currentUser &&
                 <>
@@ -26,16 +28,17 @@ function Header(props) {
                     <Collapse isOpen={isOpen} navbar>
                         <Nav className="mr-auto" navbar>
                             <NavItem>
-                                <Link to="users/0">
+                                <Link to={`users/${props.currentUser}`}>
                                     <NavLink>
                                         my profile
                                     </NavLink>
                                 </Link>
                             </NavItem>
                             <NavItem>
-                                <NavLink onClick={() => {
-                                    props.setCurrentUser(null);
-                                    history.push('/')
+                                <NavLink
+                                    onClick={() => {
+                                        props.setCurrentUser(null);
+                                        history.push('/')
                                     }}>
                                     log out
                                 </NavLink>

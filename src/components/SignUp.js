@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from './Header.js';
+import Header from '../components/Header.js';
 import { useState } from 'react';
 import { Row, Col, Input, Button } from 'reactstrap';
 import axios from 'axios';

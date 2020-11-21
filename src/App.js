@@ -3,9 +3,9 @@ import './App.css';
 import axios from 'axios';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Container } from 'reactstrap';
-import LogIn from './LogIn.js';
-import SignUp from './SignUp.js';
-import Profile from './Profile.js';
+import LogIn from './components/LogIn.js';
+import SignUp from './components/SignUp.js';
+import Profile from './components/Profile.js';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);

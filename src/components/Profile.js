@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from './Header.js';
+import Header from '../components/Header.js';
 import { Row, Col, Button } from 'reactstrap';
 import { useParams } from 'react-router-dom';
 
