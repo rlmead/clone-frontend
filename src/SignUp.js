@@ -35,7 +35,9 @@ function SignUp(props) {
 
     return (
         <>
-            <Header />
+            <Header
+                currentUser={props.currentUser}
+                setCurrentUser={props.setCurrentUser} />
             <Row>
                 <Col sm='6'>
                     <Input

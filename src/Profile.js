@@ -8,7 +8,9 @@ function Profile(props) {
 
     return (
         <>
-            <Header currentUser={props.currentUser} />
+            <Header
+                currentUser={props.currentUser}
+                setCurrentUser={props.setCurrentUser} />
             <Row>
                 <Col sm='3'>
                     <img

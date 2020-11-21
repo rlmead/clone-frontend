@@ -9,7 +9,7 @@ import Profile from './Profile.js';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
-
+  console.log(currentUser);
   async function getData(path, data) {
     const apiUrl = 'http://localhost:8000';
     const headers = {
@@ -39,13 +39,17 @@ function App() {
               <LogIn
                 currentUser={currentUser}
                 setCurrentUser={setCurrentUser}
-                getData={getData}/>
+                getData={getData} />
             </Route>
             <Route path="/signup">
-              <SignUp />
+              <SignUp
+                currentUser={currentUser}
+                setCurrentUser={setCurrentUser} />
             </Route>
             <Route path={`/users/:userId`}>
-              <Profile currentUser={currentUser} />
+              <Profile
+                currentUser={currentUser}
+                setCurrentUser={setCurrentUser} />
             </Route>
           </Switch>
         </Router>

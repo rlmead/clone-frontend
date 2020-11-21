@@ -8,11 +8,13 @@ import {
     NavItem,
     NavLink
 } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 function Header(props) {
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
+
+    let history = useHistory();
 
     return (
         <Navbar color="dark" expand="md" fixed="true">
@@ -31,11 +33,12 @@ function Header(props) {
                                 </Link>
                             </NavItem>
                             <NavItem>
-                                <Link to="/">
-                                    <NavLink>
-                                        log out
-                                    </NavLink>
-                                </Link>
+                                <NavLink onClick={() => {
+                                    props.setCurrentUser(null);
+                                    history.push('/')
+                                    }}>
+                                    log out
+                                </NavLink>
                             </NavItem>
                         </Nav>
                     </Collapse>
