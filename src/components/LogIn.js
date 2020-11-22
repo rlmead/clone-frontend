@@ -5,19 +5,34 @@ import { Row, Col, Input, Button } from 'reactstrap';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import AppContext from '../utilities/AppContext.js';
+import { axiosCall } from '../utilities/axiosCall.js';
 
 function LogIn() {
     const [emailAddress, setEmailAddress] = useState('');
     const [password, setPassword] = useState('');
-    
+
     const context = useContext(AppContext);
 
     let history = useHistory();
 
+    function loadProfile(response) {
+        context.setCurrentUser(response);
+        history.push(`/users/${response}`);
+    }
+
     async function logIn(emailAddress) {
-        let result = await context.getData('/users/get_id', { 'email': emailAddress });
-        context.setCurrentUser(result.data);
-        history.push(`/users/${result.data}`);
+        await axiosCall(
+            'post',
+            '/users/get_id',
+            {
+                'email': emailAddress
+            },
+            {
+                Accept: "application/json",
+                "Content-Type": "application/json; charset=utf-8"
+            },
+            loadProfile
+        );
     }
 
     async function authenticateUser() {
@@ -39,14 +54,12 @@ function LogIn() {
             headers
         })
             .then(await logIn(emailAddress))
-            .catch(error => console.log(error))
+            .catch(error => alert(error))
     }
-
-
 
     return (
         <>
-            <Header/>
+            <Header />
             <Row>
                 <Col sm='6'>
                     <Input

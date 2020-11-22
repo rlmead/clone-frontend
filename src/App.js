@@ -1,6 +1,5 @@
 import { React, useState } from 'react';
 import './App.css';
-import axios from 'axios';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Container } from 'reactstrap';
 import { AppProvider } from './utilities/AppContext.js';
@@ -11,27 +10,7 @@ import Profile from './components/Profile.js';
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
 
-  async function getData(path, data) {
-    const apiUrl = 'http://localhost:8000';
-    const headers = {
-      Accept: "application/json",
-      "Content-Type": "application/json; charset=utf-8"
-    };
-    return await axios({
-      method: 'post',
-      url: `${apiUrl}${path}`,
-      data: JSON.stringify(data),
-      headers
-    })
-      .then(function (response) {
-        return response;
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }
-
-  const initialContext = { 'currentUser': currentUser, 'setCurrentUser': setCurrentUser, 'getData': getData};
+  const initialContext = { 'currentUser': currentUser, 'setCurrentUser': setCurrentUser};
 
   return (
     <div className="App">
