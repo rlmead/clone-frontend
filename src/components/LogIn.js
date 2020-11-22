@@ -3,7 +3,6 @@ import Header from '../components/Header.js';
 import { useState } from 'react';
 import { Row, Col, Input, Button } from 'reactstrap';
 import { Link, useHistory } from 'react-router-dom';
-import axios from 'axios';
 import AppContext from '../utilities/AppContext.js';
 import { axiosCall } from '../utilities/axiosCall.js';
 
@@ -20,7 +19,8 @@ function LogIn() {
         history.push(`/users/${response}`);
     }
 
-    async function logIn(emailAddress) {
+    async function logIn(authData) {
+        console.log(authData);
         await axiosCall(
             'post',
             '/users/get_id',
@@ -36,14 +36,10 @@ function LogIn() {
     }
 
     async function authenticateUser() {
-        const headers = {
-            Accept: "application/json",
-            "Content-Type": "application/json; charset=utf-8"
-        };
-        axios({
-            url: "http://127.0.0.1:8000/v1/oauth/token",
-            method: "post",
-            data: {
+        await axiosCall(
+            'post',
+            '/v1/oauth/token',
+            {
                 grant_type: "password",
                 client_id: '2',
                 client_secret: "iOgp23lMwnBdyHOmpglk56acuSMGIEAJAmNCPXGq",
@@ -51,10 +47,12 @@ function LogIn() {
                 username: emailAddress,
                 scope: ""
             },
-            headers
-        })
-            .then(await logIn(emailAddress))
-            .catch(error => alert(error))
+            {
+                Accept: "application/json",
+                "Content-Type": "application/json; charset=utf-8"
+            },
+            logIn
+        )
     }
 
     return (
