@@ -9,6 +9,7 @@ import {
     NavLink
 } from 'reactstrap';
 import { Link, useHistory } from 'react-router-dom';
+import { useAuth } from '../utilities/manageAuth.js';
 import AppContext from '../utilities/AppContext.js';
 
 function Header() {
@@ -16,6 +17,8 @@ function Header() {
 
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
+
+    const auth = useAuth();
 
     let history = useHistory();
 
@@ -25,7 +28,7 @@ function Header() {
                 <NavbarBrand>Idea Network</NavbarBrand>
             </Link>
             {
-                context.currentUser &&
+                auth.user &&
                 <>
                     <NavbarToggler onClick={toggle} />
                     <Collapse isOpen={isOpen} navbar>

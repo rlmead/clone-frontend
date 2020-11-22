@@ -3,56 +3,19 @@ import Header from '../components/Header.js';
 import { useState } from 'react';
 import { Row, Col, Input, Button } from 'reactstrap';
 import { Link, useHistory } from 'react-router-dom';
-import AppContext from '../utilities/AppContext.js';
-import { axiosCall } from '../utilities/axiosCall.js';
+import { useAuth } from '../utilities/manageAuth.js';
 
 function LogIn() {
     const [emailAddress, setEmailAddress] = useState('');
     const [password, setPassword] = useState('');
 
-    const context = useContext(AppContext);
+    const auth = useAuth();
 
     let history = useHistory();
 
-    function loadProfile(response) {
-        context.setCurrentUser(response);
-        history.push(`/users/${response}`);
-    }
-
-    async function logIn(authData) {
-        console.log(authData);
-        await axiosCall(
-            'post',
-            '/users/get_id',
-            {
-                'email': emailAddress
-            },
-            {
-                Accept: "application/json",
-                "Content-Type": "application/json; charset=utf-8"
-            },
-            loadProfile
-        );
-    }
-
-    async function authenticateUser() {
-        await axiosCall(
-            'post',
-            '/v1/oauth/token',
-            {
-                grant_type: "password",
-                client_id: '2',
-                client_secret: "iOgp23lMwnBdyHOmpglk56acuSMGIEAJAmNCPXGq",
-                password: password,
-                username: emailAddress,
-                scope: ""
-            },
-            {
-                Accept: "application/json",
-                "Content-Type": "application/json; charset=utf-8"
-            },
-            logIn
-        )
+    async function logIn() {
+        await auth.signin(emailAddress, password);
+        history.push(`/users/${auth.user}`);
     }
 
     return (
@@ -69,7 +32,7 @@ function LogIn() {
                         placeholder="password"
                         onChange={(e) => setPassword(e.target.value)} />
                     <Button
-                        onClick={() => authenticateUser()}
+                        onClick={() => logIn()}
                         disabled={emailAddress.length === 0 || password.length === 0}>
                         log in!
                 </Button>
