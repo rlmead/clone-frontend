@@ -22,6 +22,7 @@ function useProvideAuth() {
     const [email, setEmail] = useState(null);
 
     function updateUser(response) {
+        setUser(response);
         console.log(response);
     }
 
