@@ -9,11 +9,11 @@ import {
   NavLink
 } from 'reactstrap';
 import { Link, useHistory } from 'react-router-dom';
-import { useAuth } from '../utilities/manageAuth.js';
-import AppContext from '../utilities/AppContext.js';
+import { useAuth } from '../utilities/AuthContext.js';
+import appContext from '../utilities/AppContext.js';
 
 function Header() {
-  const context = useContext(AppContext);
+  const context = useContext(appContext);
 
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
@@ -40,10 +40,10 @@ function Header() {
           <Collapse isOpen={isOpen} navbar>
             <Nav className="mr-auto" navbar>
               <NavItem>
-                <Link to={`users/${context.currentUser}`}>
-                  <NavLink>
+                <Link to={`users/${context.currentUser}`} className='nav-link'>
+                  {/* <NavLink> */}
                     my profile
-                  </NavLink>
+                  {/* </NavLink> */}
                 </Link>
               </NavItem>
               <NavItem>

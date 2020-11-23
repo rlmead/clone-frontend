@@ -10,6 +10,7 @@ function SignUp() {
   const [name, setName] = useState('');
   const [userName, setUserName] = useState('');
 
+  // TODO move into AuthContext (and update parseToken)
   function handleSubmit() {
     console.log(emailAddress, password);
     const headers = {

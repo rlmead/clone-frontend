@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useContext, createContext } from 'react';
 import { axiosCall } from './axiosCall.js';
 
-const authContext = createContext();
+const authContext = createContext({});
+
+export default authContext;
+
 
 // Provider component that wraps your app and makes auth object ...
 // ... available to any child component that calls useAuth().
-export function ProvideAuth({ children }) {
-    const auth = useProvideAuth();
+export function AuthProvider({ children }) {
+    const auth = useAuthProvider();
     return <authContext.Provider value={auth}>{children}</authContext.Provider>;
 }
 
@@ -17,33 +20,44 @@ export const useAuth = () => {
 };
 
 // Provider hook that creates auth object and handles state
-function useProvideAuth() {
-    const [user, setUser] = useState(null);
-    const [email, setEmail] = useState(null);
+function useAuthProvider() {
+    // const [user, setUser] = useState('');
+    // const [email, setEmail] = useState('');
+    const [token, setToken] = useState('');
 
-    function updateUser(response) {
-        setUser(response);
-        console.log(response);
+    function parseToken(authToken) {
+        setToken(authToken.accessToken);
     }
 
+    // function updateUser(response) {
+    //     setUser(response);
+    //     console.log(response);
+    // }
+
+
+    // TODO : rename getByEmail; create new route to return all profile data based on email; move to a more appropriate file
+    // TODO import this function from wherever it gets moved and use it to set user profile data
     async function getId(authData) {
         console.log(authData);
         await axiosCall(
             'post',
             '/users/get_id',
             {
-                'email': email
+                // 'email': email
             },
             {
                 Accept: "application/json",
                 "Content-Type": "application/json; charset=utf-8"
             },
-            updateUser
+            // TODO create new setProfile method
+            // updateUser
         );
     }
 
+    
+
     async function signin(emailAddress, password) {
-        setEmail(emailAddress);
+        // setEmail(emailAddress);
         await axiosCall(
             'post',
             '/v1/oauth/token',
@@ -59,8 +73,12 @@ function useProvideAuth() {
                 Accept: "application/json",
                 "Content-Type": "application/json; charset=utf-8"
             },
-            getId
+            parseToken
         )
+    }
+
+    function signout() {
+        setToken('');
     }
 
     // const signin = (email, password) => {
@@ -129,10 +147,11 @@ function useProvideAuth() {
 
     // Return the user object and auth methods
     return {
-        user,
-        signin
+        // user,
+        signin,
+        token,
         // signup,
-        // signout,
+        signout,
         // sendPasswordResetEmail,
         // confirmPasswordReset
     };

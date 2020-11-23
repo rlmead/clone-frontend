@@ -3,7 +3,7 @@ import Header from '../components/Header.js';
 import { useState } from 'react';
 import { Row, Col, Input, Button, Jumbotron, Card } from 'reactstrap';
 import { Link, useHistory } from 'react-router-dom';
-import { useAuth } from '../utilities/manageAuth.js';
+import { useAuth } from '../utilities/AuthContext.js';
 
 function LogIn() {
   const [emailAddress, setEmailAddress] = useState('');

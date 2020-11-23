@@ -23,11 +23,11 @@ function Profile() {
       <Header />
       <Row>
         <Col sm='3'>
+          <h3>{'user #'+userId}</h3>
           <img
             className='img-fluid'
             src="https://images.unsplash.com/photo-1490059830487-2f86fddb2b4b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80"></img>
           <Button className='mt-3 btn-success'>change pic</Button>
-          <div>{'user #'+userId}</div>
         </Col>
         <Col sm='9'>
           <Nav
