@@ -31,7 +31,7 @@ function Header() {
         to="/"
         className='text-dark'
         style={{ textDecoration: 'none' }}>
-        <h1>Idea Network</h1>
+        <h1>Ideary</h1>
       </Link>
       {
         auth.user &&
@@ -53,7 +53,7 @@ function Header() {
                     history.push('/')
                   }}>
                   log out
-                                </NavLink>
+                </NavLink>
               </NavItem>
             </Nav>
           </Collapse>
