@@ -22,8 +22,15 @@ export const useAuth = () => {
 function useAuthProvider() {
   const [token, setToken] = useState('');
 
-  function parseToken(authToken) {
-    console.log(authToken)
+  function getToken(authData) {
+    console.log(authData);
+    if (authData.access_token) {
+      setToken(authData.access_token);
+    } else if (authData.data.token) {
+      setToken(authData.data.token);
+    } else {
+      console.log('error: no token found');
+    }
   }
 
   // TODO : rename getByEmail; create new route to return all profile data based on email; move to a more appropriate file
@@ -54,7 +61,7 @@ function useAuthProvider() {
         scope: ""
       },
       postHeaders,
-      parseToken
+      getToken
     )
   }
 
@@ -69,7 +76,7 @@ function useAuthProvider() {
         password
       },
       postHeaders,
-      parseToken
+      getToken
     )
   }
 
