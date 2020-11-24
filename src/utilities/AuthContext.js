@@ -1,5 +1,5 @@
 import React, { useState, useContext, createContext } from 'react';
-import { useApp } from '../utilities/AppContext.js';
+import { useApp } from './AppContext.js';
 import { axiosCall } from './axiosCall.js';
 
 const authContext = createContext({});
@@ -25,10 +25,10 @@ function useAuthProvider() {
   
   const app = useApp();
 
-  function getToken(authData) {
+  async function getToken(authData) {
     if (authData.access_token) {
       setToken(authData.access_token);
-      getUser();
+      await getUser();
     } else if (authData.data.token) {
       setToken(authData.data.token);
       app.setUser(authData.data.user_data);
@@ -44,7 +44,10 @@ function useAuthProvider() {
       {
         email: app.email
       },
-      postHeaders,
+      {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`
+      },
       app.setUser
     );
   }

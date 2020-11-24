@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import Header from '../components/Header.js';
 import { Row, Col, Button, Nav, NavItem, NavLink } from 'reactstrap';
 import { useParams } from 'react-router-dom';
+// testing
+import { useApp } from '../utilities/AppContext.js';
+import { useAuth } from '../utilities/AuthContext.js';
 
 function Profile() {
   let { userId } = useParams();
@@ -9,11 +12,18 @@ function Profile() {
   const [view, setView] = useState('about');
   const views = ['about', 'ideas', 'collabs', 'people'];
 
+  // testing
+  const app = useApp();
+  const auth = useAuth();
+
   const switchView = (view) => {
     switch (view) {
       default:
         return (
-          <div>under construction</div>
+          <>
+            <div>{app.email}</div>
+            <div>{auth.token}</div>
+          </>
         )
     }
   };
@@ -23,7 +33,7 @@ function Profile() {
       <Header />
       <Row>
         <Col sm='3'>
-          <h3>{'user #'+userId}</h3>
+          <h3>{'user #' + userId}</h3>
           <img
             className='img-fluid'
             src="https://images.unsplash.com/photo-1490059830487-2f86fddb2b4b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80"></img>
