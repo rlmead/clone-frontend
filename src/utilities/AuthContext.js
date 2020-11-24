@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useContext, createContext } from 'react';
+import React, { useState, useContext, createContext } from 'react';
 import { axiosCall } from './axiosCall.js';
 
 const authContext = createContext({});
 
 export default authContext;
-
 
 // Provider component that wraps your app and makes auth object ...
 // ... available to any child component that calls useAuth().
@@ -21,19 +20,11 @@ export const useAuth = () => {
 
 // Provider hook that creates auth object and handles state
 function useAuthProvider() {
-    // const [user, setUser] = useState('');
-    // const [email, setEmail] = useState('');
     const [token, setToken] = useState('');
 
     function parseToken(authToken) {
         setToken(authToken.accessToken);
     }
-
-    // function updateUser(response) {
-    //     setUser(response);
-    //     console.log(response);
-    // }
-
 
     // TODO : rename getByEmail; create new route to return all profile data based on email; move to a more appropriate file
     // TODO import this function from wherever it gets moved and use it to set user profile data
@@ -43,7 +34,6 @@ function useAuthProvider() {
             'post',
             '/users/get_id',
             {
-                // 'email': email
             },
             {
                 Accept: "application/json",
@@ -57,7 +47,6 @@ function useAuthProvider() {
     
 
     async function signin(emailAddress, password) {
-        // setEmail(emailAddress);
         await axiosCall(
             'post',
             '/v1/oauth/token',
