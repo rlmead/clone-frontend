@@ -21,6 +21,7 @@ export const useAuth = () => {
 
 function useAuthProvider() {
   const [token, setToken] = useState('');
+  const [user, setUser] = useState({});
 
   function getToken(authData) {
     console.log(authData);
@@ -28,6 +29,7 @@ function useAuthProvider() {
       setToken(authData.access_token);
     } else if (authData.data.token) {
       setToken(authData.data.token);
+      setUser(authData.data.user_data);
     } else {
       console.log('error: no token found');
     }
