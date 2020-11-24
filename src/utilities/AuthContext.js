@@ -1,4 +1,5 @@
 import React, { useState, useContext, createContext } from 'react';
+import { useApp } from '../utilities/AppContext.js';
 import { axiosCall } from './axiosCall.js';
 
 const authContext = createContext({});
@@ -21,36 +22,34 @@ export const useAuth = () => {
 
 function useAuthProvider() {
   const [token, setToken] = useState('');
-  const [user, setUser] = useState({});
+  
+  const app = useApp();
 
   function getToken(authData) {
-    console.log(authData);
     if (authData.access_token) {
       setToken(authData.access_token);
+      getUser();
     } else if (authData.data.token) {
       setToken(authData.data.token);
-      setUser(authData.data.user_data);
+      app.setUser(authData.data.user_data);
     } else {
       console.log('error: no token found');
     }
   }
 
-  // TODO : rename getByEmail; create new route to return all profile data based on email; move to a more appropriate file
-  // TODO import this function from wherever it gets moved and use it to set user profile data
-  async function getId(authData) {
-    console.log(authData);
+  async function getUser() {
     await axiosCall(
       'post',
-      '/users/get_id',
+      '/users/get_by_email',
       {
+        email: app.email
       },
       postHeaders,
-      // TODO create new setProfile method
-      // updateUser
+      app.setUser
     );
   }
 
-  async function logIn(emailAddress, password) {
+  async function logIn() {
     await axiosCall(
       'post',
       '/v1/oauth/token',
@@ -58,8 +57,8 @@ function useAuthProvider() {
         grant_type: "password",
         client_id: '2',
         client_secret: "iOgp23lMwnBdyHOmpglk56acuSMGIEAJAmNCPXGq",
-        password: password,
-        username: emailAddress,
+        password: app.password,
+        username: app.email,
         scope: ""
       },
       postHeaders,

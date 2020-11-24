@@ -14,10 +14,14 @@ export const useApp = () => {
 };
 
 function useAppProvider() {
+    const [user, setUser] = useState({});
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+
     return {
+        user,
+        setUser,
         email,
         setEmail,
         password,

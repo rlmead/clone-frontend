@@ -12,7 +12,7 @@ function LogIn() {
   let history = useHistory();
 
   async function logIn() {
-    await auth.logIn(app.email, app.password);
+    await auth.logIn();
     history.push(`/users/${auth.user}`);
   }
 
