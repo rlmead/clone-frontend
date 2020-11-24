@@ -9,5 +9,5 @@ export function axiosCall(method, url, data, headers, func) {
         headers
     })
     .then(response => func(response.data))
-    .catch(error => alert(error))
+    .catch(error => console.log(error))
 }

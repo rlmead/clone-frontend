@@ -1,37 +1,22 @@
 import React from 'react';
 import Header from '../components/Header.js';
 import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Row, Col, Input, Button, Jumbotron, Card } from 'reactstrap';
-import axios from 'axios';
+import { useAuth } from '../utilities/AuthContext.js';
 
 function SignUp() {
+  const [name, setName] = useState('');
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [userName, setUserName] = useState('');
 
-  // TODO move into AuthContext (and update parseToken)
-  function handleSubmit() {
-    console.log(emailAddress, password);
-    const headers = {
-      Accept: "application/json",
-      "Content-Type": "application/json; charset=utf-8"
-    };
-    axios({
-      url: "http://127.0.0.1:8000/register",
-      method: "post",
-      data: {
-        name,
-        "username": userName,
-        "email": emailAddress,
-        password
-      },
-      headers
-    })
-      .then(response => {
-        console.log(response);
-      })
-      .catch(error => console.log(error))
+  const auth = useAuth();
+
+  let history = useHistory();
+
+  async function signUp() {
+    await auth.signUp(name, emailAddress, password);
+    history.push(`/users/${auth.user}`);
   }
 
   return (
@@ -45,18 +30,13 @@ function SignUp() {
               <h3>sign up</h3>
               <Input
                 type="text"
-                placeholder="email address"
-                onChange={(e) => setEmailAddress(e.target.value)}
-              />
-              <Input
-                type="text"
                 placeholder="name"
                 onChange={(e) => setName(e.target.value)}
               />
               <Input
                 type="text"
-                placeholder="username"
-                onChange={(e) => setUserName(e.target.value)}
+                placeholder="email address"
+                onChange={(e) => setEmailAddress(e.target.value)}
               />
               <Input
                 type="password"
@@ -66,10 +46,10 @@ function SignUp() {
 
               <Button
                 className='btn-success'
-                onClick={() => handleSubmit()}
+                onClick={() => signUp()}
                 disabled={emailAddress.length === 0 || password.length === 0}>
                 create account!
-                        </Button>
+              </Button>
             </Card>
           </Col>
         </Row>

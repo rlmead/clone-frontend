@@ -14,7 +14,7 @@ function LogIn() {
   let history = useHistory();
 
   async function logIn() {
-    await auth.signin(emailAddress, password);
+    await auth.logIn(emailAddress, password);
     history.push(`/users/${auth.user}`);
   }
 
