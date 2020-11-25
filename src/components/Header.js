@@ -3,7 +3,6 @@ import {
   Collapse,
   Navbar,
   NavbarToggler,
-  NavbarBrand,
   Nav,
   NavItem,
   NavLink
@@ -34,7 +33,7 @@ function Header() {
         <h1>Idea Network</h1>
       </Link>
       {
-        auth.user &&
+        auth.token &&
         <>
           <NavbarToggler onClick={toggle} className='text-dark' />
           <Collapse isOpen={isOpen} navbar>
@@ -49,7 +48,7 @@ function Header() {
               <NavItem>
                 <NavLink
                   onClick={() => {
-                    context.setCurrentUser(null);
+                    auth.signOut();
                     history.push('/')
                   }}>
                   log out

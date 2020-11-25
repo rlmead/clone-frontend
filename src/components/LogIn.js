@@ -38,7 +38,7 @@ function LogIn() {
                 onClick={() => logIn()}
                 disabled={app.email.length === 0 || app.password.length === 0}>
                 log in!
-                        </Button>
+              </Button>
             </Card>
           </Col>
           <Col sm='6'>

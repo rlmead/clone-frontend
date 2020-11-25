@@ -1,4 +1,4 @@
-import React, { useState, useContext, createContext } from 'react';
+import React, { useEffect, useState, useContext, createContext } from 'react';
 import { useApp } from './AppContext.js';
 import { axiosCall } from './axiosCall.js';
 
@@ -7,8 +7,8 @@ const authContext = createContext({});
 export default authContext;
 
 const postHeaders = {
-  Accept: "application/json",
-  "Content-Type": "application/json; charset=utf-8"
+  'Accept': 'application/json',
+  'Content-Type': 'application/json; charset=utf-8'
 }
 
 export function AuthProvider({ children }) {
@@ -22,16 +22,20 @@ export const useAuth = () => {
 
 function useAuthProvider() {
   const [token, setToken] = useState('');
-  
+
   const app = useApp();
 
+  useEffect(async () => {
+    await getUser();
+  }, [token])
+
   async function getToken(authData) {
+    // login
     if (authData.access_token) {
       setToken(authData.access_token);
-      await getUser();
+      // signup
     } else if (authData.data.token) {
       setToken(authData.data.token);
-      app.setUser(authData.data.user_data);
     } else {
       console.log('error: no token found');
     }
@@ -45,8 +49,10 @@ function useAuthProvider() {
         email: app.email
       },
       {
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`
+        'Accept': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
+        'Access-Control-Allow-Origin': '*',
+        'Authorization': `Bearer ${token}`
       },
       app.setUser
     );
@@ -75,7 +81,6 @@ function useAuthProvider() {
       '/register',
       {
         name,
-        "username": "ignore_this",
         "email": emailAddress,
         password
       },
@@ -84,14 +89,15 @@ function useAuthProvider() {
     )
   }
 
-  function signout() {
+  async function signOut() {
     setToken('');
+    app.setUser({});
   }
 
   return {
     logIn,
     token,
     signUp,
-    signout
+    signOut
   };
 }

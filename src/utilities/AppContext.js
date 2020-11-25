@@ -15,6 +15,7 @@ export const useApp = () => {
 
 function useAppProvider() {
     const [user, setUser] = useState({});
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -22,6 +23,8 @@ function useAppProvider() {
     return {
         user,
         setUser,
+        name,
+        setName,
         email,
         setEmail,
         password,

@@ -3,19 +3,20 @@ import Header from '../components/Header.js';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Row, Col, Input, Button, Jumbotron, Card } from 'reactstrap';
+import { useApp } from '../utilities/AppContext.js';
 import { useAuth } from '../utilities/AuthContext.js';
 
 function SignUp() {
-  const [name, setName] = useState('');
-  const [emailAddress, setEmailAddress] = useState('');
-  const [password, setPassword] = useState('');
-
+  const app = useApp();
   const auth = useAuth();
+
+  // const [emailAddress, setEmailAddress] = useState('');
+  // const [password, setPassword] = useState('');
 
   let history = useHistory();
 
   async function signUp() {
-    await auth.signUp(name, emailAddress, password);
+    await auth.signUp(app.name, app.email, app.password);
     history.push(`/users/${auth.user}`);
   }
 
@@ -31,23 +32,23 @@ function SignUp() {
               <Input
                 type="text"
                 placeholder="name"
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => app.setName(e.target.value)}
               />
               <Input
                 type="text"
                 placeholder="email address"
-                onChange={(e) => setEmailAddress(e.target.value)}
+                onChange={(e) => app.setEmail(e.target.value)}
               />
               <Input
                 type="password"
                 placeholder="password"
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => app.setPassword(e.target.value)}
               />
 
               <Button
                 className='btn-success'
                 onClick={() => signUp()}
-                disabled={emailAddress.length === 0 || password.length === 0}>
+                disabled={app.email.length === 0 || app.password.length === 0}>
                 create account!
               </Button>
             </Card>
