@@ -59,7 +59,7 @@ function useAuthProvider() {
       {
         grant_type: "password",
         client_id: '2',
-        client_secret: "iOgp23lMwnBdyHOmpglk56acuSMGIEAJAmNCPXGq",
+        client_secret: "tiAugBiLiD9XKo8E69pSSmh0AlnyBOjWNwLmoYh5",
         password: app.password,
         username: app.email,
         scope: ""
