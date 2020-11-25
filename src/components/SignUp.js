@@ -10,14 +10,17 @@ function SignUp() {
   const app = useApp();
   const auth = useAuth();
 
-  // const [emailAddress, setEmailAddress] = useState('');
-  // const [password, setPassword] = useState('');
+  const [passwordConf, setPasswordConf] = useState('');
 
   let history = useHistory();
 
   async function signUp() {
-    await auth.signUp(app.name, app.email, app.password);
-    history.push(`/users/${auth.user}`);
+    if (app.password === passwordConf) {
+      await auth.signUp(app.name, app.email, app.password);
+      history.push(`/users/${auth.user}`);
+    } else {
+      alert('Your passwords don\'t match! Please try again.');
+    }
   }
 
   return (
@@ -44,11 +47,20 @@ function SignUp() {
                 placeholder="password"
                 onChange={(e) => app.setPassword(e.target.value)}
               />
+              <Input
+                type="password"
+                placeholder="confirm password"
+                onChange={(e) => setPasswordConf(e.target.value)}
+              />
 
               <Button
                 className='btn-success'
                 onClick={() => signUp()}
-                disabled={app.email.length === 0 || app.password.length === 0}>
+                disabled={
+                  app.name.length === 0
+                  || app.email.length === 0
+                  || app.password.length === 0
+                  || app.password.length !== passwordConf.length }>
                 create account!
               </Button>
             </Card>
