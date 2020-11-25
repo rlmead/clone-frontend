@@ -1,20 +1,18 @@
 import React from 'react';
 import Header from '../components/Header.js';
-import { useState } from 'react';
 import { Row, Col, Input, Button, Jumbotron, Card } from 'reactstrap';
 import { Link, useHistory } from 'react-router-dom';
+import { useApp } from '../utilities/AppContext.js';
 import { useAuth } from '../utilities/AuthContext.js';
 
 function LogIn() {
-  const [emailAddress, setEmailAddress] = useState('');
-  const [password, setPassword] = useState('');
-
+  const app = useApp();
   const auth = useAuth();
 
   let history = useHistory();
 
   async function logIn() {
-    await auth.signin(emailAddress, password);
+    await auth.logIn();
     history.push(`/users/${auth.user}`);
   }
 
@@ -30,17 +28,17 @@ function LogIn() {
               <Input
                 type="text"
                 placeholder="email address"
-                onChange={(e) => setEmailAddress(e.target.value)} />
+                onChange={(e) => app.setEmail(e.target.value)} />
               <Input
                 type="password"
                 placeholder="password"
-                onChange={(e) => setPassword(e.target.value)} />
+                onChange={(e) => app.setPassword(e.target.value)} />
               <Button
                 className='btn-success'
                 onClick={() => logIn()}
-                disabled={emailAddress.length === 0 || password.length === 0}>
+                disabled={app.email.length === 0 || app.password.length === 0}>
                 log in!
-                        </Button>
+              </Button>
             </Card>
           </Col>
           <Col sm='6'>
