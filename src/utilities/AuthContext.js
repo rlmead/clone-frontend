@@ -16,9 +16,9 @@ export const useAuth = () => {
 };
 
 function useAuthProvider() {
-  const [token, setToken] = useState('');
-
   const app = useApp();
+  
+  const [token, setToken] = useState('');
 
   useEffect(() => {
     token !== '' && getUser();

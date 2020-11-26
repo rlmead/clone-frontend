@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Header from '../components/Header.js';
 import { Row, Col, Input, Button, Jumbotron, Card } from 'reactstrap';
 import { Link, useHistory } from 'react-router-dom';
@@ -13,8 +13,13 @@ function LogIn() {
 
   async function logIn() {
     await auth.logIn();
-    history.push(`/users/${auth.user}`);
   }
+
+  // this doesn't work properly when auth.token is listed as a dependency,
+  // but react complains that it should be listed
+  useEffect(() => {
+    auth.token !== '' && history.push(`/users/${app.user.id}`);
+  }, [app.user])
 
   return (
     <>
@@ -24,7 +29,7 @@ function LogIn() {
         <Row>
           <Col sm='6'>
             <Card>
-              <h3>log in</h3>
+              <h3>Log in</h3>
               <Input
                 type="text"
                 placeholder="email address"
@@ -37,19 +42,19 @@ function LogIn() {
                 className='btn-success'
                 onClick={() => logIn()}
                 disabled={app.email.length === 0 || app.password.length === 0}>
-                log in!
+                Log in
               </Button>
             </Card>
           </Col>
           <Col sm='6'>
             <Card>
-              <h3>not a member?</h3>
+              <h3>Not a member?</h3>
               <Row>
                 <Col>
                   <Link to="signup">
                     <Button
                       className='btn-success'>
-                      sign up
+                      Sign up
                                 </Button>
                   </Link>
                 </Col>
@@ -60,8 +65,8 @@ function LogIn() {
                   <Link to="users">
                     <Button
                       className='btn-success'>
-                      browse anonymously
-                                </Button>
+                      Browse anonymously
+                    </Button>
                   </Link>
                 </Col>
               </Row>
