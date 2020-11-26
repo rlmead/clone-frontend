@@ -6,11 +6,6 @@ const authContext = createContext({});
 
 export default authContext;
 
-const postHeaders = {
-  'Accept': 'application/json',
-  'Content-Type': 'application/json; charset=utf-8'
-}
-
 export function AuthProvider({ children }) {
   const auth = useAuthProvider();
   return <authContext.Provider value={auth}>{children}</authContext.Provider>;
@@ -25,15 +20,15 @@ function useAuthProvider() {
 
   const app = useApp();
 
-  useEffect(async () => {
-    await getUser();
+  useEffect(() => {
+    token !== '' && getUser();
   }, [token])
 
   async function getToken(authData) {
     // login
     if (authData.access_token) {
       setToken(authData.access_token);
-      // signup
+    // signup
     } else if (authData.data.token) {
       setToken(authData.data.token);
     } else {
@@ -45,6 +40,7 @@ function useAuthProvider() {
     await axiosCall(
       'post',
       '/users/get_by_email',
+      app.setUser,
       {
         email: app.email
       },
@@ -53,8 +49,7 @@ function useAuthProvider() {
         'Content-Type': 'application/json; charset=utf-8',
         'Access-Control-Allow-Origin': '*',
         'Authorization': `Bearer ${token}`
-      },
-      app.setUser
+      }
     );
   }
 
@@ -62,6 +57,7 @@ function useAuthProvider() {
     await axiosCall(
       'post',
       '/v1/oauth/token',
+      getToken,
       {
         grant_type: "password",
         client_id: '2',
@@ -69,9 +65,7 @@ function useAuthProvider() {
         password: app.password,
         username: app.email,
         scope: ""
-      },
-      postHeaders,
-      getToken
+      }
     )
   }
 
@@ -79,13 +73,12 @@ function useAuthProvider() {
     await axiosCall(
       'post',
       '/register',
+      getToken,
       {
         name,
         "email": emailAddress,
         password
-      },
-      postHeaders,
-      getToken
+      }
     )
   }
 

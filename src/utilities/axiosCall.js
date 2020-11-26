@@ -1,6 +1,11 @@
 import axios from 'axios';
 
-export function axiosCall(method, url, data, headers, func) {
+const postHeaders = {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json; charset=utf-8'
+  }
+
+export function axiosCall(method, url, func, data = {}, headers = postHeaders) {
     const apiUrl='http://localhost:8000';
     return axios({
         method,
