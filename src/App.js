@@ -1,4 +1,5 @@
 import { React, useState } from 'react';
+import './theme_1606090074772.css';
 import './App.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Container } from 'reactstrap';
@@ -7,17 +8,11 @@ import { AuthProvider } from "./utilities/AuthContext.js";
 import LogIn from './components/LogIn.js';
 import SignUp from './components/SignUp.js';
 import Profile from './components/Profile.js';
-import './theme_1606090074772.css';
 
 function App() {
-  const [currentUser, setCurrentUser] = useState(null);
-
-  // is this used?
-  const initialContext = { 'currentUser': currentUser, 'setCurrentUser': setCurrentUser };
-
   return (
     <div className="App">
-      <AppProvider value={initialContext}>
+      <AppProvider>
         <AuthProvider>
           <Container>
             <Router>
