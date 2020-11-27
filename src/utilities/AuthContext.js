@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useContext, createContext } from 'react';
-import { useApp } from './AppContext.js';
-import { axiosCall } from './axiosCall.js';
+import React, { useEffect, useState, useContext, createContext } from "react";
+import { useApp } from "./AppContext";
+import { axiosCall } from "./axiosCall";
 
 const authContext = createContext({});
 
@@ -18,10 +18,10 @@ export const useAuth = () => {
 function useAuthProvider() {
   const app = useApp();
   
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState("");
 
   useEffect(() => {
-    token !== '' && getUserByEmail();
+    token !== "" && getUserByEmail();
   }, [token])
 
   async function getToken(authData) {
@@ -32,47 +32,14 @@ function useAuthProvider() {
     } else if (authData.data.token) {
       setToken(authData.data.token);
     } else {
-      console.log('error: no token found');
+      console.log("error: no token found");
     }
-  }
-
-  async function getUserByEmail() {
-    await axiosCall(
-      'post',
-      '/users/get_by_email',
-      app.setUser,
-      {
-        email: app.email
-      },
-      {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json; charset=utf-8',
-        'Access-Control-Allow-Origin': '*',
-        'Authorization': `Bearer ${token}`
-      }
-    );
-  }
-
-  async function logIn(username, password) {
-    await axiosCall(
-      'post',
-      '/v1/oauth/token',
-      getToken,
-      {
-        grant_type: "password",
-        client_id: '2',
-        client_secret: "tiAugBiLiD9XKo8E69pSSmh0AlnyBOjWNwLmoYh5",
-        password,
-        username,
-        scope: ""
-      }
-    )
   }
 
   async function signUp(name, email, password) {
     await axiosCall(
-      'post',
-      '/register',
+      "post",
+      "/register",
       getToken,
       {
         name,
@@ -82,15 +49,48 @@ function useAuthProvider() {
     )
   }
 
-  async function signOut() {
-    setToken('');
+  async function getUserByEmail() {
+    await axiosCall(
+      "post",
+      "/users/get_by_email",
+      app.setUser,
+      {
+        email: app.email
+      },
+      {
+        "Accept": "application/json",
+        "Content-Type": "application/json; charset=utf-8",
+        "Access-Control-Allow-Origin": "*",
+        "Authorization": `Bearer ${token}`
+      }
+    );
+  }
+
+  async function logIn(username, password) {
+    await axiosCall(
+      "post",
+      "/v1/oauth/token",
+      getToken,
+      {
+        grant_type: "password",
+        client_id: "2",
+        client_secret: "tiAugBiLiD9XKo8E69pSSmh0AlnyBOjWNwLmoYh5",
+        password,
+        username,
+        scope: ""
+      }
+    )
+  }
+
+  async function logOut() {
+    setToken("");
     app.setUser({});
   }
 
   return {
     token,
-    logIn,
     signUp,
-    signOut
+    logIn,
+    logOut
   };
 }
