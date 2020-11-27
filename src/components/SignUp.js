@@ -34,6 +34,18 @@ function SignUp() {
     auth.token !== "" && history.push(`/users/${app.user.id}`);
   }, [app.user])
 
+  function handleKeyPress(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (name.length !== 0
+        && email.length !== 0
+        && password.length !== 0
+        && password.length === passwordConf.length) {
+        signUp();
+      }
+    }
+  }
+
   return (
     <>
       <Header />
@@ -41,7 +53,8 @@ function SignUp() {
         style={{ backgroundImage: "url(https://images.unsplash.com/photo-1545494097-1545e22ee878?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxzZWFyY2h8OHx8Z2xpdHRlcnxlbnwwfHwwfA%3D%3D&auto=format&fit=crop&w=800&q=60)", backgroundSize: "100%", opacity: "0.8" }}>
         <Row>
           <Col sm="6" className="offset-sm-3">
-            <Card>
+            <Card
+              onKeyPress={handleKeyPress}>
               {
                 auth.token
                   ? (

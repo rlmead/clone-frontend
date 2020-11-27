@@ -27,7 +27,6 @@ function LogIn() {
     auth.token !== "" && history.push(`/users/${app.user.id}`);
   }, [app.user])
 
-  // declare function to handle "enter" keypress
   function handleKeyPress(e) {
     if (e.key === "Enter") {
       e.preventDefault();
