@@ -1,15 +1,8 @@
-import React, { useState, useContext } from 'react';
-import {
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  Nav,
-  NavItem,
-  NavLink
-} from 'reactstrap';
-import { Link, useHistory } from 'react-router-dom';
-import { useAuth } from '../utilities/AuthContext.js';
-import appContext from '../utilities/AppContext.js';
+import React, { useState, useContext } from "react";
+import { Collapse, Navbar, NavbarToggler, Nav, NavItem, NavLink } from "reactstrap";
+import { Link, useHistory } from "react-router-dom";
+import { useAuth } from "../utilities/AuthContext";
+import appContext from "../utilities/AppContext";
 
 function Header() {
   const context = useContext(appContext);
@@ -28,18 +21,18 @@ function Header() {
       fixed="true">
       <Link
         to="/"
-        className='text-dark'
-        style={{ textDecoration: 'none' }}>
+        className="text-dark"
+        style={{ textDecoration: "none" }}>
         <h1>Idea Network</h1>
       </Link>
       {
         auth.token &&
         <>
-          <NavbarToggler onClick={toggle} className='text-dark' />
+          <NavbarToggler onClick={toggle} className="text-dark" />
           <Collapse isOpen={isOpen} navbar>
             <Nav className="mr-auto" navbar>
               <NavItem>
-                <Link to={`users/${context.currentUser}`} className='nav-link'>
+                <Link to={`users/${context.currentUser}`} className="nav-link">
                   {/* <NavLink> */}
                     my profile
                   {/* </NavLink> */}
@@ -48,8 +41,8 @@ function Header() {
               <NavItem>
                 <NavLink
                   onClick={() => {
-                    auth.signOut();
-                    history.push('/')
+                    auth.logOut();
+                    history.push("/")
                   }}>
                   log out
                 </NavLink>

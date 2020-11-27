@@ -1,9 +1,9 @@
-import React from 'react';
-import Header from '../components/Header.js';
-import { Row, Col, Input, Button, Jumbotron, Card } from 'reactstrap';
-import { Link, useHistory } from 'react-router-dom';
-import { useApp } from '../utilities/AppContext.js';
-import { useAuth } from '../utilities/AuthContext.js';
+import React, { useEffect, useState } from "react";
+import Header from "../components/Header.js";
+import { Jumbotron, Row, Col, Input, Button, Card } from "reactstrap";
+import { Link, useHistory } from "react-router-dom";
+import { useApp } from "../utilities/AppContext.js";
+import { useAuth } from "../utilities/AuthContext.js";
 
 function LogIn() {
   const app = useApp();
@@ -11,45 +11,56 @@ function LogIn() {
 
   let history = useHistory();
 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   async function logIn() {
-    await auth.logIn();
-    history.push(`/users/${auth.user}`);
+    app.setEmail(email);
+    await auth.logIn(email, password);
+    // is this necessary? or does this variable get obliterated when we leave the page?
+    setPassword("");
   }
+
+  // this doesn't work properly when auth.token is listed as a dependency,
+  // but react complains that it should be listed
+  useEffect(() => {
+    auth.token !== "" && history.push(`/users/${app.user.id}`);
+  }, [app.user])
 
   return (
     <>
       <Header />
       <Jumbotron
-        style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1545494097-1545e22ee878?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxzZWFyY2h8OHx8Z2xpdHRlcnxlbnwwfHwwfA%3D%3D&auto=format&fit=crop&w=800&q=60)', backgroundSize: '100%', opacity: '0.8' }}>
+        style={{ backgroundImage: "url(https://images.unsplash.com/photo-1545494097-1545e22ee878?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxzZWFyY2h8OHx8Z2xpdHRlcnxlbnwwfHwwfA%3D%3D&auto=format&fit=crop&w=800&q=60)", backgroundSize: "100%", opacity: "0.8" }}>
         <Row>
-          <Col sm='6'>
+          <Col sm="6">
             <Card>
-              <h3>log in</h3>
+              <h3>Log in</h3>
               <Input
                 type="text"
-                placeholder="email address"
-                onChange={(e) => app.setEmail(e.target.value)} />
+                placeholder="Email address"
+                onChange={(e) => setEmail(e.target.value)} />
               <Input
                 type="password"
-                placeholder="password"
-                onChange={(e) => app.setPassword(e.target.value)} />
+                placeholder="Password"
+                onChange={(e) => setPassword(e.target.value)} />
               <Button
-                className='btn-success'
+                className="btn-success"
                 onClick={() => logIn()}
-                disabled={app.email.length === 0 || app.password.length === 0}>
-                log in!
+                disabled={email.length === 0 || password.length === 0}>
+                Log in
               </Button>
             </Card>
           </Col>
-          <Col sm='6'>
+          <Col sm="6">
             <Card>
-              <h3>not a member?</h3>
+              <h3>Not a member?</h3>
               <Row>
                 <Col>
                   <Link to="signup">
                     <Button
-                      className='btn-success'>
-                      sign up
+                      className="btn-success">
+                      Sign up
                                 </Button>
                   </Link>
                 </Col>
@@ -59,9 +70,9 @@ function LogIn() {
                 <Col>
                   <Link to="users">
                     <Button
-                      className='btn-success'>
-                      browse anonymously
-                                </Button>
+                      className="btn-success">
+                      Browse anonymously
+                    </Button>
                   </Link>
                 </Col>
               </Row>

@@ -1,29 +1,29 @@
-import { React, useState } from 'react';
-import './App.css';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { Container } from 'reactstrap';
-import { AppProvider } from './utilities/AppContext.js';
-import { AuthProvider } from "./utilities/AuthContext.js";
-import LogIn from './components/LogIn.js';
-import SignUp from './components/SignUp.js';
-import Profile from './components/Profile.js';
-import './theme_1606090074772.css';
+import React from "react";
+import "./theme_1606090074772.css";
+import "./App.css";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Container } from "reactstrap";
+import { AppProvider } from "./utilities/AppContext";
+import { AuthProvider, useAuth } from "./utilities/AuthContext";
+import LogIn from "./components/LogIn";
+import SignUp from "./components/SignUp";
+import Profile from "./components/Profile";
 
 function App() {
-  const [currentUser, setCurrentUser] = useState(null);
-
-  // is this used?
-  const initialContext = { 'currentUser': currentUser, 'setCurrentUser': setCurrentUser };
-
+  const auth = useAuth();
   return (
     <div className="App">
-      <AppProvider value={initialContext}>
+      <AppProvider>
         <AuthProvider>
           <Container>
             <Router>
               <Switch>
                 <Route exact path="/">
-                  <LogIn />
+                  {
+                    auth.token
+                      ? <Profile />
+                      : <LogIn />
+                  }
                 </Route>
                 <Route path="/signup">
                   <SignUp />

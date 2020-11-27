@@ -1,33 +1,26 @@
-import React, { useState, useContext, createContext } from 'react';
+import React, { useState, useContext, createContext } from "react";
 
 const appContext = createContext({});
 
 export default appContext;
 
 export function AppProvider({ children }) {
-    const app = useAppProvider();
-    return <appContext.Provider value={app}>{children}</appContext.Provider>;
+  const app = useAppProvider();
+  return <appContext.Provider value={app}>{children}</appContext.Provider>;
 }
 
 export const useApp = () => {
-    return useContext(appContext);
+  return useContext(appContext);
 };
 
 function useAppProvider() {
-    const [user, setUser] = useState({});
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+  const [user, setUser] = useState({});
+  const [email, setEmail] = useState("");
 
-
-    return {
-        user,
-        setUser,
-        name,
-        setName,
-        email,
-        setEmail,
-        password,
-        setPassword
-    };
+  return {
+    user,
+    setUser,
+    email,
+    setEmail
+  };
 }
