@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../components/Header.js';
-import { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { Row, Col, Input, Button, Jumbotron, Card } from 'reactstrap';
 import { useApp } from '../utilities/AppContext.js';
@@ -10,13 +9,20 @@ function SignUp() {
   const app = useApp();
   const auth = useAuth();
 
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [passwordConf, setPasswordConf] = useState('');
 
   let history = useHistory();
 
   async function signUp() {
-    if (app.password === passwordConf) {
-      await auth.signUp(app.name, app.email, app.password);
+    if (password === passwordConf) {
+      app.setEmail(email);
+      await auth.signUp(name, email, password);
+      // is this necessary? or do these variables get obliterated when we leave the page?
+      setPassword('');
+      setPasswordConf('');
     } else {
       alert('Your passwords don\'t match! Please try again.');
     }
@@ -55,17 +61,17 @@ function SignUp() {
                       <Input
                         type="text"
                         placeholder="name"
-                        onChange={(e) => app.setName(e.target.value)}
+                        onChange={(e) => setName(e.target.value)}
                       />
                       <Input
                         type="text"
                         placeholder="email address"
-                        onChange={(e) => app.setEmail(e.target.value)}
+                        onChange={(e) => setEmail(e.target.value)}
                       />
                       <Input
                         type="password"
                         placeholder="password"
-                        onChange={(e) => app.setPassword(e.target.value)}
+                        onChange={(e) => setPassword(e.target.value)}
                       />
                       <Input
                         type="password"
@@ -76,10 +82,10 @@ function SignUp() {
                         className='btn-success'
                         onClick={() => signUp()}
                         disabled={
-                          app.name.length === 0
-                          || app.email.length === 0
-                          || app.password.length === 0
-                          || app.password.length !== passwordConf.length}>
+                          name.length === 0
+                          || email.length === 0
+                          || password.length === 0
+                          || password.length !== passwordConf.length}>
                         create account!
                     </Button>
                     </>

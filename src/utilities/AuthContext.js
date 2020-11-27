@@ -21,7 +21,7 @@ function useAuthProvider() {
   const [token, setToken] = useState('');
 
   useEffect(() => {
-    token !== '' && getUser();
+    token !== '' && getUserByEmail();
   }, [token])
 
   async function getToken(authData) {
@@ -36,7 +36,7 @@ function useAuthProvider() {
     }
   }
 
-  async function getUser() {
+  async function getUserByEmail() {
     await axiosCall(
       'post',
       '/users/get_by_email',
@@ -53,7 +53,7 @@ function useAuthProvider() {
     );
   }
 
-  async function logIn() {
+  async function logIn(username, password) {
     await axiosCall(
       'post',
       '/v1/oauth/token',
@@ -62,21 +62,21 @@ function useAuthProvider() {
         grant_type: "password",
         client_id: '2',
         client_secret: "tiAugBiLiD9XKo8E69pSSmh0AlnyBOjWNwLmoYh5",
-        password: app.password,
-        username: app.email,
+        password,
+        username,
         scope: ""
       }
     )
   }
 
-  async function signUp(name, emailAddress, password) {
+  async function signUp(name, email, password) {
     await axiosCall(
       'post',
       '/register',
       getToken,
       {
         name,
-        "email": emailAddress,
+        email,
         password
       }
     )
@@ -88,8 +88,8 @@ function useAuthProvider() {
   }
 
   return {
-    logIn,
     token,
+    logIn,
     signUp,
     signOut
   };

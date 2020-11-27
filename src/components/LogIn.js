@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../components/Header.js';
-import { Row, Col, Input, Button, Jumbotron, Card } from 'reactstrap';
+import { Jumbotron, Row, Col, Input, Button, Card } from 'reactstrap';
 import { Link, useHistory } from 'react-router-dom';
 import { useApp } from '../utilities/AppContext.js';
 import { useAuth } from '../utilities/AuthContext.js';
@@ -11,8 +11,14 @@ function LogIn() {
 
   let history = useHistory();
 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   async function logIn() {
-    await auth.logIn();
+    app.setEmail(email);
+    await auth.logIn(email, password);
+    // is this necessary? or does this variable get obliterated when we leave the page?
+    setPassword('');
   }
 
   // this doesn't work properly when auth.token is listed as a dependency,
@@ -33,15 +39,15 @@ function LogIn() {
               <Input
                 type="text"
                 placeholder="email address"
-                onChange={(e) => app.setEmail(e.target.value)} />
+                onChange={(e) => setEmail(e.target.value)} />
               <Input
                 type="password"
                 placeholder="password"
-                onChange={(e) => app.setPassword(e.target.value)} />
+                onChange={(e) => setPassword(e.target.value)} />
               <Button
                 className='btn-success'
                 onClick={() => logIn()}
-                disabled={app.email.length === 0 || app.password.length === 0}>
+                disabled={email.length === 0 || password.length === 0}>
                 Log in
               </Button>
             </Card>

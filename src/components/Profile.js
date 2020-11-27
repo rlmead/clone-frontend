@@ -6,7 +6,7 @@ import { useAuth } from '../utilities/AuthContext.js';
 
 function Profile() {
   const [view, setView] = useState('about');
-  const views = ['about', 'ideas', 'collabs', 'people'];
+  const views = ['About', 'Ideas', 'Collabs', 'People'];
 
   const app = useApp();
   const auth = useAuth();
@@ -29,7 +29,7 @@ function Profile() {
           <img
             className='img-fluid'
             src="https://images.unsplash.com/photo-1490059830487-2f86fddb2b4b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80"></img>
-          <Button className='mt-3 btn-success'>change pic</Button>
+          <Button className='mt-3 btn-success'>Change Pic</Button>
         </Col>
         <Col sm='9'>
           <Nav
