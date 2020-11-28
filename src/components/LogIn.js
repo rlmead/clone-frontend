@@ -16,9 +16,10 @@ function LogIn() {
 
   async function logIn() {
     app.setEmail(email);
-    await auth.logIn(email, password);
-    // is this necessary? or does this variable get obliterated when we leave the page?
-    setPassword("");
+    let error = await auth.logIn(email, password);
+    if (error) {
+      alert("Whoops, those credentials didn't work. Please try again, or sign up instead.");
+    }
   }
 
   // this doesn't work properly when auth.token is listed as a dependency,

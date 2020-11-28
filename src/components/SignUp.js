@@ -25,7 +25,6 @@ function SignUp() {
       app.setEmail(email);
       let error = await auth.signUp(name, email, password);
       if (error) {
-        // console.log(error.response.status);
         switch (error.response.status) {
           case 500:
             alert("There's already an account associated with this email address! Please use a different email address, or log in instead.");
