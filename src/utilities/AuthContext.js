@@ -18,7 +18,8 @@ export const useAuth = () => {
 function useAuthProvider() {
   const app = useApp();
 
-  const [token, setToken] = useState("");
+  let storedToken = window.localStorage.getItem('token') || "";
+  const [token, setToken] = useState(storedToken);
 
   useEffect(() => {
     if (token !== "") {
@@ -27,6 +28,7 @@ function useAuthProvider() {
         console.log(response)
       };
     }
+    window.localStorage.setItem('token', JSON.stringify(token))
   }, [token])
 
   async function getToken(authData) {
