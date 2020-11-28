@@ -1,11 +1,11 @@
 import React, { useState, useContext } from "react";
 import { Collapse, Navbar, NavbarToggler, Nav, NavItem } from "reactstrap";
 import { Link, useHistory } from "react-router-dom";
+import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
-import appContext from "../utilities/AppContext";
 
 function Header() {
-  const context = useContext(appContext);
+  const app = useApp();
 
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
@@ -34,7 +34,7 @@ function Header() {
             auth.token ? (
               <>
                 <NavItem>
-                  <Link to={`users/${context.currentUser}`} className="nav-link">
+                  <Link to={`/users/${app.user.id}`} className="nav-link">
                     My profile
                   </Link>
                 </NavItem>
@@ -61,11 +61,6 @@ function Header() {
                       Sign up
                     </Link>
                   </NavItem>
-                  {/* <NavItem>
-                    <Link to="users" className="nav-link">
-                      Browse
-                    </Link>
-                  </NavItem> */}
                 </>
               )
           }

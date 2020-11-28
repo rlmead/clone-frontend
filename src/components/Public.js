@@ -20,9 +20,9 @@ function Public() {
 
   // this doesn't work properly when auth.token is listed as a dependency,
   // but react complains that it should be listed
-  useEffect(() => {
-    auth.token !== "" && history.push(`/users/${app.user.id}`);
-  }, [app.user])
+  // useEffect(() => {
+  //   auth.token !== "" && history.push(`/users/${app.user.id}`);
+  // }, [app.user])
 
   async function signUp() {
     if (password !== passwordConf) {

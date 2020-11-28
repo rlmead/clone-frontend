@@ -21,14 +21,20 @@ function useAuthProvider() {
   let storedToken = window.localStorage.getItem('token') || "";
   const [token, setToken] = useState(storedToken);
 
+  let storedUser = window.localStorage.getItem('user') || {};
+  if (! app.user) {
+    app.setUser(storedUser);
+  }
+
   useEffect(() => {
     if (token !== "") {
       let response = getUserByEmail();
       if (response) {
         console.log(response)
       };
-    }
-    window.localStorage.setItem('token', JSON.stringify(token))
+    };
+    window.localStorage.setItem('token', JSON.stringify(token));
+    window.localStorage.setItem('user', JSON.stringify(app.user));
   }, [token])
 
   async function getToken(authData) {
