@@ -64,7 +64,7 @@ function SignUp() {
       <Jumbotron
         style={{ backgroundImage: "url(https://images.unsplash.com/photo-1545494097-1545e22ee878?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxzZWFyY2h8OHx8Z2xpdHRlcnxlbnwwfHwwfA%3D%3D&auto=format&fit=crop&w=800&q=60)", backgroundSize: "100%", opacity: "0.8" }}>
         <Row>
-          <Col sm="6" className="offset-sm-3">
+          <Col sm="6">
             <Card
               onKeyPress={handleKeyPress}>
               {
@@ -116,6 +116,32 @@ function SignUp() {
                     </>
                   )
               }
+            </Card>
+          </Col>
+          <Col sm="6">
+            <Card>
+              <h3>Already a member?</h3>
+              <Row>
+                <Col>
+                  <Link to="/">
+                    <Button
+                      className="btn-success">
+                      Log in
+                    </Button>
+                  </Link>
+                </Col>
+              </Row>
+              <h3>or</h3>
+              <Row>
+                <Col>
+                  <Link to="users">
+                    <Button
+                      className="btn-success">
+                      Browse anonymously
+                    </Button>
+                  </Link>
+                </Col>
+              </Row>
             </Card>
           </Col>
         </Row>

@@ -72,7 +72,7 @@ function LogIn() {
                     <Button
                       className="btn-success">
                       Sign up
-                                </Button>
+                    </Button>
                   </Link>
                 </Col>
               </Row>
