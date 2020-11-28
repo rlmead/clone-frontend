@@ -68,6 +68,11 @@ function Header() {
                 </>
               )
           }
+          <NavItem>
+            <Link to="about" className="nav-link">
+              About
+            </Link>
+          </NavItem>
         </Nav>
       </Collapse>
     </Navbar>

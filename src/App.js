@@ -9,6 +9,7 @@ import LogIn from "./components/LogIn";
 import SignUp from "./components/SignUp";
 import Profile from "./components/Profile";
 import LogOut from "./components/LogOut";
+import About from "./components/About";
 
 function App() {
   const auth = useAuth();
@@ -26,14 +27,17 @@ function App() {
                       : <LogIn />
                   }
                 </Route>
-                <Route path="/logout">
-                  <LogOut />
-                </Route>
                 <Route path="/signup">
                   <SignUp />
                 </Route>
+                <Route path="/about">
+                  <About />
+                </Route>
                 <Route path={`/users/:userId`}>
                   <Profile />
+                </Route>
+                <Route path="/logout">
+                  <LogOut />
                 </Route>
               </Switch>
             </Router>
