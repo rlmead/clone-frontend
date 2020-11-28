@@ -24,7 +24,7 @@ function useAuthProvider() {
     if (token !== "") {
       let response = getUserByEmail();
       if (response) {
-        alert("Whoops, something went wrong! Please try again.");
+        console.log(response)
       };
     }
   }, [token])
