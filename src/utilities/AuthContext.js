@@ -18,13 +18,8 @@ export const useAuth = () => {
 function useAuthProvider() {
   const app = useApp();
 
-  let storedToken = window.localStorage.getItem('token') || "";
+  let storedToken = JSON.parse(window.localStorage.getItem('token')) || "";
   const [token, setToken] = useState(storedToken);
-
-  let storedUser = window.localStorage.getItem('user') || {};
-  if (! app.user) {
-    app.setUser(storedUser);
-  }
 
   useEffect(() => {
     if (token !== "") {
@@ -34,8 +29,18 @@ function useAuthProvider() {
       };
     };
     window.localStorage.setItem('token', JSON.stringify(token));
-    window.localStorage.setItem('user', JSON.stringify(app.user));
   }, [token])
+
+  let storedUser = JSON.parse(window.localStorage.getItem('user')) || {};
+  if (Object.keys(app.user).length === 0 && Object.keys(storedUser).length > 0) {
+    app.setUser(storedUser);
+  }
+
+  useEffect(() => {
+    if (typeof app.user === "object" && Object.keys(app.user).length > 0) {
+      window.localStorage.setItem('user', JSON.stringify(app.user));
+    }
+  }, [app.user])
 
   async function getToken(authData) {
     // login
@@ -101,6 +106,7 @@ function useAuthProvider() {
   async function logOut() {
     setToken("");
     app.setUser({});
+    window.localStorage.setItem('user', JSON.stringify({}));
   }
 
   return {
