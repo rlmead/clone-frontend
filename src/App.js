@@ -5,8 +5,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Container } from "reactstrap";
 import { AppProvider } from "./utilities/AppContext";
 import { AuthProvider, useAuth } from "./utilities/AuthContext";
-import LogIn from "./components/LogIn";
-import SignUp from "./components/SignUp";
+import Public from "./components/Public";
 import Profile from "./components/Profile";
 
 function App() {
@@ -22,11 +21,15 @@ function App() {
                   {
                     auth.token
                       ? <Profile />
-                      : <LogIn />
+                      : <Public />
                   }
                 </Route>
-                <Route path="/signup">
-                  <SignUp />
+                <Route path="/public/:view">
+                  {
+                    auth.token
+                      ? <Profile />
+                      : <Public />
+                  }
                 </Route>
                 <Route path={`/users/:userId`}>
                   <Profile />

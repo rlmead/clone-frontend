@@ -17,18 +17,23 @@ export const useAuth = () => {
 
 function useAuthProvider() {
   const app = useApp();
-  
+
   const [token, setToken] = useState("");
 
   useEffect(() => {
-    token !== "" && getUserByEmail();
+    if (token !== "") {
+      let response = getUserByEmail();
+      if (response) {
+        console.log(response)
+      };
+    }
   }, [token])
 
   async function getToken(authData) {
     // login
     if (authData.access_token) {
       setToken(authData.access_token);
-    // signup
+      // signup
     } else if (authData.data.token) {
       setToken(authData.data.token);
     } else {
@@ -37,7 +42,7 @@ function useAuthProvider() {
   }
 
   async function signUp(name, email, password) {
-    await axiosCall(
+    let response = await axiosCall(
       "post",
       "/register",
       getToken,
@@ -46,11 +51,12 @@ function useAuthProvider() {
         email,
         password
       }
-    )
+    );
+    return response;
   }
 
   async function getUserByEmail() {
-    await axiosCall(
+    let response = await axiosCall(
       "post",
       "/users/get_by_email",
       app.setUser,
@@ -64,10 +70,11 @@ function useAuthProvider() {
         "Authorization": `Bearer ${token}`
       }
     );
+    return response;
   }
 
   async function logIn(username, password) {
-    await axiosCall(
+    let response = await axiosCall(
       "post",
       "/v1/oauth/token",
       getToken,
@@ -79,7 +86,8 @@ function useAuthProvider() {
         username,
         scope: ""
       }
-    )
+    );
+    return response;
   }
 
   async function logOut() {
