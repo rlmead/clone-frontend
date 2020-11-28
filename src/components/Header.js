@@ -42,7 +42,7 @@ function Header() {
                 <NavLink
                   onClick={() => {
                     auth.logOut();
-                    history.push("/")
+                    history.push("/logout")
                   }}>
                   log out
                 </NavLink>

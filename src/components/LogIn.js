@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import Header from "../components/Header.js";
+import Header from "../components/Header";
 import { Jumbotron, Row, Col, Input, Button, Card } from "reactstrap";
 import { Link, useHistory } from "react-router-dom";
-import { useApp } from "../utilities/AppContext.js";
-import { useAuth } from "../utilities/AuthContext.js";
+import { useApp } from "../utilities/AppContext";
+import { useAuth } from "../utilities/AuthContext";
 
 function LogIn() {
   const app = useApp();

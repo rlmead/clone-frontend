@@ -8,6 +8,7 @@ import { AuthProvider, useAuth } from "./utilities/AuthContext";
 import LogIn from "./components/LogIn";
 import SignUp from "./components/SignUp";
 import Profile from "./components/Profile";
+import LogOut from "./components/LogOut";
 
 function App() {
   const auth = useAuth();
@@ -24,6 +25,9 @@ function App() {
                       ? <Profile />
                       : <LogIn />
                   }
+                </Route>
+                <Route path="/logout">
+                  <LogOut />
                 </Route>
                 <Route path="/signup">
                   <SignUp />
