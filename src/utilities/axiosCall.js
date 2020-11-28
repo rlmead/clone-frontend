@@ -14,5 +14,5 @@ export function axiosCall(method, url, func, data = {}, headers = defaultHeaders
     headers
   })
     .then(response => func(response.data))
-    .catch(error => console.log(error))
+    .catch(error => {return error})
 }

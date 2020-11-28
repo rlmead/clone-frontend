@@ -17,14 +17,27 @@ function SignUp() {
   let history = useHistory();
 
   async function signUp() {
-    if (password === passwordConf) {
-      app.setEmail(email);
-      await auth.signUp(name, email, password);
-      // is this necessary? or do these variables get obliterated when we leave the page?
-      setPassword("");
-      setPasswordConf("");
-    } else {
+    if (password !== passwordConf) {
       alert("Your passwords don't match! Please try again.");
+    } else if (password.length < 8) {
+      alert("Please use a password that's at least 8 characters long.");
+    } else {
+      app.setEmail(email);
+      let error = await auth.signUp(name, email, password);
+      if (error) {
+        // console.log(error.response.status);
+        switch (error.response.status) {
+          case 500:
+            alert("There's already an account associated with this email address! Please use a different email address, or log in instead.");
+            break;
+          case 422:
+            alert("Please enter a valid email address.");
+            break;
+          default:
+            alert("There was an error getting you signed up. Please try again or contact an administrator.");
+            break;
+        }
+      }
     }
   }
 
@@ -59,7 +72,7 @@ function SignUp() {
                 auth.token
                   ? (
                     <>
-                      <h3>You"re already logged in!</h3>
+                      <h3>You're already logged in!</h3>
                       <Link to="/">
                         <Button
                           className="btn-success"

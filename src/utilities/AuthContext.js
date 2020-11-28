@@ -37,7 +37,7 @@ function useAuthProvider() {
   }
 
   async function signUp(name, email, password) {
-    await axiosCall(
+    let result = await axiosCall(
       "post",
       "/register",
       getToken,
@@ -46,7 +46,8 @@ function useAuthProvider() {
         email,
         password
       }
-    )
+    );
+    return result;
   }
 
   async function getUserByEmail() {
