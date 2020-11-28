@@ -25,32 +25,51 @@ function Header() {
         style={{ textDecoration: "none" }}>
         <h1>Idea Network</h1>
       </Link>
-      {
-        auth.token &&
-        <>
-          <NavbarToggler onClick={toggle} className="text-dark" />
-          <Collapse isOpen={isOpen} navbar>
-            <Nav className="mr-auto" navbar>
-              <NavItem>
-                <Link to={`users/${context.currentUser}`} className="nav-link">
-                  {/* <NavLink> */}
+      <NavbarToggler onClick={toggle} className="text-dark" />
+      <Collapse isOpen={isOpen} navbar>
+        <Nav className="mr-auto" navbar>
+          {
+            auth.token ? (
+              <>
+                <NavItem>
+                  <Link to={`users/${context.currentUser}`} className="nav-link">
+                    {/* <NavLink> */}
                     my profile
                   {/* </NavLink> */}
-                </Link>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  onClick={() => {
-                    auth.logOut();
-                    history.push("/logout")
-                  }}>
-                  log out
+                  </Link>
+                </NavItem>
+                <NavItem>
+                  <NavLink
+                    onClick={() => {
+                      auth.logOut();
+                      history.push("/logout")
+                    }}>
+                    log out
                 </NavLink>
-              </NavItem>
-            </Nav>
-          </Collapse>
-        </>
-      }
+                </NavItem>
+              </>
+            ) : (
+                <>
+                  <NavItem>
+                    <Link to="/" className="nav-link">
+                      Log in
+                    </Link>
+                  </NavItem>
+                  <NavItem>
+                    <Link to="signup" className="nav-link">
+                      Sign up
+                    </Link>
+                  </NavItem>
+                  <NavItem>
+                    <Link to="users" className="nav-link">
+                      Browse
+                    </Link>
+                  </NavItem>
+                </>
+              )
+          }
+        </Nav>
+      </Collapse>
     </Navbar>
   )
 }
