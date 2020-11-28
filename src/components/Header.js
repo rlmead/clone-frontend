@@ -42,7 +42,7 @@ function Header() {
                   <Link
                     onClick={() => {
                       auth.logOut();
-                      history.push("/logout")
+                      history.push("/public/logout")
                     }}
                     className="nav-link">
                     Log out
@@ -52,25 +52,25 @@ function Header() {
             ) : (
                 <>
                   <NavItem>
-                    <Link to="/" className="nav-link">
+                    <Link to="/public/login" className="nav-link">
                       Log in
                     </Link>
                   </NavItem>
                   <NavItem>
-                    <Link to="signup" className="nav-link">
+                    <Link to="/public/signup" className="nav-link">
                       Sign up
                     </Link>
                   </NavItem>
-                  <NavItem>
+                  {/* <NavItem>
                     <Link to="users" className="nav-link">
                       Browse
                     </Link>
-                  </NavItem>
+                  </NavItem> */}
                 </>
               )
           }
           <NavItem>
-            <Link to="about" className="nav-link">
+            <Link to="/public/about" className="nav-link">
               About
             </Link>
           </NavItem>

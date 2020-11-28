@@ -9,7 +9,7 @@ function Profile() {
 
   const app = useApp();
 
-  const switchView = (view) => {
+  function switchView(view) {
     switch (view) {
       default:
         return (
