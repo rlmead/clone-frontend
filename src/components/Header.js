@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { Collapse, Navbar, NavbarToggler, Nav, NavItem, NavLink } from "reactstrap";
+import { Collapse, Navbar, NavbarToggler, Nav, NavItem } from "reactstrap";
 import { Link, useHistory } from "react-router-dom";
 import { useAuth } from "../utilities/AuthContext";
 import appContext from "../utilities/AppContext";
@@ -33,19 +33,18 @@ function Header() {
               <>
                 <NavItem>
                   <Link to={`users/${context.currentUser}`} className="nav-link">
-                    {/* <NavLink> */}
-                    my profile
-                  {/* </NavLink> */}
+                    My profile
                   </Link>
                 </NavItem>
                 <NavItem>
-                  <NavLink
+                  <Link
                     onClick={() => {
                       auth.logOut();
                       history.push("/logout")
-                    }}>
-                    log out
-                </NavLink>
+                    }}
+                    className="nav-link">
+                    Log out
+                </Link>
                 </NavItem>
               </>
             ) : (
