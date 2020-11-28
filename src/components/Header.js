@@ -16,17 +16,19 @@ function Header() {
 
   return (
     <Navbar
-      color="light"
       expand="md"
-      fixed="true">
+      fixed
+      light>
       <Link
         to="/"
         className="text-dark"
         style={{ textDecoration: "none" }}>
         <h1>Idea Network</h1>
       </Link>
-      <NavbarToggler onClick={toggle} className="text-dark" />
-      <Collapse isOpen={isOpen} navbar>
+      <NavbarToggler onClick={toggle}/>
+      <Collapse
+        isOpen={isOpen}
+        navbar >
         <Nav className="mr-auto" navbar>
           {
             auth.token ? (
