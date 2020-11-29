@@ -16,6 +16,7 @@ function Profile() {
   const app = useApp();
 
   let { userProfileId } = useParams();
+  let currentUserProfile = app.user.id == userProfileId;
 
   async function getUserById() {
     let response = await axiosCall(
@@ -64,9 +65,10 @@ function Profile() {
           <img
             alt=""
             className="img-fluid"
-            src={userProfile.image_url || "https://images.unsplash.com/photo-1490059830487-2f86fddb2b4b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80"}></img>
+            src={userProfile.image_url || "https://images.unsplash.com/photo-1490059830487-2f86fddb2b4b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80"}>
+            </img>
           {
-            app.user.id === userProfileId &&
+            currentUserProfile &&
             <Button
               className="mt-3 btn-success">
               Change Pic
