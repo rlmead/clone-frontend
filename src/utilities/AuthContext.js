@@ -18,7 +18,10 @@ export const useAuth = () => {
 function useAuthProvider() {
   const app = useApp();
 
-  const [token, setToken] = useState("");
+  const [storage, setStorage] = useState(window.sessionStorage);
+
+  let storedToken = JSON.parse(window.localStorage.getItem('token')) || JSON.parse(window.sessionStorage.getItem('token')) || "";
+  const [token, setToken] = useState(storedToken);
 
   useEffect(() => {
     if (token !== "") {
@@ -26,8 +29,20 @@ function useAuthProvider() {
       if (response) {
         console.log(response)
       };
-    }
+    };
+    storage.setItem('token', JSON.stringify(token));
   }, [token])
+
+  let storedUser = JSON.parse(window.localStorage.getItem('user')) || JSON.parse(storage.getItem('user')) || {};
+  if (Object.keys(app.user).length === 0 && Object.keys(storedUser).length > 0) {
+    app.setUser(storedUser);
+  }
+
+  useEffect(() => {
+    if (typeof app.user === "object" && Object.keys(app.user).length > 0) {
+      storage.setItem('user', JSON.stringify(app.user));
+    }
+  }, [app.user])
 
   async function getToken(authData) {
     // login
@@ -93,9 +108,13 @@ function useAuthProvider() {
   async function logOut() {
     setToken("");
     app.setUser({});
+    window.localStorage.clear();
+    window.sessionStorage.clear();
   }
 
   return {
+    storage,
+    setStorage,
     token,
     signUp,
     logIn,

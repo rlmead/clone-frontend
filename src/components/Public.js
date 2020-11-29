@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
-import { Jumbotron, Row, Col, Input, Button, Card } from "reactstrap";
+import { Jumbotron, Row, Col, Input, Button, Card, Label } from "reactstrap";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
@@ -20,9 +20,15 @@ function Public() {
 
   // this doesn't work properly when auth.token is listed as a dependency,
   // but react complains that it should be listed
-  useEffect(() => {
-    auth.token !== "" && history.push(`/users/${app.user.id}`);
-  }, [app.user])
+  // useEffect(() => {
+  //   auth.token !== "" && history.push(`/users/${app.user.id}`);
+  // }, [app.user])
+
+  function changeStorage() {
+    auth.storage === window.sessionStorage
+      ? auth.setStorage(window.localStorage)
+      : auth.setStorage(window.sessionStorage);
+  }
 
   async function signUp() {
     if (password !== passwordConf) {
@@ -119,6 +125,12 @@ function Public() {
                       placeholder="Confirm password"
                       onChange={(e) => setPasswordConf(e.target.value)}
                     />
+                    <Label>
+                      <Input
+                        type="checkbox"
+                        onChange={() => changeStorage()} />
+                      Remember me
+                    </Label>
                     <Button
                       className="btn-success"
                       onClick={() => signUp()}
@@ -128,7 +140,7 @@ function Public() {
                         || password.length === 0
                         || password.length !== passwordConf.length}>
                       Create Account
-                </Button>
+                    </Button>
                   </>
                 )
             }
@@ -161,12 +173,18 @@ function Public() {
               type="password"
               placeholder="Password"
               onChange={(e) => setPassword(e.target.value)} />
+            <Label>
+              <Input
+                type="checkbox"
+                onChange={() => changeStorage()} />
+                Remember me
+            </Label>
             <Button
               className="btn-success"
               onClick={() => logIn()}
               disabled={email.length === 0 || password.length === 0}>
               Log in
-          </Button>
+            </Button>
           </Card>
         );
     }
