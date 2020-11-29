@@ -24,6 +24,12 @@ function Public() {
   //   auth.token !== "" && history.push(`/users/${app.user.id}`);
   // }, [app.user])
 
+  function changeStorage() {
+    auth.storage === window.sessionStorage
+      ? auth.setStorage(window.localStorage)
+      : auth.setStorage(window.sessionStorage);
+  }
+
   async function signUp() {
     if (password !== passwordConf) {
       alert("Your passwords don't match! Please try again.");
@@ -122,7 +128,7 @@ function Public() {
                     <Label>
                       <Input
                         type="checkbox"
-                        onChange={() => auth.setStorage(window.localStorage)} />
+                        onChange={() => changeStorage()} />
                       Remember me
                     </Label>
                     <Button
@@ -167,12 +173,18 @@ function Public() {
               type="password"
               placeholder="Password"
               onChange={(e) => setPassword(e.target.value)} />
+            <Label>
+              <Input
+                type="checkbox"
+                onChange={() => changeStorage()} />
+                Remember me
+            </Label>
             <Button
               className="btn-success"
               onClick={() => logIn()}
               disabled={email.length === 0 || password.length === 0}>
               Log in
-          </Button>
+            </Button>
           </Card>
         );
     }
