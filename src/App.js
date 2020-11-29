@@ -22,7 +22,7 @@ function App() {
                 <Route path="/public/:view">
                   <Public />
                 </Route>
-                <Route path={`/users/:userId`}>
+                <Route path={`/users/:userProfileId`}>
                   <Profile />
                 </Route>
               </Switch>
