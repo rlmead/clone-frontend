@@ -25,11 +25,7 @@ function App() {
                   }
                 </Route>
                 <Route path="/public/:view">
-                  {
-                    auth.token
-                      ? <Profile />
-                      : <Public />
-                  }
+                  <Public />
                 </Route>
                 <Route path={`/users/:userId`}>
                   <Profile />
