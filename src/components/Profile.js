@@ -8,7 +8,7 @@ import { axiosCall } from "../utilities/axiosCall";
 
 function Profile() {
   const auth = useAuth();
-  
+
   const [userProfile, setUserProfile] = useState({});
   const [view, setView] = useState("About");
   const views = ["About", "Ideas", "Collabs", "People"];
@@ -41,7 +41,12 @@ function Profile() {
     switch (view) {
       case "About":
         return (
-          <p>{userProfile.bio}</p>
+          <>
+            <h5>Bio</h5>
+            <p>{userProfile.bio}</p>
+            <h5>Pronouns</h5>
+            <p>{userProfile.pronouns}</p>
+          </>
         )
       default:
         return (
@@ -68,7 +73,7 @@ function Profile() {
             </Button>
           }
         </Col>
-        <Col sm="9" style={{textAlign: "left"}}>
+        <Col sm="9" style={{ textAlign: "left" }}>
           <Nav
             justified
             tabs
