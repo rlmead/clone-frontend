@@ -4,12 +4,11 @@ import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Container } from "reactstrap";
 import { AppProvider } from "./utilities/AppContext";
-import { AuthProvider, useAuth } from "./utilities/AuthContext";
+import { AuthProvider } from "./utilities/AuthContext";
 import Public from "./components/Public";
 import Profile from "./components/Profile";
 
 function App() {
-  const auth = useAuth();
   return (
     <div className="App">
       <AppProvider>
@@ -18,11 +17,7 @@ function App() {
             <Router>
               <Switch>
                 <Route exact path="/">
-                  {
-                    auth.token
-                      ? <Profile />
-                      : <Public />
-                  }
+                  <Public />
                 </Route>
                 <Route path="/public/:view">
                   <Public />
