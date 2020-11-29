@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
-import { Row, Col, Button, Nav, NavItem, NavLink } from "reactstrap";
+import { Row, Col, Nav, NavItem, NavLink } from "reactstrap";
 import { useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 
 function Profile() {
   const auth = useAuth();
@@ -18,18 +20,35 @@ function Profile() {
   let { userProfileId } = useParams();
   let currentUserProfile = app.user.id == userProfileId;
 
+  let postHeaders = {
+    "Accept": "application/json",
+    "Content-Type": "application/json; charset=utf-8",
+    "Access-Control-Allow-Origin": "*",
+    "Authorization": `Bearer ${auth.token}`
+  };
+
+
   async function getUserById() {
     let response = await axiosCall(
       "get",
       `/users/${userProfileId}`,
       setUserProfile,
       {},
+      postHeaders
+    );
+    return response;
+  }
+
+  async function editProfile(key, value) {
+    let response = await axiosCall(
+      "post",
+      "/users/update",
+      console.log,
       {
-        "Accept": "application/json",
-        "Content-Type": "application/json; charset=utf-8",
-        "Access-Control-Allow-Origin": "*",
-        "Authorization": `Bearer ${auth.token}`
-      }
+        id: app.user.id,
+        [key]: value
+      },
+      postHeaders
     );
     return response;
   }
@@ -44,6 +63,14 @@ function Profile() {
         return (
           <>
             <h5>Bio</h5>
+            {
+              currentUserProfile &&
+              <FontAwesomeIcon
+                icon={faPencilAlt}
+                className="text-success"
+                onClick={() => console.log("edit bio")}
+              />
+            }
             <p>{userProfile.bio}</p>
             <h5>Pronouns</h5>
             <p>{userProfile.pronouns}</p>
@@ -65,14 +92,18 @@ function Profile() {
           <img
             alt=""
             className="img-fluid"
-            src={userProfile.image_url || "https://images.unsplash.com/photo-1490059830487-2f86fddb2b4b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80"}>
-            </img>
+            style={{ height: "auto", width: "100%" }}
+            src={userProfile.image_url || "https://images.unsplash.com/photo-1490059830487-2f86fddb2b4b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80"} />
           {
             currentUserProfile &&
-            <Button
-              className="mt-3 btn-success">
-              Change Pic
-            </Button>
+            <FontAwesomeIcon
+              icon={faPencilAlt}
+              className="text-success"
+              onClick={() => {
+                let newUrl = prompt("Please enter a link to your new profile picture.");
+                newUrl && editProfile("image_url", newUrl) && getUserById();
+              }}
+            />
           }
         </Col>
         <Col sm="9" style={{ textAlign: "left" }}>
@@ -98,7 +129,7 @@ function Profile() {
           </Nav>
           {switchView(view)}
         </Col>
-      </Row>
+      </Row >
     </>
   )
 }
