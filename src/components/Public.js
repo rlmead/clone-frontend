@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
-import { Jumbotron, Row, Col, Input, Button, Card } from "reactstrap";
+import { Jumbotron, Row, Col, Input, Button, Card, Label } from "reactstrap";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
@@ -119,6 +119,12 @@ function Public() {
                       placeholder="Confirm password"
                       onChange={(e) => setPasswordConf(e.target.value)}
                     />
+                    <Label>
+                      <Input
+                        type="checkbox"
+                        onChange={() => auth.setStorage(window.localStorage)} />
+                      Remember me
+                    </Label>
                     <Button
                       className="btn-success"
                       onClick={() => signUp()}
@@ -128,7 +134,7 @@ function Public() {
                         || password.length === 0
                         || password.length !== passwordConf.length}>
                       Create Account
-                </Button>
+                    </Button>
                   </>
                 )
             }
