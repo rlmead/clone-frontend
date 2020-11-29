@@ -18,11 +18,10 @@ function Public() {
   const [password, setPassword] = useState("");
   const [passwordConf, setPasswordConf] = useState("");
 
-  // this doesn't work properly when auth.token is listed as a dependency,
-  // but react complains that it should be listed
-  // useEffect(() => {
-  //   auth.token !== "" && history.push(`/users/${app.user.id}`);
-  // }, [app.user])
+  useEffect(() => {
+    auth.justLoggedIn && history.push(`/users/${app.user.id}`);
+    auth.setJustLoggedIn(false);
+  }, [auth.justLoggedIn])
 
   function changeStorage() {
     auth.storage === window.sessionStorage

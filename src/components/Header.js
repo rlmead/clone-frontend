@@ -1,6 +1,6 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Collapse, Navbar, NavbarToggler, Nav, NavItem } from "reactstrap";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 
@@ -12,12 +12,10 @@ function Header() {
 
   const auth = useAuth();
 
-  let history = useHistory();
-
   return (
     <Navbar
       expand="md"
-      fixed
+      fixed="true"
       light>
       <Link
         to="/"
@@ -34,16 +32,16 @@ function Header() {
             auth.token ? (
               <>
                 <NavItem>
-                  <Link to={`/users/${app.user.id}`} className="nav-link">
-                    My profile
+                  <Link
+                    to={`/users/${app.user.id}`}
+                    className="nav-link">
+                    {`${app.user.name}'s Profile`}
                   </Link>
                 </NavItem>
                 <NavItem>
                   <Link
-                    onClick={() => {
-                      auth.logOut();
-                      history.push("/public/logout")
-                    }}
+                    to="/public/logout"
+                    onClick={() => auth.logOut()}
                     className="nav-link">
                     Log out
                 </Link>

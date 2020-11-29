@@ -23,6 +23,8 @@ function useAuthProvider() {
   let storedToken = JSON.parse(window.localStorage.getItem('token')) || JSON.parse(window.sessionStorage.getItem('token')) || "";
   const [token, setToken] = useState(storedToken);
 
+  const [justLoggedIn, setJustLoggedIn] = useState(false);
+
   useEffect(() => {
     if (token !== "") {
       let response = getUserByEmail();
@@ -41,6 +43,7 @@ function useAuthProvider() {
   useEffect(() => {
     if (typeof app.user === "object" && Object.keys(app.user).length > 0) {
       storage.setItem('user', JSON.stringify(app.user));
+      setJustLoggedIn(true);
     }
   }, [app.user])
 
@@ -96,7 +99,7 @@ function useAuthProvider() {
       {
         grant_type: "password",
         client_id: "2",
-        client_secret: "tiAugBiLiD9XKo8E69pSSmh0AlnyBOjWNwLmoYh5",
+        client_secret: "T39ZVr2y0s5hCN6ZdfWreUgjwhfBGR17Vag2hY52",
         password,
         username,
         scope: ""
@@ -108,6 +111,7 @@ function useAuthProvider() {
   async function logOut() {
     setToken("");
     app.setUser({});
+    setJustLoggedIn(false);
     window.localStorage.clear();
     window.sessionStorage.clear();
   }
@@ -118,6 +122,8 @@ function useAuthProvider() {
     token,
     signUp,
     logIn,
-    logOut
+    logOut,
+    justLoggedIn,
+    setJustLoggedIn
   };
 }
