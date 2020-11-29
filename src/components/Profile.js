@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
 import { Row, Col, Button, Nav, NavItem, NavLink } from "reactstrap";
+import { useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 
 function Profile() {
@@ -9,8 +10,14 @@ function Profile() {
 
   const app = useApp();
 
+  let { userId } = useParams();
+
   function switchView(view) {
     switch (view) {
+      case "About":
+        return (
+          <h3>{"user #" + userId}</h3>
+        )
       default:
         return (
           <p>under construction</p>
@@ -23,7 +30,6 @@ function Profile() {
       <Header />
       <Row>
         <Col sm="3">
-          <h3>{"user #" + app.user.id}</h3>
           <img
             alt=""
             className="img-fluid"

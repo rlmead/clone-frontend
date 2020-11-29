@@ -35,7 +35,7 @@ function Header() {
                   <Link
                     to={`/users/${app.user.id}`}
                     className="nav-link">
-                    My profile
+                    {`${app.user.name}'s Profile`}
                   </Link>
                 </NavItem>
                 <NavItem>
