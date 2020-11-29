@@ -4,7 +4,7 @@ import { Row, Col, Button, Nav, NavItem, NavLink } from "reactstrap";
 import { useApp } from "../utilities/AppContext";
 
 function Profile() {
-  const [view, setView] = useState("about");
+  const [view, setView] = useState("About");
   const views = ["About", "Ideas", "Collabs", "People"];
 
   const app = useApp();
@@ -25,6 +25,7 @@ function Profile() {
         <Col sm="3">
           <h3>{"user #" + app.user.id}</h3>
           <img
+            alt=""
             className="img-fluid"
             src="https://images.unsplash.com/photo-1490059830487-2f86fddb2b4b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80"></img>
           <Button className="mt-3 btn-success">Change Pic</Button>
