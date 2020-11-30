@@ -6,11 +6,11 @@ import { useAuth } from "../utilities/AuthContext";
 
 function Header() {
   const app = useApp();
+  const { token, logOut } = useAuth();
 
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
-  const auth = useAuth();
 
   return (
     <Navbar
@@ -29,7 +29,7 @@ function Header() {
         navbar >
         <Nav className="mr-auto" navbar>
           {
-            auth.token ? (
+            token ? (
               <>
                 <NavItem>
                   <Link
@@ -41,7 +41,7 @@ function Header() {
                 <NavItem>
                   <Link
                     to="/public/logout"
-                    onClick={() => auth.logOut()}
+                    onClick={() => logOut()}
                     className="nav-link">
                     Log out
                 </Link>
