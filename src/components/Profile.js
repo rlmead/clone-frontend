@@ -57,6 +57,15 @@ function Profile() {
     );
   }
 
+  function isValidUrl(string) {
+    try {
+      new URL(string);
+    } catch (_) {
+      return false;
+    }
+    return true;
+  }
+
   useEffect(() => {
     getUserById();
   }, [userProfileId])
@@ -159,7 +168,13 @@ function Profile() {
               className="text-success"
               onClick={() => {
                 let newUrl = prompt("Please enter a link to your new profile picture.");
-                newUrl && editProfile("image_url", newUrl) && getUserById();
+                if (newUrl) {
+                  if (isValidUrl(newUrl)) {
+                    editProfile("image_url", newUrl) && getUserById();
+                  } else {
+                    alert("Whoops, that doesn't look like a valid link!");
+                  }
+                }
               }}
             />
           }

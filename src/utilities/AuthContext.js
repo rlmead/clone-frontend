@@ -15,8 +15,9 @@ export const useAuth = () => {
   return useContext(authContext);
 };
 
+// prepare initial states to be used throughout the app
 function useAuthProvider() {
-  const app = useApp();
+  const {user, setUser, email} = useApp();
 
   const [storage, setStorage] = useState(window.sessionStorage);
 
@@ -36,16 +37,16 @@ function useAuthProvider() {
   }, [token])
 
   let storedUser = JSON.parse(window.localStorage.getItem('user')) || JSON.parse(storage.getItem('user')) || {};
-  if (Object.keys(app.user).length === 0 && Object.keys(storedUser).length > 0) {
-    app.setUser(storedUser);
+  if (Object.keys(user).length === 0 && Object.keys(storedUser).length > 0) {
+    setUser(storedUser);
   }
 
   useEffect(() => {
-    if (typeof app.user === "object" && Object.keys(app.user).length > 0) {
-      storage.setItem('user', JSON.stringify(app.user));
+    if (typeof user === "object" && Object.keys(user).length > 0) {
+      storage.setItem('user', JSON.stringify(user));
       setJustLoggedIn(true);
     }
-  }, [app.user])
+  }, [user])
 
   async function getToken(authData) {
     // login
@@ -59,14 +60,14 @@ function useAuthProvider() {
     }
   }
 
-  async function signUp(name, email, password) {
+  async function signUp(name, inputEmail, password) {
     let response = await axiosCall(
       "post",
       "/register",
       getToken,
       {
         name,
-        email,
+        inputEmail,
         password
       }
     );
@@ -77,9 +78,9 @@ function useAuthProvider() {
     let response = await axiosCall(
       "post",
       "/users/get_by_email",
-      app.setUser,
+      setUser,
       {
-        email: app.email
+        email
       },
       {
         "Accept": "application/json",
@@ -108,9 +109,10 @@ function useAuthProvider() {
     return response;
   }
 
+  // TODO: use /oauth/personal-access-tokens/{token_id} delete method to delete token on back end
   async function logOut() {
     setToken("");
-    app.setUser({});
+    setUser({});
     setJustLoggedIn(false);
     window.localStorage.clear();
     window.sessionStorage.clear();
