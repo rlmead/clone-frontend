@@ -67,7 +67,7 @@ function useAuthProvider() {
       getToken,
       {
         name,
-        inputEmail,
+        email: inputEmail,
         password
       }
     );
@@ -100,7 +100,7 @@ function useAuthProvider() {
       {
         grant_type: "password",
         client_id: "2",
-        client_secret: "T39ZVr2y0s5hCN6ZdfWreUgjwhfBGR17Vag2hY52",
+        client_secret: "W4hSv8BMLOh43T6gzLNAlqpK5p70bXNF7Zqw2jL1",
         password,
         username,
         scope: ""

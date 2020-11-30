@@ -107,21 +107,27 @@ function Public() {
                     <Input
                       type="text"
                       placeholder="Name"
+                      maxLength={64}
                       onChange={(e) => setName(e.target.value)}
                     />
                     <Input
                       type="text"
                       placeholder="Email address"
+                      maxLength={64}
                       onChange={(e) => setEmail(e.target.value)}
                     />
                     <Input
                       type="password"
                       placeholder="Password"
+                      minLength={8}
+                      maxLength={64}
                       onChange={(e) => setPassword(e.target.value)}
                     />
                     <Input
                       type="password"
                       placeholder="Confirm password"
+                      minLength={8}
+                      maxLength={64}
                       onChange={(e) => setPasswordConf(e.target.value)}
                     />
                     <Label>
@@ -167,10 +173,13 @@ function Public() {
             <Input
               type="text"
               placeholder="Email address"
+              maxLength={64}
               onChange={(e) => setEmail(e.target.value)} />
             <Input
               type="password"
               placeholder="Password"
+              minLength={8}
+              maxLength={64}
               onChange={(e) => setPassword(e.target.value)} />
             <Label>
               <Input
