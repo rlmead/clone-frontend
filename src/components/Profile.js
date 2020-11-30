@@ -17,6 +17,7 @@ function Profile() {
   const [editingBio, setEditingBio] = useState(false);
   const [newBio, setNewBio] = useState("");
   const [editingPronouns, setEditingPronouns] = useState(false);
+  const [newPronouns, setNewPronouns] = useState("");
   const views = ["About", "Ideas", "Collabs", "People"];
 
   const app = useApp();
@@ -89,7 +90,7 @@ function Profile() {
                     onClick={() => {
                       editProfile("bio", newBio) && getUserById();
                       setEditingBio(!editingBio);
-                      }}
+                    }}
                   />
                 </div>
                 <textarea
@@ -99,7 +100,38 @@ function Profile() {
               </>
             }
             <h5>Pronouns</h5>
-            <p>{userProfile.pronouns}</p>
+            {
+              currentUserProfile && !editingPronouns &&
+              <>
+                <div>
+                  <FontAwesomeIcon
+                    icon={faPencilAlt}
+                    className="text-success"
+                    onClick={() => setEditingPronouns(!editingPronouns)}
+                  />
+                </div>
+                <p>{userProfile.pronouns}</p>
+              </>
+            }
+            {
+              currentUserProfile && editingPronouns &&
+              <>
+                <div>
+                  <FontAwesomeIcon
+                    icon={faSave}
+                    className="text-success"
+                    onClick={() => {
+                      editProfile("pronouns", newPronouns) && getUserById();
+                      setEditingPronouns(!editingPronouns);
+                    }}
+                  />
+                </div>
+                <textarea
+                  onChange={(e) => setNewPronouns(e.target.value)}>
+                  {userProfile.pronouns}
+                </textarea>
+              </>
+            }
           </>
         )
       default:
