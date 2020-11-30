@@ -119,7 +119,9 @@ function Profile() {
                 </div>
                 <textarea
                   onChange={(e) => setNewBio(e.target.value)}
-                  onKeyPress={(e) => editBioKeyPress(e)}>
+                  onKeyPress={(e) => editBioKeyPress(e)}
+                  maxLength={255}
+                  style={{width: "100%"}}>
                   {userProfile.bio}
                 </textarea>
               </>
@@ -153,7 +155,9 @@ function Profile() {
                 </div>
                 <textarea
                   onChange={(e) => setNewPronouns(e.target.value)}
-                  onKeyPress={(e) => editPronounsKeyPress(e)}>
+                  onKeyPress={(e) => editPronounsKeyPress(e)}
+                  maxLength={64}
+                  style={{width: "100%"}}>
                   {userProfile.pronouns}
                 </textarea>
               </>
