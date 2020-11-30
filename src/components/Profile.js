@@ -32,7 +32,6 @@ function Profile() {
     "Authorization": `Bearer ${auth.token}`
   };
 
-
   async function getUserById() {
     let response = await axiosCall(
       "get",
@@ -55,6 +54,22 @@ function Profile() {
       },
       postHeaders
     );
+  }
+
+  function editBioKeyPress(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      editProfile("bio", newBio) && getUserById();
+      setEditingBio(!editingBio);
+    }
+  }
+
+  function editPronounsKeyPress(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      editProfile("pronouns", newPronouns) && getUserById();
+      setEditingPronouns(!editingPronouns);
+    }
   }
 
   function isValidUrl(string) {
@@ -103,7 +118,8 @@ function Profile() {
                   />
                 </div>
                 <textarea
-                  onChange={(e) => setNewBio(e.target.value)}>
+                  onChange={(e) => setNewBio(e.target.value)}
+                  onKeyPress={(e) => editBioKeyPress(e)}>
                   {userProfile.bio}
                 </textarea>
               </>
@@ -136,7 +152,8 @@ function Profile() {
                   />
                 </div>
                 <textarea
-                  onChange={(e) => setNewPronouns(e.target.value)}>
+                  onChange={(e) => setNewPronouns(e.target.value)}
+                  onKeyPress={(e) => editPronounsKeyPress(e)}>
                   {userProfile.pronouns}
                 </textarea>
               </>
