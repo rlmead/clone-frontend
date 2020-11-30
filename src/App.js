@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Container } from "reactstrap";
 import { AppProvider } from "./utilities/AppContext";
 import { AuthProvider } from "./utilities/AuthContext";
+import Header from "./components/Header";
 import Public from "./components/Public";
 import Profile from "./components/Profile";
 
@@ -15,6 +16,7 @@ function App() {
         <AuthProvider>
           <Container>
             <Router>
+              <Header />
               <Switch>
                 <Route exact path="/">
                   <Public />

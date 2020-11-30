@@ -23,19 +23,32 @@ function Header() {
         style={{ textDecoration: "none" }}>
         <h1>Idea Network</h1>
       </Link>
-      <NavbarToggler onClick={toggle}/>
+      <NavbarToggler onClick={toggle} />
       <Collapse
         isOpen={isOpen}
         navbar >
         <Nav className="mr-auto" navbar>
+          <NavItem>
+            <Link to="/public/about" className="nav-link">
+              About
+            </Link>
+          </NavItem>
+
           {
             token ? (
               <>
                 <NavItem>
                   <Link
+                    to="/ideas"
+                    className="nav-link">
+                    Browse ideas
+                  </Link>
+                </NavItem>
+                <NavItem>
+                  <Link
                     to={`/users/${app.user.id}`}
                     className="nav-link">
-                    {`${app.user.name}'s Profile`}
+                    {`${app.user.name}'s profile`}
                   </Link>
                 </NavItem>
                 <NavItem>
@@ -62,11 +75,6 @@ function Header() {
                 </>
               )
           }
-          <NavItem>
-            <Link to="/public/about" className="nav-link">
-              About
-            </Link>
-          </NavItem>
         </Nav>
       </Collapse>
     </Navbar>

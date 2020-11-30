@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Header from "../components/Header";
 import { Row, Col, Nav, NavItem, NavLink } from "reactstrap";
 import { useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
@@ -121,7 +120,7 @@ function Profile() {
                   onChange={(e) => setNewBio(e.target.value)}
                   onKeyPress={(e) => editBioKeyPress(e)}
                   maxLength={255}
-                  style={{width: "100%"}}>
+                  style={{ width: "100%" }}>
                   {userProfile.bio}
                 </textarea>
               </>
@@ -157,7 +156,7 @@ function Profile() {
                   onChange={(e) => setNewPronouns(e.target.value)}
                   onKeyPress={(e) => editPronounsKeyPress(e)}
                   maxLength={64}
-                  style={{width: "100%"}}>
+                  style={{ width: "100%" }}>
                   {userProfile.pronouns}
                 </textarea>
               </>
@@ -172,59 +171,56 @@ function Profile() {
   };
 
   return (
-    <>
-      <Header />
-      <Row>
-        <Col sm="3">
-          <h4>{userProfile.name}</h4>
-          <img
-            alt=""
-            className="img-fluid"
-            style={{ height: "auto", width: "100%" }}
-            src={userProfile.image_url || "https://images.unsplash.com/photo-1490059830487-2f86fddb2b4b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80"} />
-          {
-            currentUserProfile &&
-            <FontAwesomeIcon
-              icon={faPencilAlt}
-              className="text-success"
-              onClick={() => {
-                let newUrl = prompt("Please enter a link to your new profile picture.");
-                if (newUrl) {
-                  if (isValidUrl(newUrl)) {
-                    editProfile("image_url", newUrl) && getUserById();
-                  } else {
-                    alert("Whoops, that doesn't look like a valid link!");
-                  }
+    <Row>
+      <Col sm="3">
+        <h4>{userProfile.name}</h4>
+        <img
+          alt=""
+          className="img-fluid"
+          style={{ height: "auto", width: "100%" }}
+          src={userProfile.image_url || "https://images.unsplash.com/photo-1490059830487-2f86fddb2b4b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80"} />
+        {
+          currentUserProfile &&
+          <FontAwesomeIcon
+            icon={faPencilAlt}
+            className="text-success"
+            onClick={() => {
+              let newUrl = prompt("Please enter a link to your new profile picture.");
+              if (newUrl) {
+                if (isValidUrl(newUrl)) {
+                  editProfile("image_url", newUrl) && getUserById();
+                } else {
+                  alert("Whoops, that doesn't look like a valid link!");
                 }
-              }}
-            />
+              }
+            }}
+          />
+        }
+      </Col>
+      <Col sm="9" style={{ textAlign: "left" }}>
+        <Nav
+          justified
+          tabs
+          className="bg-light">
+          {
+            views.map((item, index) => {
+              return (
+                <NavItem
+                  key={"button-" + index}>
+                  <NavLink
+                    className={(view === item) ? "active" : ""}
+                    id={item}
+                    onClick={() => setView(item)}>
+                    <h5>{item}</h5>
+                  </NavLink>
+                </NavItem>
+              )
+            })
           }
-        </Col>
-        <Col sm="9" style={{ textAlign: "left" }}>
-          <Nav
-            justified
-            tabs
-            className="bg-light">
-            {
-              views.map((item, index) => {
-                return (
-                  <NavItem
-                    key={"button-" + index}>
-                    <NavLink
-                      className={(view === item) ? "active" : ""}
-                      id={item}
-                      onClick={() => setView(item)}>
-                      <h5>{item}</h5>
-                    </NavLink>
-                  </NavItem>
-                )
-              })
-            }
-          </Nav>
-          {switchView(view)}
-        </Col>
-      </Row >
-    </>
+        </Nav>
+        {switchView(view)}
+      </Col>
+    </Row >
   )
 }
 
