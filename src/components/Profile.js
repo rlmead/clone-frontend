@@ -7,12 +7,16 @@ import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import { faSave } from '@fortawesome/free-solid-svg-icons'
 
 function Profile() {
   const auth = useAuth();
 
   const [userProfile, setUserProfile] = useState({});
   const [view, setView] = useState("About");
+  const [editingBio, setEditingBio] = useState(false);
+  const [newBio, setNewBio] = useState("");
+  const [editingPronouns, setEditingPronouns] = useState(false);
   const views = ["About", "Ideas", "Collabs", "People"];
 
   const app = useApp();
@@ -40,7 +44,7 @@ function Profile() {
   }
 
   async function editProfile(key, value) {
-    let response = await axiosCall(
+    await axiosCall(
       "post",
       "/users/update",
       console.log,
@@ -50,7 +54,6 @@ function Profile() {
       },
       postHeaders
     );
-    return response;
   }
 
   useEffect(() => {
@@ -64,14 +67,37 @@ function Profile() {
           <>
             <h5>Bio</h5>
             {
-              currentUserProfile &&
-              <FontAwesomeIcon
-                icon={faPencilAlt}
-                className="text-success"
-                onClick={() => console.log("edit bio")}
-              />
+              currentUserProfile && !editingBio &&
+              <>
+                <div>
+                  <FontAwesomeIcon
+                    icon={faPencilAlt}
+                    className="text-success"
+                    onClick={() => setEditingBio(!editingBio)}
+                  />
+                </div>
+                <p>{userProfile.bio}</p>
+              </>
             }
-            <p>{userProfile.bio}</p>
+            {
+              currentUserProfile && editingBio &&
+              <>
+                <div>
+                  <FontAwesomeIcon
+                    icon={faSave}
+                    className="text-success"
+                    onClick={() => {
+                      editProfile("bio", newBio) && getUserById();
+                      setEditingBio(!editingBio);
+                      }}
+                  />
+                </div>
+                <textarea
+                  onChange={(e) => setNewBio(e.target.value)}>
+                  {userProfile.bio}
+                </textarea>
+              </>
+            }
             <h5>Pronouns</h5>
             <p>{userProfile.pronouns}</p>
           </>
