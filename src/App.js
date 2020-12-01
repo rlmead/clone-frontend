@@ -15,9 +15,9 @@ function App() {
     <div className="App">
       <AppProvider>
         <AuthProvider>
-          <Container>
-            <Router>
-              <Header />
+          <Router>
+            <Header />
+            <Container>
               <Switch>
                 <Route exact path="/">
                   <Public />
@@ -35,8 +35,8 @@ function App() {
                   <List type="users" />
                 </Route>
               </Switch>
-            </Router>
-          </Container>
+            </Container>
+          </Router>
         </AuthProvider>
       </AppProvider>
     </div>
