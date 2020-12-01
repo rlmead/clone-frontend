@@ -31,7 +31,7 @@ function List(props) {
   useEffect(() => {
     getList();
     initialLoad = true;
-  }, [initialLoad])
+  }, [initialLoad, props.type])
 
   let defaultImage;
   switch (props.type) {
