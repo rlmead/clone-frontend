@@ -8,6 +8,7 @@ import { AuthProvider } from "./utilities/AuthContext";
 import Header from "./components/Header";
 import Public from "./components/Public";
 import Profile from "./components/Profile";
+import Idea from "./components/Idea";
 import List from "./components/List";
 
 function App() {
@@ -28,11 +29,14 @@ function App() {
                 <Route path={`/users/:userProfileId`}>
                   <Profile />
                 </Route>
-                <Route path={`/ideas`}>
-                  <List type="ideas" />
-                </Route>
                 <Route path={`/users`}>
                   <List type="users" />
+                </Route>
+                <Route path={`/ideas/:ideaId`}>
+                  <Idea />
+                </Route>
+                <Route path={`/ideas`}>
+                  <List type="ideas" />
                 </Route>
               </Switch>
             </Container>
