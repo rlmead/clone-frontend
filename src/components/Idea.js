@@ -123,7 +123,6 @@ function Idea() {
                 <textarea
                   onChange={(e) => setNewDescription(e.target.value)}
                   onKeyPress={(e) => editDescriptionKeyPress(e)}
-                  maxLength={255}
                   style={{ width: "100%" }}>
                   {ideaData.description}
                 </textarea>

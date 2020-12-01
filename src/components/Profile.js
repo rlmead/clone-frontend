@@ -135,7 +135,6 @@ function Profile() {
                 <textarea
                   onChange={(e) => setNewBio(e.target.value)}
                   onKeyPress={(e) => editBioKeyPress(e)}
-                  maxLength={255}
                   style={{ width: "100%" }}>
                   {userProfile.bio}
                 </textarea>
