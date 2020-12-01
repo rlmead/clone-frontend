@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Nav, NavItem, NavLink } from "reactstrap";
-import { useParams } from "react-router-dom";
+import { Button, Row, Col, Nav, NavItem, NavLink } from "reactstrap";
+import { useHistory, useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
@@ -25,6 +25,8 @@ function Profile() {
 
   let { userProfileId } = useParams();
   let currentUserProfile = app.user.id == userProfileId;
+
+  let history = useHistory();
 
   let postHeaders = {
     "Accept": "application/json",
@@ -180,6 +182,14 @@ function Profile() {
               </>
             }
           </>
+        )
+      case "Ideas":
+        return (
+          <Button
+            className="btn-success"
+            onClick={() => history.push("/ideas/new")}>
+            Add a new idea
+          </Button>
         )
       default:
         return (

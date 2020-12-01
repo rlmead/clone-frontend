@@ -4,11 +4,12 @@ import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Container } from "reactstrap";
 import { AppProvider } from "./utilities/AppContext";
-import { AuthProvider } from "./utilities/AuthContext";
+import { useAuth, AuthProvider } from "./utilities/AuthContext";
 import Header from "./components/Header";
 import Public from "./components/Public";
 import Profile from "./components/Profile";
 import Idea from "./components/Idea";
+import IdeaForm from "./components/IdeaForm";
 import List from "./components/List";
 
 function App() {
@@ -31,6 +32,9 @@ function App() {
                 </Route>
                 <Route path={`/users`}>
                   <List type="users" />
+                </Route>
+                <Route path={`/ideas/new`}>
+                  <IdeaForm />
                 </Route>
                 <Route path={`/ideas/:ideaId`}>
                   <Idea />
