@@ -100,7 +100,7 @@ function useAuthProvider() {
       {
         grant_type: "password",
         client_id: "2",
-        client_secret: "xjpWA3p9CQPGOboPrBVyfGpNAowKoIgdPd5GUuH0",
+        client_secret: "D5qZT2jQKzRerNOUOKr5d02xvyGC9W0U0t7alGDy",
         password,
         username,
         scope: ""

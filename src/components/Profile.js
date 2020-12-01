@@ -13,6 +13,8 @@ function Profile() {
 
   const [userProfile, setUserProfile] = useState({});
   const [view, setView] = useState("About");
+  const [editingName, setEditingName] = useState(false);
+  const [newName, setNewName] = useState("");
   const [editingBio, setEditingBio] = useState(false);
   const [newBio, setNewBio] = useState("");
   const [editingPronouns, setEditingPronouns] = useState(false);
@@ -53,6 +55,14 @@ function Profile() {
       },
       postHeaders
     );
+  }
+
+  function editNameKeyPress(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      editProfile("name", newName) && getUserById();
+      setEditingName(!editingName);
+    }
   }
 
   function editBioKeyPress(e) {
@@ -181,7 +191,45 @@ function Profile() {
   return (
     <Row>
       <Col sm="3">
-        <h4>{userProfile.name}</h4>
+        {
+          !currentUserProfile &&
+          <h4>{userProfile.name}</h4>
+        }
+        {
+          currentUserProfile && !editingName &&
+          <>
+            <div>
+              <FontAwesomeIcon
+                icon={faPencilAlt}
+                className="text-success"
+                onClick={() => setEditingName(!editingName)}
+              />
+            </div>
+            <h4>{userProfile.name}</h4>
+          </>
+        }
+        {
+          currentUserProfile && editingName &&
+          <>
+            <div>
+              <FontAwesomeIcon
+                icon={faSave}
+                className="text-success"
+                onClick={() => {
+                  editProfile("name", newName) && getUserById();
+                  setEditingName(!editingName);
+                }}
+              />
+            </div>
+            <textarea
+              onChange={(e) => setNewName(e.target.value)}
+              onKeyPress={(e) => editNameKeyPress(e)}
+              maxLength={64}
+              style={{ width: "100%" }}>
+              {userProfile.name}
+            </textarea>
+          </>
+        }
         <img
           alt=""
           className="img-fluid"
