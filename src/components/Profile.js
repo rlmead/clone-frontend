@@ -91,6 +91,10 @@ function Profile() {
           <>
             <h5>Bio</h5>
             {
+              !currentUserProfile &&
+              <p>{userProfile.bio}</p>
+            }
+            {
               currentUserProfile && !editingBio &&
               <>
                 <div>
@@ -126,6 +130,10 @@ function Profile() {
               </>
             }
             <h5>Pronouns</h5>
+            {
+              !currentUserProfile &&
+              <p>{userProfile.pronouns}</p>
+            }
             {
               currentUserProfile && !editingPronouns &&
               <>
