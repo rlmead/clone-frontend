@@ -1,23 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { useHistory } from "react-router-dom";
+import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
 
 function IdeaForm() {
   const auth = useAuth();
+  const app = useApp();
+
+  let history = useHistory();
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [id, setId] = useState("");
+
+  function getIdeaId(input) {
+    setId(input.data.id);
+  }
 
   async function createIdea() {
     let response = await axiosCall(
       "post",
       "/ideas/create",
-      console.log,
+      getIdeaId,
       {
         name,
         description,
-        status: "open"
+        status: "open",
+        user: app.user.id
       },
       {
         "Accept": "application/json",
@@ -28,6 +39,11 @@ function IdeaForm() {
     );
     return response;
   }
+
+  useEffect(() => {
+    id && history.push(`/ideas/${id}`);
+  }, [id])
+
 
   return (
     <>

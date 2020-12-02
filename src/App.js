@@ -4,7 +4,7 @@ import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Container } from "reactstrap";
 import { AppProvider } from "./utilities/AppContext";
-import { useAuth, AuthProvider } from "./utilities/AuthContext";
+import { AuthProvider } from "./utilities/AuthContext";
 import Header from "./components/Header";
 import Public from "./components/Public";
 import Profile from "./components/Profile";
