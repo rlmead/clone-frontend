@@ -5,16 +5,21 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Container } from "reactstrap";
 import { AppProvider } from "./utilities/AppContext";
 import { AuthProvider } from "./utilities/AuthContext";
+import Header from "./components/Header";
 import Public from "./components/Public";
 import Profile from "./components/Profile";
+import Idea from "./components/Idea";
+import IdeaForm from "./components/IdeaForm";
+import List from "./components/List";
 
 function App() {
   return (
     <div className="App">
       <AppProvider>
         <AuthProvider>
-          <Container>
-            <Router>
+          <Router>
+            <Header />
+            <Container>
               <Switch>
                 <Route exact path="/">
                   <Public />
@@ -25,9 +30,21 @@ function App() {
                 <Route path={`/users/:userProfileId`}>
                   <Profile />
                 </Route>
+                <Route path={`/users`}>
+                  <List type="users" />
+                </Route>
+                <Route path={`/ideas/new`}>
+                  <IdeaForm />
+                </Route>
+                <Route path={`/ideas/:ideaId`}>
+                  <Idea />
+                </Route>
+                <Route path={`/ideas`}>
+                  <List type="ideas" />
+                </Route>
               </Switch>
-            </Router>
-          </Container>
+            </Container>
+          </Router>
         </AuthProvider>
       </AppProvider>
     </div>

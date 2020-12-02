@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Button, Row, Col, Nav, NavItem, NavLink } from "reactstrap";
-import { useHistory, useParams } from "react-router-dom";
+import { Row, Col, Nav, NavItem, NavLink } from "reactstrap";
+import { useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
@@ -8,25 +8,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { faSave } from '@fortawesome/free-solid-svg-icons'
 
-function Profile() {
+function Idea() {
   const auth = useAuth();
 
-  const [userProfile, setUserProfile] = useState({});
+  const [ideaData, setIdeaData] = useState({});
   const [view, setView] = useState("About");
   const [editingName, setEditingName] = useState(false);
   const [newName, setNewName] = useState("");
-  const [editingBio, setEditingBio] = useState(false);
-  const [newBio, setNewBio] = useState("");
-  const [editingPronouns, setEditingPronouns] = useState(false);
-  const [newPronouns, setNewPronouns] = useState("");
-  const views = ["About", "Ideas", "Collabs", "People"];
+  const [editingDescription, setEditingDescription] = useState(false);
+  const [newDescription, setNewDescription] = useState("");
+  const views = ["About", "People", "Skills", "Discussion"];
 
   const app = useApp();
 
-  let { userProfileId } = useParams();
-  let currentUserProfile = app.user.id == userProfileId;
-
-  let history = useHistory();
+  let { ideaId } = useParams();
+  let currentUserOwnsIdea = (ideaData.users && ideaData.users.map(x => x.id).includes(app.user.id));
 
   let postHeaders = {
     "Accept": "application/json",
@@ -35,24 +31,24 @@ function Profile() {
     "Authorization": `Bearer ${auth.token}`
   };
 
-  async function getUserById() {
+  async function getIdeaById() {
     let response = await axiosCall(
       "get",
-      `/users/${userProfileId}`,
-      setUserProfile,
+      `/ideas/${ideaId}`,
+      setIdeaData,
       {},
       postHeaders
     );
     return response;
   }
 
-  async function editProfile(key, value) {
+  async function editData(key, value) {
     await axiosCall(
       "post",
-      "/users/update",
+      "/ideas/update",
       console.log,
       {
-        id: app.user.id,
+        id: ideaId,
         [key]: value
       },
       postHeaders
@@ -62,24 +58,16 @@ function Profile() {
   function editNameKeyPress(e) {
     if (e.key === "Enter") {
       e.preventDefault();
-      editProfile("name", newName) && getUserById();
+      editData("name", newName) && getIdeaById();
       setEditingName(!editingName);
     }
   }
 
-  function editBioKeyPress(e) {
+  function editDescriptionKeyPress(e) {
     if (e.key === "Enter") {
       e.preventDefault();
-      editProfile("bio", newBio) && getUserById();
-      setEditingBio(!editingBio);
-    }
-  }
-
-  function editPronounsKeyPress(e) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      editProfile("pronouns", newPronouns) && getUserById();
-      setEditingPronouns(!editingPronouns);
+      editData("description", newDescription) && getIdeaById();
+      setEditingDescription(!editingDescription);
     }
   }
 
@@ -93,102 +81,54 @@ function Profile() {
   }
 
   useEffect(() => {
-    getUserById();
-  }, [userProfileId])
+    getIdeaById();
+  }, [ideaId])
 
   function switchView(view) {
     switch (view) {
       case "About":
         return (
           <>
-            <h5>Bio</h5>
+            <h5>Description</h5>
             {
-              !currentUserProfile &&
-              <p>{userProfile.bio}</p>
+              !currentUserOwnsIdea &&
+              <p>{ideaData.description}</p>
             }
             {
-              currentUserProfile && !editingBio &&
+              currentUserOwnsIdea && !editingDescription &&
               <>
                 <div>
                   <FontAwesomeIcon
                     icon={faPencilAlt}
                     className="text-success"
-                    onClick={() => setEditingBio(!editingBio)}
+                    onClick={() => setEditingDescription(!editingDescription)}
                   />
                 </div>
-                <p>{userProfile.bio}</p>
+                <p>{ideaData.description}</p>
               </>
             }
             {
-              currentUserProfile && editingBio &&
+              currentUserOwnsIdea && editingDescription &&
               <>
                 <div>
                   <FontAwesomeIcon
                     icon={faSave}
                     className="text-success"
                     onClick={() => {
-                      editProfile("bio", newBio) && getUserById();
-                      setEditingBio(!editingBio);
+                      editData("description", newDescription) && getIdeaById();
+                      setEditingDescription(!editingDescription);
                     }}
                   />
                 </div>
                 <textarea
-                  onChange={(e) => setNewBio(e.target.value)}
-                  onKeyPress={(e) => editBioKeyPress(e)}
+                  onChange={(e) => setNewDescription(e.target.value)}
+                  onKeyPress={(e) => editDescriptionKeyPress(e)}
                   style={{ width: "100%" }}>
-                  {userProfile.bio}
-                </textarea>
-              </>
-            }
-            <h5>Pronouns</h5>
-            {
-              !currentUserProfile &&
-              <p>{userProfile.pronouns}</p>
-            }
-            {
-              currentUserProfile && !editingPronouns &&
-              <>
-                <div>
-                  <FontAwesomeIcon
-                    icon={faPencilAlt}
-                    className="text-success"
-                    onClick={() => setEditingPronouns(!editingPronouns)}
-                  />
-                </div>
-                <p>{userProfile.pronouns}</p>
-              </>
-            }
-            {
-              currentUserProfile && editingPronouns &&
-              <>
-                <div>
-                  <FontAwesomeIcon
-                    icon={faSave}
-                    className="text-success"
-                    onClick={() => {
-                      editProfile("pronouns", newPronouns) && getUserById();
-                      setEditingPronouns(!editingPronouns);
-                    }}
-                  />
-                </div>
-                <textarea
-                  onChange={(e) => setNewPronouns(e.target.value)}
-                  onKeyPress={(e) => editPronounsKeyPress(e)}
-                  maxLength={64}
-                  style={{ width: "100%" }}>
-                  {userProfile.pronouns}
+                  {ideaData.description}
                 </textarea>
               </>
             }
           </>
-        )
-      case "Ideas":
-        return (
-          <Button
-            className="btn-success"
-            onClick={() => history.push("/ideas/new")}>
-            Add a new idea
-          </Button>
         )
       default:
         return (
@@ -201,11 +141,11 @@ function Profile() {
     <Row>
       <Col sm="3">
         {
-          !currentUserProfile &&
-          <h4>{userProfile.name}</h4>
+          !currentUserOwnsIdea &&
+          <h4>{ideaData.name}</h4>
         }
         {
-          currentUserProfile && !editingName &&
+          currentUserOwnsIdea && !editingName &&
           <>
             <div>
               <FontAwesomeIcon
@@ -214,18 +154,18 @@ function Profile() {
                 onClick={() => setEditingName(!editingName)}
               />
             </div>
-            <h4>{userProfile.name}</h4>
+          <h4>{ideaData.name}</h4>
           </>
         }
         {
-          currentUserProfile && editingName &&
+          currentUserOwnsIdea && editingName &&
           <>
             <div>
               <FontAwesomeIcon
                 icon={faSave}
                 className="text-success"
                 onClick={() => {
-                  editProfile("name", newName) && getUserById();
+                  editData("name", newName) && getIdeaById();
                   setEditingName(!editingName);
                 }}
               />
@@ -233,9 +173,9 @@ function Profile() {
             <textarea
               onChange={(e) => setNewName(e.target.value)}
               onKeyPress={(e) => editNameKeyPress(e)}
-              maxLength={64}
+              maxLength={255}
               style={{ width: "100%" }}>
-              {userProfile.name}
+              {ideaData.name}
             </textarea>
           </>
         }
@@ -243,17 +183,17 @@ function Profile() {
           alt=""
           className="img-fluid"
           style={{ height: "auto", width: "100%" }}
-          src={userProfile.image_url || "https://images.unsplash.com/photo-1490059830487-2f86fddb2b4b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80"} />
+          src={ideaData.image_url || "https://images.unsplash.com/photo-1529310399831-ed472b81d589?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=634&q=80"} />
         {
-          currentUserProfile &&
+          currentUserOwnsIdea &&
           <FontAwesomeIcon
             icon={faPencilAlt}
             className="text-success"
             onClick={() => {
-              let newUrl = prompt("Please enter a link to your new profile picture.");
+              let newUrl = prompt("Please enter a link to your new picture.");
               if (newUrl) {
                 if (isValidUrl(newUrl)) {
-                  editProfile("image_url", newUrl) && getUserById();
+                  editData("image_url", newUrl) && getIdeaById();
                 } else {
                   alert("Whoops, that doesn't look like a valid link!");
                 }
@@ -289,4 +229,4 @@ function Profile() {
   )
 }
 
-export default Profile;
+export default Idea;

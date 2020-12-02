@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Header from "../components/Header";
 import { Jumbotron, Row, Col, Input, Button, Card, Label } from "reactstrap";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
@@ -199,17 +198,14 @@ function Public() {
   };
 
   return (
-    <>
-      <Header />
-      <Jumbotron
-        style={{ backgroundImage: "url(https://images.unsplash.com/photo-1545494097-1545e22ee878?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxzZWFyY2h8OHx8Z2xpdHRlcnxlbnwwfHwwfA%3D%3D&auto=format&fit=crop&w=800&q=60)", backgroundSize: "100%", opacity: "0.8" }}>
-        <Row>
-          <Col sm={{ size: 10, offset: 1 }}>
-            {switchView(view)}
-          </Col>
-        </Row>
-      </Jumbotron>
-    </>
+    <Jumbotron
+      style={{ backgroundImage: "url(https://images.unsplash.com/photo-1545494097-1545e22ee878?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxzZWFyY2h8OHx8Z2xpdHRlcnxlbnwwfHwwfA%3D%3D&auto=format&fit=crop&w=800&q=60)", backgroundSize: "100%", opacity: "0.8" }}>
+      <Row>
+        <Col sm={{ size: 10, offset: 1 }}>
+          {switchView(view)}
+        </Col>
+      </Row>
+    </Jumbotron>
   )
 }
 

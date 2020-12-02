@@ -100,7 +100,7 @@ function useAuthProvider() {
       {
         grant_type: "password",
         client_id: "2",
-        client_secret: "W4hSv8BMLOh43T6gzLNAlqpK5p70bXNF7Zqw2jL1",
+        client_secret: "43bEF4H1IPEDZGzHwJj6frZSdyDon6nw7QOsNqko",
         password,
         username,
         scope: ""
@@ -109,7 +109,6 @@ function useAuthProvider() {
     return response;
   }
 
-  // TODO: use /oauth/personal-access-tokens/{token_id} delete method to delete token on back end
   async function logOut() {
     setToken("");
     setUser({});
