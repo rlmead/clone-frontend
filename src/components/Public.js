@@ -150,21 +150,7 @@ function Public() {
             }
           </Card>
         );
-      case "about":
-        return (
-          <Card style={{ textAlign: "left" }}>
-            <h3>About</h3>
-            <p>The Idea Network is a social network that allows people to share their creative dreams, and find the collaborators they need to make their dreams happen.</p>
-            <p>This website is being created by <a href="https://github.com/rlmead">Becky</a>.</p>
-          </Card>
-        );
-      case "logout":
-        return (
-          <Card>
-            <h3>Goodbye!</h3>
-          </Card>
-        );
-      default:
+      case "login":
         return (
           <Card
             onKeyPress={logInKeyPress}>
@@ -192,6 +178,20 @@ function Public() {
               disabled={email.length === 0 || password.length === 0}>
               Log in
             </Button>
+          </Card>
+        );
+      case "logout":
+        return (
+          <Card>
+            <h3>Goodbye!</h3>
+          </Card>
+        );
+      default:
+        return (
+          <Card style={{ textAlign: "left" }}>
+            <h3>About</h3>
+            <p>The Idea Network allows people to share their creative dreams, and find the collaborators they need to make their dreams happen.</p>
+            <p>This website is being created by <a href="https://github.com/rlmead">Becky</a>.</p>
           </Card>
         );
     }
