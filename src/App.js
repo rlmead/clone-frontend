@@ -31,7 +31,7 @@ function App() {
                   <Profile />
                 </Route>
                 <Route path={`/users`}>
-                  <List type="users" />
+                  <List type="users" route="users" />
                 </Route>
                 <Route path={`/ideas/new`}>
                   <IdeaForm />
@@ -40,7 +40,7 @@ function App() {
                   <Idea />
                 </Route>
                 <Route path={`/ideas`}>
-                  <List type="ideas" />
+                  <List type="ideas" route="ideas" />
                 </Route>
               </Switch>
             </Container>
