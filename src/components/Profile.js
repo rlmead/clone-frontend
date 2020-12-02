@@ -4,6 +4,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
+import List from "./List";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { faSave } from '@fortawesome/free-solid-svg-icons'
@@ -184,11 +185,14 @@ function Profile() {
         )
       case "Ideas":
         return (
-          <Button
-            className="btn-success"
-            onClick={() => history.push("/ideas/new")}>
-            Add a new idea
-          </Button>
+          <>
+            <Button
+              className="btn-success"
+              onClick={() => history.push("/ideas/new")}>
+              Add a new idea
+            </Button>
+            <List type="ideas" route="/ideas/index_by_user" data={{ user: userProfileId }} />
+          </>
         )
       default:
         return (

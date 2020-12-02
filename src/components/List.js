@@ -11,13 +11,12 @@ function List(props) {
 
   let initialLoad = false;
 
-  // do axios call to get list data
   async function getList() {
     let response = await axiosCall(
-      "get",
-      `/${props.type}`,
+      props.route === "/ideas/index_by_user" ? "post" : "get",
+      `/${props.route}`,
       setListData,
-      {},
+      props.data || {},
       {
         "Accept": "application/json",
         "Content-Type": "application/json; charset=utf-8",
