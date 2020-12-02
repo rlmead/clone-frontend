@@ -52,6 +52,7 @@ function List(props) {
           listData.map((item, index) => {
             return (
               <ListGroupItem
+                className={item.status === "closed" ? "bg-secondary" : ""}
                 style={{ cursor: "pointer" }}
                 onClick={() => history.push(`/${props.type}/${item.id}`)}
                 id={`listItem${index}`}>

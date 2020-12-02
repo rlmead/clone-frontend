@@ -9,7 +9,8 @@ import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { faSave } from '@fortawesome/free-solid-svg-icons'
 
 function Idea() {
-  const auth = useAuth();
+  const { user } = useApp();
+  const { token } = useAuth();
 
   const [ideaData, setIdeaData] = useState({});
   const [view, setView] = useState("About");
@@ -19,16 +20,15 @@ function Idea() {
   const [newDescription, setNewDescription] = useState("");
   const views = ["About", "People", "Skills", "Discussion"];
 
-  const app = useApp();
 
   let { ideaId } = useParams();
-  let currentUserOwnsIdea = (ideaData.users && ideaData.users.map(x => x.id).includes(app.user.id));
+  let currentUserOwnsIdea = (ideaData.users && ideaData.users.map(x => x.id).includes(user.id));
 
   let postHeaders = {
     "Accept": "application/json",
     "Content-Type": "application/json; charset=utf-8",
     "Access-Control-Allow-Origin": "*",
-    "Authorization": `Bearer ${auth.token}`
+    "Authorization": `Bearer ${token}`
   };
 
   async function getIdeaById() {

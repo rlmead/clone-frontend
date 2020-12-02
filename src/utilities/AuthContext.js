@@ -15,7 +15,6 @@ export const useAuth = () => {
   return useContext(authContext);
 };
 
-// prepare initial states to be used throughout the app
 function useAuthProvider() {
   const {user, setUser, email} = useApp();
 
