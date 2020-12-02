@@ -11,6 +11,17 @@ function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
+  let navItems = token
+    ? [
+      { to: "/ideas", text: "Browse ideas" },
+      { to: `/users/${user.id}`, text: `${user.name}'s profile` },
+      { to: "/public/logout", text: "Log out", onClick: () => logOut() }
+    ]
+    : [
+      { to: "/ideas", text: "Browse ideas" },
+      { to: "/public/signup", text: "Sign up" },
+      { to: "/public/login", text: "Log in" }
+    ]
 
   return (
     <Navbar
@@ -29,52 +40,19 @@ function Header() {
           isOpen={isOpen}
           navbar >
           <Nav className="mr-auto" navbar>
-            <NavItem>
-              <Link to="/public/about" className="nav-link">
-                About
-            </Link>
-            </NavItem>
-
             {
-              token ? (
-                <>
+              navItems.map((item, index) => {
+                return(
                   <NavItem>
                     <Link
-                      to="/ideas"
-                      className="nav-link">
-                      Browse ideas
-                  </Link>
-                  </NavItem>
-                  <NavItem>
-                    <Link
-                      to={`/users/${user.id}`}
-                      className="nav-link">
-                      {`${user.name}'s profile`}
+                      className="nav-link"
+                      to={item.to}
+                      onClick={item.onClick || ""}>
+                      {item.text}
                     </Link>
                   </NavItem>
-                  <NavItem>
-                    <Link
-                      to="/public/logout"
-                      onClick={() => logOut()}
-                      className="nav-link">
-                      Log out
-                </Link>
-                  </NavItem>
-                </>
-              ) : (
-                  <>
-                    <NavItem>
-                      <Link to="/public/login" className="nav-link">
-                        Log in
-                    </Link>
-                    </NavItem>
-                    <NavItem>
-                      <Link to="/public/signup" className="nav-link">
-                        Sign up
-                    </Link>
-                    </NavItem>
-                  </>
                 )
+              })
             }
           </Nav>
         </Collapse>
