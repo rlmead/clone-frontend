@@ -5,7 +5,7 @@ import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 
 function Public() {
-  const app = useApp();
+  const { user, setEmail } = useApp();
   const auth = useAuth();
 
   let history = useHistory();
@@ -13,12 +13,12 @@ function Public() {
   let { view } = useParams();
 
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setLocalEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConf, setPasswordConf] = useState("");
 
   useEffect(() => {
-    auth.justLoggedIn && history.push(`/users/${app.user.id}`);
+    auth.justLoggedIn && history.push(`/users/${user.id}`);
     auth.setJustLoggedIn(false);
   }, [auth.justLoggedIn])
 
@@ -34,7 +34,7 @@ function Public() {
     } else if (password.length < 8) {
       alert("Please use a password that's at least 8 characters long.");
     } else {
-      app.setEmail(email);
+      setEmail(email);
       let error = await auth.signUp(name, email, password);
       if (error) {
         switch (error.response.status) {
@@ -65,7 +65,7 @@ function Public() {
   }
 
   async function logIn() {
-    app.setEmail(email);
+    setEmail(email);
     let error = await auth.logIn(email, password);
     if (error) {
       alert("Whoops, those credentials didn't work. Please try again, or sign up instead.");
@@ -113,7 +113,7 @@ function Public() {
                       type="text"
                       placeholder="Email address"
                       maxLength={64}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => setLocalEmail(e.target.value)}
                     />
                     <Input
                       type="password"
@@ -173,7 +173,7 @@ function Public() {
               type="text"
               placeholder="Email address"
               maxLength={64}
-              onChange={(e) => setEmail(e.target.value)} />
+              onChange={(e) => setLocalEmail(e.target.value)} />
             <Input
               type="password"
               placeholder="Password"

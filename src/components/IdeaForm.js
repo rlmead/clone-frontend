@@ -6,8 +6,8 @@ import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
 
 function IdeaForm() {
-  const auth = useAuth();
-  const app = useApp();
+  const { user } = useApp();
+  const { token } = useAuth();
 
   let history = useHistory();
 
@@ -28,13 +28,13 @@ function IdeaForm() {
         name,
         description,
         status: "open",
-        user: app.user.id
+        user: user.id
       },
       {
         "Accept": "application/json",
         "Content-Type": "application/json; charset=utf-8",
         "Access-Control-Allow-Origin": "*",
-        "Authorization": `Bearer ${auth.token}`
+        "Authorization": `Bearer ${token}`
       }
     );
     return response;

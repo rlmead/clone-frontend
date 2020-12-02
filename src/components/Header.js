@@ -5,7 +5,7 @@ import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 
 function Header() {
-  const app = useApp();
+  const { user } = useApp();
   const { token, logOut } = useAuth();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -47,9 +47,9 @@ function Header() {
                   </NavItem>
                   <NavItem>
                     <Link
-                      to={`/users/${app.user.id}`}
+                      to={`/users/${user.id}`}
                       className="nav-link">
-                      {`${app.user.name}'s profile`}
+                      {`${user.name}'s profile`}
                     </Link>
                   </NavItem>
                   <NavItem>

@@ -10,7 +10,7 @@ import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { faSave } from '@fortawesome/free-solid-svg-icons'
 
 function Profile() {
-  const auth = useAuth();
+  const { token } = useAuth();
 
   const [userProfile, setUserProfile] = useState({});
   const [view, setView] = useState("About");
@@ -33,7 +33,7 @@ function Profile() {
     "Accept": "application/json",
     "Content-Type": "application/json; charset=utf-8",
     "Access-Control-Allow-Origin": "*",
-    "Authorization": `Bearer ${auth.token}`
+    "Authorization": `Bearer ${token}`
   };
 
   async function getUserById() {
