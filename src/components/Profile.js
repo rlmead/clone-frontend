@@ -204,45 +204,6 @@ function Profile() {
   return (
     <Row>
       <Col sm="3">
-        {
-          !currentUserProfile &&
-          <h4>{userProfile.name}</h4>
-        }
-        {
-          currentUserProfile && !editingName &&
-          <>
-            <div>
-              <FontAwesomeIcon
-                icon={faPencilAlt}
-                className="text-success"
-                onClick={() => setEditingName(!editingName)}
-              />
-            </div>
-            <h4>{userProfile.name}</h4>
-          </>
-        }
-        {
-          currentUserProfile && editingName &&
-          <>
-            <div>
-              <FontAwesomeIcon
-                icon={faSave}
-                className="text-success"
-                onClick={() => {
-                  editProfile("name", newName) && getUserById();
-                  setEditingName(!editingName);
-                }}
-              />
-            </div>
-            <textarea
-              onChange={(e) => setNewName(e.target.value)}
-              onKeyPress={(e) => editNameKeyPress(e)}
-              maxLength={64}
-              style={{ width: "100%" }}>
-              {userProfile.name}
-            </textarea>
-          </>
-        }
         <img
           alt=""
           className="img-fluid"
@@ -264,6 +225,45 @@ function Profile() {
               }
             }}
           />
+        }
+        {
+          !currentUserProfile &&
+          <h4>{userProfile.name}</h4>
+        }
+        {
+          currentUserProfile && !editingName &&
+          <>
+            <h4>{userProfile.name}</h4>
+            <div>
+              <FontAwesomeIcon
+                icon={faPencilAlt}
+                className="text-success"
+                onClick={() => setEditingName(!editingName)}
+              />
+            </div>
+          </>
+        }
+        {
+          currentUserProfile && editingName &&
+          <>
+            <textarea
+              onChange={(e) => setNewName(e.target.value)}
+              onKeyPress={(e) => editNameKeyPress(e)}
+              maxLength={64}
+              style={{ width: "100%" }}>
+              {userProfile.name}
+            </textarea>
+            <div>
+              <FontAwesomeIcon
+                icon={faSave}
+                className="text-success"
+                onClick={() => {
+                  editProfile("name", newName) && getUserById();
+                  setEditingName(!editingName);
+                }}
+              />
+            </div>
+          </>
         }
       </Col>
       <Col sm="9" style={{ textAlign: "left" }}>

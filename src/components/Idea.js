@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Nav, NavItem, NavLink } from "reactstrap";
+import { Button, Row, Col, Nav, NavItem, NavLink } from "reactstrap";
 import { useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
+import Editable from "./Editable";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { faSave } from '@fortawesome/free-solid-svg-icons'
@@ -11,6 +12,7 @@ import { faSave } from '@fortawesome/free-solid-svg-icons'
 function Idea() {
   const { user } = useApp();
   const { token } = useAuth();
+  let { ideaId } = useParams();
 
   const [ideaData, setIdeaData] = useState({});
   const [view, setView] = useState("About");
@@ -20,9 +22,11 @@ function Idea() {
   const [newDescription, setNewDescription] = useState("");
   const views = ["About", "People", "Skills", "Discussion"];
 
-
-  let { ideaId } = useParams();
   let currentUserOwnsIdea = (ideaData.users && ideaData.users.map(x => x.id).includes(user.id));
+
+  let editables = [
+    { table: "ideas", column: "name", element: "h4" }
+  ]
 
   let postHeaders = {
     "Accept": "application/json",
@@ -140,50 +144,15 @@ function Idea() {
   return (
     <Row>
       <Col sm="3">
-        {
-          !currentUserOwnsIdea &&
-          <h4>{ideaData.name}</h4>
-        }
-        {
-          currentUserOwnsIdea && !editingName &&
-          <>
-            <div>
-              <FontAwesomeIcon
-                icon={faPencilAlt}
-                className="text-success"
-                onClick={() => setEditingName(!editingName)}
-              />
-            </div>
-          <h4>{ideaData.name}</h4>
-          </>
-        }
-        {
-          currentUserOwnsIdea && editingName &&
-          <>
-            <div>
-              <FontAwesomeIcon
-                icon={faSave}
-                className="text-success"
-                onClick={() => {
-                  editData("name", newName) && getIdeaById();
-                  setEditingName(!editingName);
-                }}
-              />
-            </div>
-            <textarea
-              onChange={(e) => setNewName(e.target.value)}
-              onKeyPress={(e) => editNameKeyPress(e)}
-              maxLength={255}
-              style={{ width: "100%" }}>
-              {ideaData.name}
-            </textarea>
-          </>
-        }
         <img
           alt=""
           className="img-fluid"
           style={{ height: "auto", width: "100%" }}
           src={ideaData.image_url || "https://images.unsplash.com/photo-1529310399831-ed472b81d589?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=634&q=80"} />
+        {
+          !currentUserOwnsIdea &&
+          <Button className="btn-success">Collaborate</Button>
+        }
         {
           currentUserOwnsIdea &&
           <FontAwesomeIcon
@@ -200,6 +169,45 @@ function Idea() {
               }
             }}
           />
+        }
+        {
+          !currentUserOwnsIdea &&
+          <h4>{ideaData.name}</h4>
+        }
+        {
+          currentUserOwnsIdea && !editingName &&
+          <>
+            <h4>{ideaData.name}</h4>
+            <div>
+              <FontAwesomeIcon
+                icon={faPencilAlt}
+                className="text-success"
+                onClick={() => setEditingName(!editingName)}
+              />
+            </div>
+          </>
+        }
+        {
+          currentUserOwnsIdea && editingName &&
+          <>
+            <textarea
+              onChange={(e) => setNewName(e.target.value)}
+              onKeyPress={(e) => editNameKeyPress(e)}
+              maxLength={255}
+              style={{ width: "100%" }}>
+              {ideaData.name}
+            </textarea>
+            <div>
+              <FontAwesomeIcon
+                icon={faSave}
+                className="text-success"
+                onClick={() => {
+                  editData("name", newName) && getIdeaById();
+                  setEditingName(!editingName);
+                }}
+              />
+            </div>
+          </>
         }
       </Col>
       <Col sm="9" style={{ textAlign: "left" }}>
