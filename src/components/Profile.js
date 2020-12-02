@@ -187,7 +187,7 @@ function Profile() {
         return (
           <>
             <Button
-              className="btn-success"
+              className="btn-success text-dark"
               onClick={() => history.push("/ideas/new")}>
               Add a new idea
             </Button>
