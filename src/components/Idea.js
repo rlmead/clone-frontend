@@ -15,6 +15,7 @@ function Idea() {
   let { ideaId } = useParams();
 
   const [ideaData, setIdeaData] = useState({});
+  const [ideaUsers, setIdeaUsers] = useState({});
   const [view, setView] = useState("About");
   const [editingName, setEditingName] = useState(false);
   const [newName, setNewName] = useState("");
@@ -24,7 +25,17 @@ function Idea() {
   const [newStatus, setNewStatus] = useState("");
   const views = ["About", "People", "Skills", "Discussion"];
 
-  let currentUserOwnsIdea = (ideaData.users && ideaData.users.map(x => x.id).includes(user.id));
+  let currentUserOwnsIdea = (
+    Object.keys(ideaUsers).includes(user.id.toString())
+    && ideaUsers[user.id] === "creator");
+
+  let currentUserIsCollaborator = (
+    Object.keys(ideaUsers).includes(user.id.toString())
+    && ideaUsers[user.id] === "collaborator");
+
+  let collabRequested = (
+    Object.keys(ideaUsers).includes(user.id.toString())
+    && ideaUsers[user.id] === "request");
 
   let editables = [
     { table: "ideas", column: "name", element: "h4" }
@@ -48,6 +59,27 @@ function Idea() {
     return response;
   }
 
+  function parseUserData(input) {
+    let output = {};
+    for (let i = 0; i < input.length; i++) {
+      output[input[i].pivot.user_id] = input[i].pivot.user_role;
+    }
+    setIdeaUsers(output);
+  }
+
+  async function getIdeaUsers() {
+    let response = await axiosCall(
+      "post",
+      "/ideas/get_users",
+      parseUserData,
+      {
+        id: ideaId
+      },
+      postHeaders
+    );
+    return response;
+  }
+
   async function editData(key, value) {
     await axiosCall(
       "post",
@@ -56,6 +88,20 @@ function Idea() {
       {
         id: ideaId,
         [key]: value
+      },
+      postHeaders
+    );
+  }
+
+  async function requestCollab() {
+    await axiosCall(
+      "post",
+      "/request_collab",
+      console.log,
+      {
+        idea_id: ideaId,
+        user_id: user.id,
+        user_role: "request"
       },
       postHeaders
     );
@@ -96,6 +142,7 @@ function Idea() {
 
   useEffect(() => {
     getIdeaById();
+    getIdeaUsers();
   }, [ideaId])
 
   function switchView(view) {
@@ -199,10 +246,6 @@ function Idea() {
           style={{ height: "auto", width: "100%" }}
           src={ideaData.image_url || "https://images.unsplash.com/photo-1529310399831-ed472b81d589?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=634&q=80"} />
         {
-          !currentUserOwnsIdea &&
-          <Button className="btn-success">Collaborate</Button>
-        }
-        {
           currentUserOwnsIdea &&
           <FontAwesomeIcon
             icon={faPencilAlt}
@@ -257,6 +300,22 @@ function Idea() {
               />
             </div>
           </>
+        }
+        {
+          !currentUserOwnsIdea
+          && !currentUserIsCollaborator
+          && ideaData.status === "open"
+          &&
+          <Button
+            className="btn-success"
+            onClick={() => requestCollab()}
+            disabled={collabRequested}>
+            {
+              collabRequested
+              ? "Collaboration Requested"
+              : "Request to Collaborate"
+            }
+          </Button>
         }
       </Col>
       <Col sm="9" style={{ textAlign: "left" }}>
