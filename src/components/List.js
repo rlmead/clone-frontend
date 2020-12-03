@@ -66,7 +66,7 @@ function List(props) {
                 className={item.status === "closed" ? "bg-secondary" : ""}
                 style={{ cursor: "pointer" }}
                 onClick={() => history.push(`/${props.type}/${item.id}`)}
-                id={`listItem${index}`}>
+                key={`listItem-${index}`}>
                 <Row>
                   <Col sm="2">
                     <img
