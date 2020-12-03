@@ -49,16 +49,16 @@ function Profile() {
 
   async function editProfile(key, value) {
     value != "" &&
-    await axiosCall(
-      "post",
-      "/users/update",
-      console.log,
-      {
-        id: app.user.id,
-        [key]: value
-      },
-      postHeaders
-    );
+      await axiosCall(
+        "post",
+        "/users/update",
+        console.log,
+        {
+          id: app.user.id,
+          [key]: value
+        },
+        postHeaders
+      );
   }
 
   function editNameKeyPress(e) {
@@ -192,8 +192,12 @@ function Profile() {
               onClick={() => history.push("/ideas/new")}>
               Add a new idea
             </Button>
-            <List type="ideas" route="/ideas/index_by_user" data={{ user: userProfileId }} />
+            <List type="ideas" route="/users/get_creations" data={{ id: userProfileId }} />
           </>
+        )
+      case "Collabs":
+        return (
+          <List type="ideas" route="/users/get_collaborations" data={{ id: userProfileId }} />
         )
       default:
         return (
