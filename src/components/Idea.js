@@ -26,6 +26,7 @@ function Idea() {
   const [newDescription, setNewDescription] = useState("");
   const [editingStatus, setEditingStatus] = useState(false);
   const [newStatus, setNewStatus] = useState("");
+  const [relationship, setRelationship] = useState("");
   const views = ["About", "People", "Discussion"];
 
   let currentUserOwnsIdea = (
@@ -74,7 +75,7 @@ function Idea() {
         name: input[i].name
       });
     }
-    output.sort((a,b) => a.role < b.role ? 1 : -1);
+    output.sort((a, b) => a.role < b.role ? 1 : -1);
     setIdeaUsers(output);
   }
 
@@ -92,7 +93,7 @@ function Idea() {
   }
 
   async function editData(key, value) {
-    value != "" &&
+    value !== "" &&
       await axiosCall(
         "post",
         "/ideas/update",
@@ -114,6 +115,20 @@ function Idea() {
         idea_id: ideaId,
         user_id: user.id,
         user_role: "request"
+      },
+      postHeaders
+    );
+  }
+
+  async function saveRelationship(relationshipUser) {
+    await axiosCall(
+      "post",
+      relationship === "reject" ? "/delete_collab" : "/update_collab",
+      console.log,
+      {
+        idea_id: ideaId,
+        user_id: relationshipUser,
+        user_role: relationship
       },
       postHeaders
     );
@@ -254,16 +269,50 @@ function Idea() {
               {
                 ideaUsers.map((item, index) => {
                   return (
+                    (currentUserOwnsIdea
+                      || (!currentUserOwnsIdea && item.role !== "request")) &&
                     <ListGroupItem
                       style={{ cursor: "pointer" }}
-                      onClick={() => history.push(`/users/${item.id}`)}
                       key={`listItem-${index}`}>
                       <Row>
                         <Col sm="8">
-                          <h4>{item.name}</h4>
+                          <h4 onClick={() => history.push(`/users/${item.id}`)}>{item.name}</h4>
                         </Col>
                         <Col sm="4">
-                          <h5>{item.role}</h5>
+                          {
+                            item.role === "request"
+                              ?
+                              <>
+                                <Input
+                                  type="select"
+                                  name="select"
+                                  onKeyPress={(e) => console.log(e)}
+                                  onChange={(e) => {
+                                    if (e.target.value === "add collaborator") {
+                                      setRelationship("collaborator")
+                                    } else if (e.target.value === "add co-creator") {
+                                      setRelationship("creator")
+                                    } else {
+                                      setRelationship(e.target.value)
+                                    }}}>
+                                  <option></option>
+                                  <option>add collaborator</option>
+                                  <option>add co-creator</option>
+                                  <option>reject</option>
+                                </Input>
+                                <FontAwesomeIcon
+                                  icon={faSave}
+                                  className="text-success"
+                                  onClick={() => {
+                                    relationship !== "" &&
+                                    saveRelationship(item.id) && 
+                                    getIdeaUsers();
+                                  }}
+                                />
+                              </>
+                              :
+                              <h5>{item.role}</h5>
+                          }
                         </Col>
                       </Row>
                     </ListGroupItem>
