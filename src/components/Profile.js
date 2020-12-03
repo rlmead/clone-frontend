@@ -20,7 +20,7 @@ function Profile() {
   const [newBio, setNewBio] = useState("");
   const [editingPronouns, setEditingPronouns] = useState(false);
   const [newPronouns, setNewPronouns] = useState("");
-  const views = ["About", "Ideas", "Collabs", "People"];
+  const views = ["About", "Ideas", "Collabs"];
 
   const app = useApp();
 
