@@ -19,6 +19,7 @@ function Idea() {
 
   const [ideaData, setIdeaData] = useState({});
   const [ideaUsers, setIdeaUsers] = useState([]);
+  const [comments, setComments] = useState([]);
   const [view, setView] = useState("About");
   const [editingName, setEditingName] = useState(false);
   const [newName, setNewName] = useState("");
@@ -262,65 +263,88 @@ function Idea() {
         )
       case "People":
         return (
-          <>
-            <ListGroup
-              flush
-              className='text-left'>
-              {
-                ideaUsers.map((item, index) => {
-                  return (
-                    (currentUserOwnsIdea
-                      || (!currentUserOwnsIdea && item.role !== "request")) &&
-                    <ListGroupItem
-                      style={{ cursor: "pointer" }}
-                      key={`listItem-${index}`}>
-                      <Row>
-                        <Col sm="8">
-                          <h4 onClick={() => history.push(`/users/${item.id}`)}>{item.name}</h4>
-                        </Col>
-                        <Col sm="4">
-                          {
-                            item.role === "request"
-                              ?
-                              <>
-                                <Input
-                                  type="select"
-                                  name="select"
-                                  onKeyPress={(e) => console.log(e)}
-                                  onChange={(e) => {
-                                    if (e.target.value === "add collaborator") {
-                                      setRelationship("collaborator")
-                                    } else if (e.target.value === "add co-creator") {
-                                      setRelationship("creator")
-                                    } else {
-                                      setRelationship(e.target.value)
-                                    }}}>
-                                  <option></option>
-                                  <option>add collaborator</option>
-                                  <option>add co-creator</option>
-                                  <option>reject</option>
-                                </Input>
-                                <FontAwesomeIcon
-                                  icon={faSave}
-                                  className="text-success"
-                                  onClick={() => {
-                                    relationship !== "" &&
-                                    saveRelationship(item.id) && 
+          <ListGroup
+            flush
+            className='text-left'>
+            {
+              ideaUsers.map((item, index) => {
+                return (
+                  (currentUserOwnsIdea
+                    || (!currentUserOwnsIdea && item.role !== "request")) &&
+                  <ListGroupItem
+                    style={{ cursor: "pointer" }}
+                    key={`listItem-${index}`}>
+                    <Row>
+                      <Col sm="8">
+                        <h4 onClick={() => history.push(`/users/${item.id}`)}>{item.name}</h4>
+                      </Col>
+                      <Col sm="4">
+                        {
+                          item.role === "request"
+                            ?
+                            <>
+                              <Input
+                                type="select"
+                                name="select"
+                                onKeyPress={(e) => console.log(e)}
+                                onChange={(e) => {
+                                  if (e.target.value === "add collaborator") {
+                                    setRelationship("collaborator")
+                                  } else if (e.target.value === "add co-creator") {
+                                    setRelationship("creator")
+                                  } else {
+                                    setRelationship(e.target.value)
+                                  }
+                                }}>
+                                <option></option>
+                                <option>add collaborator</option>
+                                <option>add co-creator</option>
+                                <option>reject</option>
+                              </Input>
+                              <FontAwesomeIcon
+                                icon={faSave}
+                                className="text-success"
+                                onClick={() => {
+                                  relationship !== "" &&
+                                    saveRelationship(item.id) &&
                                     getIdeaUsers();
-                                  }}
-                                />
-                              </>
-                              :
-                              <h5>{item.role}</h5>
-                          }
-                        </Col>
-                      </Row>
-                    </ListGroupItem>
-                  )
-                })
-              }
-            </ListGroup>
-          </>
+                                }}
+                              />
+                            </>
+                            :
+                            <h5>{item.role}</h5>
+                        }
+                      </Col>
+                    </Row>
+                  </ListGroupItem>
+                )
+              })
+            }
+          </ListGroup>
+        )
+      case "Discussion":
+        return (
+          <ListGroup
+          flush
+          className='text-left'>
+          {
+            comments.map((item, index) => {
+              return (
+                <ListGroupItem
+                  key={`listItem-${index}`}>
+                  <Row>
+                    <Col sm="8">
+                      <p>{item.text}</p>
+                    </Col>
+                    <Col sm="4">
+                    <p>person info</p>
+                    </Col>
+                  </Row>
+                </ListGroupItem>
+              )
+            })
+          }
+        </ListGroup>
         )
       default:
         return (
@@ -400,7 +424,7 @@ function Idea() {
           &&
           <Button
             className="btn-success"
-            onClick={() => requestCollab()}
+            onClick={() => requestCollab() && getIdeaUsers()}
             disabled={collabRequested}>
             {
               collabRequested
