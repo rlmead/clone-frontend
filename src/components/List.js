@@ -9,13 +9,17 @@ function List(props) {
   const { token } = useAuth();
   const [listData, setListData] = useState([]);
 
+  let profileList =
+    (props.route === "/users/get_creations"
+    || props.route === "/users/get_collaborations");
+
   let initialLoad = false;
 
   async function getList() {
     let response = await axiosCall(
-      props.route === "/ideas/index_by_user" ? "post" : "get",
-      `/${props.route}`,
-      setListData,
+      profileList ? "post" : "get",
+      `${props.route}`,
+      parseListData,
       props.data || {},
       {
         "Accept": "application/json",
@@ -25,6 +29,13 @@ function List(props) {
       }
     );
     return response;
+  }
+
+  function parseListData(input) {
+    let output = profileList
+      ? input.map(item => item.idea)
+      : input;
+    setListData(output);
   }
 
   useEffect(() => {

@@ -48,16 +48,17 @@ function Profile() {
   }
 
   async function editProfile(key, value) {
-    await axiosCall(
-      "post",
-      "/users/update",
-      console.log,
-      {
-        id: app.user.id,
-        [key]: value
-      },
-      postHeaders
-    );
+    value != "" &&
+      await axiosCall(
+        "post",
+        "/users/update",
+        console.log,
+        {
+          id: app.user.id,
+          [key]: value
+        },
+        postHeaders
+      );
   }
 
   function editNameKeyPress(e) {
@@ -191,8 +192,12 @@ function Profile() {
               onClick={() => history.push("/ideas/new")}>
               Add a new idea
             </Button>
-            <List type="ideas" route="/ideas/index_by_user" data={{ user: userProfileId }} />
+            <List type="ideas" route="/users/get_creations" data={{ id: userProfileId }} />
           </>
+        )
+      case "Collabs":
+        return (
+          <List type="ideas" route="/users/get_collaborations" data={{ id: userProfileId }} />
         )
       default:
         return (
@@ -204,45 +209,6 @@ function Profile() {
   return (
     <Row>
       <Col sm="3">
-        {
-          !currentUserProfile &&
-          <h4>{userProfile.name}</h4>
-        }
-        {
-          currentUserProfile && !editingName &&
-          <>
-            <div>
-              <FontAwesomeIcon
-                icon={faPencilAlt}
-                className="text-success"
-                onClick={() => setEditingName(!editingName)}
-              />
-            </div>
-            <h4>{userProfile.name}</h4>
-          </>
-        }
-        {
-          currentUserProfile && editingName &&
-          <>
-            <div>
-              <FontAwesomeIcon
-                icon={faSave}
-                className="text-success"
-                onClick={() => {
-                  editProfile("name", newName) && getUserById();
-                  setEditingName(!editingName);
-                }}
-              />
-            </div>
-            <textarea
-              onChange={(e) => setNewName(e.target.value)}
-              onKeyPress={(e) => editNameKeyPress(e)}
-              maxLength={64}
-              style={{ width: "100%" }}>
-              {userProfile.name}
-            </textarea>
-          </>
-        }
         <img
           alt=""
           className="img-fluid"
@@ -264,6 +230,45 @@ function Profile() {
               }
             }}
           />
+        }
+        {
+          !currentUserProfile &&
+          <h4>{userProfile.name}</h4>
+        }
+        {
+          currentUserProfile && !editingName &&
+          <>
+            <h4>{userProfile.name}</h4>
+            <div>
+              <FontAwesomeIcon
+                icon={faPencilAlt}
+                className="text-success"
+                onClick={() => setEditingName(!editingName)}
+              />
+            </div>
+          </>
+        }
+        {
+          currentUserProfile && editingName &&
+          <>
+            <textarea
+              onChange={(e) => setNewName(e.target.value)}
+              onKeyPress={(e) => editNameKeyPress(e)}
+              maxLength={64}
+              style={{ width: "100%" }}>
+              {userProfile.name}
+            </textarea>
+            <div>
+              <FontAwesomeIcon
+                icon={faSave}
+                className="text-success"
+                onClick={() => {
+                  editProfile("name", newName) && getUserById();
+                  setEditingName(!editingName);
+                }}
+              />
+            </div>
+          </>
         }
       </Col>
       <Col sm="9" style={{ textAlign: "left" }}>
