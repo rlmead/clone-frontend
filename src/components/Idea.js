@@ -26,15 +26,18 @@ function Idea() {
   const views = ["About", "People", "Skills", "Discussion"];
 
   let currentUserOwnsIdea = (
-    Object.keys(ideaUsers).includes(user.id.toString())
+    user.id
+    && Object.keys(ideaUsers).includes(user.id.toString())
     && ideaUsers[user.id] === "creator");
 
   let currentUserIsCollaborator = (
-    Object.keys(ideaUsers).includes(user.id.toString())
+    user.id
+    && Object.keys(ideaUsers).includes(user.id.toString())
     && ideaUsers[user.id] === "collaborator");
 
   let collabRequested = (
-    Object.keys(ideaUsers).includes(user.id.toString())
+    user.id
+    && Object.keys(ideaUsers).includes(user.id.toString())
     && ideaUsers[user.id] === "request");
 
   let editables = [
