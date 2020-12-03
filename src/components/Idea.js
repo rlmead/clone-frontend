@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Button, Row, Col, Nav, NavItem, NavLink, Input } from "reactstrap";
-import { useParams } from "react-router-dom";
+import { Button, Row, Col, Nav, NavItem, NavLink, Input, ListGroup, ListGroupItem } from "reactstrap";
+import { useHistory, useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
@@ -12,10 +12,13 @@ import { faSave } from '@fortawesome/free-solid-svg-icons'
 function Idea() {
   const { user } = useApp();
   const { token } = useAuth();
+
   let { ideaId } = useParams();
 
+  let history = useHistory();
+
   const [ideaData, setIdeaData] = useState({});
-  const [ideaUsers, setIdeaUsers] = useState({});
+  const [ideaUsers, setIdeaUsers] = useState([]);
   const [view, setView] = useState("About");
   const [editingName, setEditingName] = useState(false);
   const [newName, setNewName] = useState("");
@@ -23,22 +26,23 @@ function Idea() {
   const [newDescription, setNewDescription] = useState("");
   const [editingStatus, setEditingStatus] = useState(false);
   const [newStatus, setNewStatus] = useState("");
-  const views = ["About", "People", "Skills", "Discussion"];
+  const [relationship, setRelationship] = useState("");
+  const views = ["About", "People", "Discussion"];
 
   let currentUserOwnsIdea = (
     user.id
-    && Object.keys(ideaUsers).includes(user.id.toString())
-    && ideaUsers[user.id] === "creator");
+    && ideaUsers.map(item => item.id).includes(user.id)
+    && ideaUsers.filter(item => item.id === user.id)[0].role === "creator");
 
   let currentUserIsCollaborator = (
     user.id
-    && Object.keys(ideaUsers).includes(user.id.toString())
-    && ideaUsers[user.id] === "collaborator");
+    && ideaUsers.map(item => item.id).includes(user.id)
+    && ideaUsers.filter(item => item.id === user.id)[0].role === "collaborator");
 
   let collabRequested = (
     user.id
-    && Object.keys(ideaUsers).includes(user.id.toString())
-    && ideaUsers[user.id] === "request");
+    && ideaUsers.map(item => item.id).includes(user.id)
+    && ideaUsers.filter(item => item.id === user.id)[0].role === "request");
 
   let editables = [
     { table: "ideas", column: "name", element: "h4" }
@@ -63,10 +67,15 @@ function Idea() {
   }
 
   function parseUserData(input) {
-    let output = {};
+    let output = [];
     for (let i = 0; i < input.length; i++) {
-      output[input[i].pivot.user_id] = input[i].pivot.user_role;
+      output.push({
+        role: input[i].pivot.user_role,
+        id: input[i].id,
+        name: input[i].name
+      });
     }
+    output.sort((a, b) => a.role < b.role ? 1 : -1);
     setIdeaUsers(output);
   }
 
@@ -84,17 +93,17 @@ function Idea() {
   }
 
   async function editData(key, value) {
-    value != "" &&
-    await axiosCall(
-      "post",
-      "/ideas/update",
-      console.log,
-      {
-        id: ideaId,
-        [key]: value
-      },
-      postHeaders
-    );
+    value !== "" &&
+      await axiosCall(
+        "post",
+        "/ideas/update",
+        console.log,
+        {
+          id: ideaId,
+          [key]: value
+        },
+        postHeaders
+      );
   }
 
   async function requestCollab() {
@@ -106,6 +115,20 @@ function Idea() {
         idea_id: ideaId,
         user_id: user.id,
         user_role: "request"
+      },
+      postHeaders
+    );
+  }
+
+  async function saveRelationship(relationshipUser) {
+    await axiosCall(
+      "post",
+      relationship === "reject" ? "/delete_collab" : "/update_collab",
+      console.log,
+      {
+        idea_id: ideaId,
+        user_id: relationshipUser,
+        user_role: relationship
       },
       postHeaders
     );
@@ -227,6 +250,7 @@ function Idea() {
                 <Input
                   type="select"
                   name="select"
+                  onKeyPress={(e) => editStatusKeyPress(e)}
                   onChange={(e) => e.target.value !== "" && setNewStatus(e.target.value)}>
                   <option></option>
                   <option>open</option>
@@ -234,6 +258,68 @@ function Idea() {
                 </Input>
               </>
             }
+          </>
+        )
+      case "People":
+        return (
+          <>
+            <ListGroup
+              flush
+              className='text-left'>
+              {
+                ideaUsers.map((item, index) => {
+                  return (
+                    (currentUserOwnsIdea
+                      || (!currentUserOwnsIdea && item.role !== "request")) &&
+                    <ListGroupItem
+                      style={{ cursor: "pointer" }}
+                      key={`listItem-${index}`}>
+                      <Row>
+                        <Col sm="8">
+                          <h4 onClick={() => history.push(`/users/${item.id}`)}>{item.name}</h4>
+                        </Col>
+                        <Col sm="4">
+                          {
+                            item.role === "request"
+                              ?
+                              <>
+                                <Input
+                                  type="select"
+                                  name="select"
+                                  onKeyPress={(e) => console.log(e)}
+                                  onChange={(e) => {
+                                    if (e.target.value === "add collaborator") {
+                                      setRelationship("collaborator")
+                                    } else if (e.target.value === "add co-creator") {
+                                      setRelationship("creator")
+                                    } else {
+                                      setRelationship(e.target.value)
+                                    }}}>
+                                  <option></option>
+                                  <option>add collaborator</option>
+                                  <option>add co-creator</option>
+                                  <option>reject</option>
+                                </Input>
+                                <FontAwesomeIcon
+                                  icon={faSave}
+                                  className="text-success"
+                                  onClick={() => {
+                                    relationship !== "" &&
+                                    saveRelationship(item.id) && 
+                                    getIdeaUsers();
+                                  }}
+                                />
+                              </>
+                              :
+                              <h5>{item.role}</h5>
+                          }
+                        </Col>
+                      </Row>
+                    </ListGroupItem>
+                  )
+                })
+              }
+            </ListGroup>
           </>
         )
       default:
