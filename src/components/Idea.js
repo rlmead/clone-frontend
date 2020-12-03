@@ -81,6 +81,7 @@ function Idea() {
   }
 
   async function editData(key, value) {
+    value != "" &&
     await axiosCall(
       "post",
       "/ideas/update",

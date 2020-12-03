@@ -48,6 +48,7 @@ function Profile() {
   }
 
   async function editProfile(key, value) {
+    value != "" &&
     await axiosCall(
       "post",
       "/users/update",
