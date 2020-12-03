@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Row, Col, Nav, NavItem, NavLink } from "reactstrap";
+import { Button, Row, Col, Nav, NavItem, NavLink, Input } from "reactstrap";
 import { useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
@@ -220,12 +220,14 @@ function Idea() {
                     }}
                   />
                 </div>
-                <textarea
-                  onChange={(e) => setNewStatus(e.target.value)}
-                  onKeyPress={(e) => editStatusKeyPress(e)}
-                  style={{ width: "100%" }}>
-                  {ideaData.status}
-                </textarea>
+                <Input
+                  type="select"
+                  name="select"
+                  onChange={(e) => e.target.value !== "" && setNewStatus(e.target.value)}>
+                  <option></option>
+                  <option>open</option>
+                  <option>closed</option>
+                </Input>
               </>
             }
           </>
@@ -312,8 +314,8 @@ function Idea() {
             disabled={collabRequested}>
             {
               collabRequested
-              ? "Collaboration Requested"
-              : "Request to Collaborate"
+                ? "Collaboration Requested"
+                : "Request to Collaborate"
             }
           </Button>
         }
