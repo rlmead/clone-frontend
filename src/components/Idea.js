@@ -20,6 +20,8 @@ function Idea() {
   const [newName, setNewName] = useState("");
   const [editingDescription, setEditingDescription] = useState(false);
   const [newDescription, setNewDescription] = useState("");
+  const [editingStatus, setEditingStatus] = useState(false);
+  const [newStatus, setNewStatus] = useState("");
   const views = ["About", "People", "Skills", "Discussion"];
 
   let currentUserOwnsIdea = (ideaData.users && ideaData.users.map(x => x.id).includes(user.id));
@@ -72,6 +74,14 @@ function Idea() {
       e.preventDefault();
       editData("description", newDescription) && getIdeaById();
       setEditingDescription(!editingDescription);
+    }
+  }
+
+  function editStatusKeyPress(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      editData("status", newStatus) && getIdeaById();
+      setEditingStatus(!editingStatus);
     }
   }
 
@@ -129,6 +139,45 @@ function Idea() {
                   onKeyPress={(e) => editDescriptionKeyPress(e)}
                   style={{ width: "100%" }}>
                   {ideaData.description}
+                </textarea>
+              </>
+            }
+            <h5>Status</h5>
+            {
+              !currentUserOwnsIdea &&
+              <p>{ideaData.status}</p>
+            }
+            {
+              currentUserOwnsIdea && !editingStatus &&
+              <>
+                <div>
+                  <FontAwesomeIcon
+                    icon={faPencilAlt}
+                    className="text-success"
+                    onClick={() => setEditingStatus(!editingStatus)}
+                  />
+                </div>
+                <p>{ideaData.status}</p>
+              </>
+            }
+            {
+              currentUserOwnsIdea && editingStatus &&
+              <>
+                <div>
+                  <FontAwesomeIcon
+                    icon={faSave}
+                    className="text-success"
+                    onClick={() => {
+                      editData("status", newStatus) && getIdeaById();
+                      setEditingStatus(!editingStatus);
+                    }}
+                  />
+                </div>
+                <textarea
+                  onChange={(e) => setNewStatus(e.target.value)}
+                  onKeyPress={(e) => editStatusKeyPress(e)}
+                  style={{ width: "100%" }}>
+                  {ideaData.status}
                 </textarea>
               </>
             }
