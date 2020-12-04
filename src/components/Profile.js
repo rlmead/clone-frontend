@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Button, Row, Col, Nav, NavItem, NavLink } from "reactstrap";
+import { Row, Col, Nav, NavItem, NavLink } from "reactstrap";
 import { useHistory, useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
+import { zipCodeBaseKey } from "../utilities/apiKeys";
 import List from "./List";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
@@ -21,6 +22,9 @@ function Profile() {
   const [newBio, setNewBio] = useState("");
   const [editingPronouns, setEditingPronouns] = useState(false);
   const [newPronouns, setNewPronouns] = useState("");
+  const [editingLocation, setEditingLocation] = useState(false);
+  const [newPostalCode, setNewPostalCode] = useState("");
+  const [newCountryCode, setNewCountryCode] = useState("");
   const views = ["About", "Ideas", "Collabs"];
 
 
@@ -59,6 +63,18 @@ function Profile() {
         },
         postHeaders
       );
+  }
+
+  async function getLocationData() {
+    let response = await axiosCall(
+      "get",
+      `&codes=${newPostalCode}&country=${newCountryCode}`,
+      console.log,
+      {},
+      postHeaders,
+      `https://app.zipcodebase.com/api/v1/search?apikey=${zipCodeBaseKey}`
+    );
+    return response;
   }
 
   function editNameKeyPress(e) {
@@ -181,6 +197,54 @@ function Profile() {
                   {userProfile.pronouns}
                 </textarea>
               </>
+            }
+            <h5>Location</h5>
+            {
+              !currentUserProfile &&
+              <p>{userProfile.location_id}</p>
+            }
+            {
+              currentUserProfile && !editingLocation &&
+              <>
+                <div>
+                  <FontAwesomeIcon
+                    icon={faPencilAlt}
+                    className="text-success"
+                    onClick={() => setEditingLocation(!editingLocation)}
+                  />
+                </div>
+                <p>{userProfile.location_id}</p>
+              </>
+            }
+            {
+              currentUserProfile && editingLocation &&
+              <>
+                <div>
+                  <FontAwesomeIcon
+                    icon={faSave}
+                    className="text-success"
+                    onClick={() => {
+                      getLocationData();
+                      setEditingLocation(!editingLocation);
+                    }}
+                  />
+                </div>
+                <input
+                  type="text"
+                  onChange={(e) => setNewPostalCode(e.target.value)}
+                  maxLength={64}
+                  style={{ width: "20%" }}
+                  placeholder="Postal code">
+                </input>
+                <input
+                  type="text"
+                  onChange={(e) => setNewCountryCode(e.target.value)}
+                  maxLength={64}
+                  style={{ width: "20%" }}
+                  placeholder="Country code">
+                </input>
+              </>
+
             }
           </>
         )

@@ -5,8 +5,7 @@ const defaultHeaders = {
   "Content-Type": "application/json; charset=utf-8"
 }
 
-export function axiosCall(method, url, func, data = {}, headers = defaultHeaders) {
-  const apiUrl = "http://localhost:8000";
+export function axiosCall(method, url, func, data = {}, headers = defaultHeaders, apiUrl = "http://localhost:8000") {
   return axios({
     method,
     url: apiUrl + url,
