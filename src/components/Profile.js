@@ -187,11 +187,6 @@ function Profile() {
       case "Ideas":
         return (
           <>
-            <Button
-              className="btn-success text-dark"
-              onClick={() => history.push("/ideas/new")}>
-              Add a new idea
-            </Button>
             <List type="ideas" route="/users/get_creations" data={{ id: userProfileId }} />
           </>
         )
