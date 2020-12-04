@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { faSave } from '@fortawesome/free-solid-svg-icons'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 
 function Idea() {
   const { user } = useApp();
@@ -158,6 +159,18 @@ function Idea() {
         idea_id: ideaId,
         user_id: user.id,
         text: newComment
+      },
+      postHeaders
+    );
+  }
+
+  async function deleteComment(commentId) {
+    await axiosCall(
+      "post",
+      "/comments/delete",
+      console.log,
+      {
+        id: commentId
       },
       postHeaders
     );
@@ -397,7 +410,19 @@ function Idea() {
                             style={{ textDecoration: "none" }}>
                             <h5>{item.users.name}</h5>
                           </Link>
-                          <p>{item.updated_at}</p>
+                          <p>{item.updated_at.split('T')[0] + ' ' + item.updated_at.split('T')[1].split('.')[0]}</p>
+                          {
+                            item.users.id === user.id &&
+                            <div className="text-right">
+                              <FontAwesomeIcon
+                                icon={faTrashAlt}
+                                className="text-success"
+                                onClick={() => {
+                                  deleteComment(item.id) && getComments();
+                                }}
+                              />
+                            </div>
+                          }
                         </Col>
                       </Row>
                     </ListGroupItem>
