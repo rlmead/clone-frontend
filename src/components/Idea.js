@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Row, Col, Nav, NavItem, NavLink, Input, ListGroup, ListGroupItem } from "reactstrap";
-import { useHistory, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
@@ -391,7 +391,12 @@ function Idea() {
                           <p>{item.text}</p>
                         </Col>
                         <Col sm="4">
-                          <h5>{item.users.name}</h5>
+                          <Link
+                            to={`/users/${item.users.id}`}
+                            className="text-dark"
+                            style={{ textDecoration: "none" }}>
+                            <h5>{item.users.name}</h5>
+                          </Link>
                           <p>{item.updated_at}</p>
                         </Col>
                       </Row>
