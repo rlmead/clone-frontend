@@ -93,6 +93,17 @@ function Idea() {
     return response;
   }
 
+  async function getComments() {
+    let response = await axiosCall(
+      "get",
+      `/comments/${ideaId}`,
+      setComments,
+      {},
+      postHeaders
+    );
+    return response;
+  }
+
   async function editData(key, value) {
     value !== "" &&
       await axiosCall(
@@ -171,6 +182,7 @@ function Idea() {
   useEffect(() => {
     getIdeaById();
     getIdeaUsers();
+    getComments();
   }, [ideaId])
 
   function switchView(view) {
@@ -337,7 +349,8 @@ function Idea() {
                       <p>{item.text}</p>
                     </Col>
                     <Col sm="4">
-                    <p>person info</p>
+                    <h5>{item.users.name}</h5>
+                    <p>{item.updated_at}</p>
                     </Col>
                   </Row>
                 </ListGroupItem>
