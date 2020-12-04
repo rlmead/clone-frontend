@@ -11,6 +11,7 @@ import { faSave } from '@fortawesome/free-solid-svg-icons'
 
 function Profile() {
   const { token } = useAuth();
+  const { user } = useApp();
 
   const [userProfile, setUserProfile] = useState({});
   const [view, setView] = useState("About");
@@ -22,10 +23,9 @@ function Profile() {
   const [newPronouns, setNewPronouns] = useState("");
   const views = ["About", "Ideas", "Collabs"];
 
-  const app = useApp();
 
   let { userProfileId } = useParams();
-  let currentUserProfile = app.user.id == userProfileId;
+  let currentUserProfile = user.id == userProfileId;
 
   let history = useHistory();
 
@@ -54,7 +54,7 @@ function Profile() {
         "/users/update",
         console.log,
         {
-          id: app.user.id,
+          id: user.id,
           [key]: value
         },
         postHeaders
@@ -204,28 +204,6 @@ function Profile() {
   return (
     <Row>
       <Col sm="3">
-        <img
-          alt=""
-          className="img-fluid"
-          style={{ height: "auto", width: "100%" }}
-          src={userProfile.image_url || "https://images.unsplash.com/photo-1490059830487-2f86fddb2b4b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80"} />
-        {
-          currentUserProfile &&
-          <FontAwesomeIcon
-            icon={faPencilAlt}
-            className="text-success"
-            onClick={() => {
-              let newUrl = prompt("Please enter a link to your new profile picture.");
-              if (newUrl) {
-                if (isValidUrl(newUrl)) {
-                  editProfile("image_url", newUrl) && getUserById();
-                } else {
-                  alert("Whoops, that doesn't look like a valid link!");
-                }
-              }
-            }}
-          />
-        }
         {
           !currentUserProfile &&
           <h4>{userProfile.name}</h4>
@@ -264,6 +242,28 @@ function Profile() {
               />
             </div>
           </>
+        }
+        <img
+          alt=""
+          className="img-fluid"
+          style={{ height: "auto", width: "100%" }}
+          src={userProfile.image_url || "https://images.unsplash.com/photo-1490059830487-2f86fddb2b4b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80"} />
+        {
+          currentUserProfile &&
+          <FontAwesomeIcon
+            icon={faPencilAlt}
+            className="text-success"
+            onClick={() => {
+              let newUrl = prompt("Please enter a link to your new profile picture.");
+              if (newUrl) {
+                if (isValidUrl(newUrl)) {
+                  editProfile("image_url", newUrl) && getUserById();
+                } else {
+                  alert("Whoops, that doesn't look like a valid link!");
+                }
+              }
+            }}
+          />
         }
       </Col>
       <Col sm="9" style={{ textAlign: "left" }}>
