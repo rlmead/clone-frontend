@@ -20,7 +20,7 @@ function Profile() {
   const [newBio, setNewBio] = useState("");
   const [editingPronouns, setEditingPronouns] = useState(false);
   const [newPronouns, setNewPronouns] = useState("");
-  const views = ["About", "Ideas", "Collabs", "People"];
+  const views = ["About", "Ideas", "Collabs"];
 
   const app = useApp();
 
@@ -187,11 +187,6 @@ function Profile() {
       case "Ideas":
         return (
           <>
-            <Button
-              className="btn-success text-dark"
-              onClick={() => history.push("/ideas/new")}>
-              Add a new idea
-            </Button>
             <List type="ideas" route="/users/get_creations" data={{ id: userProfileId }} />
           </>
         )
@@ -275,7 +270,7 @@ function Profile() {
         <Nav
           justified
           tabs
-          className="bg-light">
+          className="bg-light fixed-bottom">
           {
             views.map((item, index) => {
               return (

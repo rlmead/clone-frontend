@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Row, Col, Nav, NavItem, NavLink, Input, ListGroup, ListGroupItem } from "reactstrap";
-import { useHistory, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
@@ -8,6 +8,8 @@ import Editable from "./Editable";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { faSave } from '@fortawesome/free-solid-svg-icons'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 
 function Idea() {
   const { user } = useApp();
@@ -19,6 +21,7 @@ function Idea() {
 
   const [ideaData, setIdeaData] = useState({});
   const [ideaUsers, setIdeaUsers] = useState([]);
+  const [comments, setComments] = useState([]);
   const [view, setView] = useState("About");
   const [editingName, setEditingName] = useState(false);
   const [newName, setNewName] = useState("");
@@ -26,6 +29,8 @@ function Idea() {
   const [newDescription, setNewDescription] = useState("");
   const [editingStatus, setEditingStatus] = useState(false);
   const [newStatus, setNewStatus] = useState("");
+  const [addingComment, setAddingComment] = useState(false);
+  const [newComment, setNewComment] = useState("");
   const [relationship, setRelationship] = useState("");
   const views = ["About", "People", "Discussion"];
 
@@ -92,6 +97,17 @@ function Idea() {
     return response;
   }
 
+  async function getComments() {
+    let response = await axiosCall(
+      "get",
+      `/comments/${ideaId}`,
+      setComments,
+      {},
+      postHeaders
+    );
+    return response;
+  }
+
   async function editData(key, value) {
     value !== "" &&
       await axiosCall(
@@ -134,6 +150,32 @@ function Idea() {
     );
   }
 
+  async function addComment() {
+    await axiosCall(
+      "post",
+      "/comments/add",
+      console.log,
+      {
+        idea_id: ideaId,
+        user_id: user.id,
+        text: newComment
+      },
+      postHeaders
+    );
+  }
+
+  async function deleteComment(commentId) {
+    await axiosCall(
+      "post",
+      "/comments/delete",
+      console.log,
+      {
+        id: commentId
+      },
+      postHeaders
+    );
+  }
+
   function editNameKeyPress(e) {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -158,6 +200,14 @@ function Idea() {
     }
   }
 
+  function addCommentKeyPress(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      newComment !== "" && addComment() && getComments();
+      setAddingComment(!addingComment);
+    }
+  }
+
   function isValidUrl(string) {
     try {
       new URL(string);
@@ -170,6 +220,7 @@ function Idea() {
   useEffect(() => {
     getIdeaById();
     getIdeaUsers();
+    getComments();
   }, [ideaId])
 
   function switchView(view) {
@@ -262,56 +313,115 @@ function Idea() {
         )
       case "People":
         return (
+          <ListGroup
+            flush
+            className='text-left'>
+            {
+              ideaUsers.map((item, index) => {
+                return (
+                  (currentUserOwnsIdea
+                    || (!currentUserOwnsIdea && item.role !== "request")) &&
+                  <ListGroupItem
+                    style={{ cursor: "pointer" }}
+                    key={`listItem-${index}`}>
+                    <Row>
+                      <Col sm="8">
+                        <h4 onClick={() => history.push(`/users/${item.id}`)}>{item.name}</h4>
+                      </Col>
+                      <Col sm="4">
+                        {
+                          item.role === "request"
+                            ?
+                            <>
+                              <Input
+                                type="select"
+                                name="select"
+                                onKeyPress={(e) => console.log(e)}
+                                onChange={(e) => {
+                                  if (e.target.value === "add collaborator") {
+                                    setRelationship("collaborator")
+                                  } else if (e.target.value === "add co-creator") {
+                                    setRelationship("creator")
+                                  } else {
+                                    setRelationship(e.target.value)
+                                  }
+                                }}>
+                                <option></option>
+                                <option>add collaborator</option>
+                                <option>add co-creator</option>
+                                <option>reject</option>
+                              </Input>
+                              <FontAwesomeIcon
+                                icon={faSave}
+                                className="text-success"
+                                onClick={() => {
+                                  relationship !== "" &&
+                                    saveRelationship(item.id) &&
+                                    getIdeaUsers();
+                                }}
+                              />
+                            </>
+                            :
+                            <h5>{item.role}</h5>
+                        }
+                      </Col>
+                    </Row>
+                  </ListGroupItem>
+                )
+              })
+            }
+          </ListGroup>
+        )
+      case "Discussion":
+        return (
           <>
+            <FontAwesomeIcon
+              icon={addingComment ? faSave : faPlus}
+              size="2x"
+              className="text-success"
+              onClick={() => {
+                addingComment && newComment != "" && addComment();
+                setAddingComment(!addingComment);
+              }}
+            />
+            {
+              addingComment &&
+              <textarea
+                onChange={(e) => setNewComment(e.target.value)}
+                onKeyPress={(e) => addCommentKeyPress(e)}
+                style={{ width: "100%" }} />
+            }
             <ListGroup
               flush
               className='text-left'>
               {
-                ideaUsers.map((item, index) => {
+                comments.map((item, index) => {
                   return (
-                    (currentUserOwnsIdea
-                      || (!currentUserOwnsIdea && item.role !== "request")) &&
                     <ListGroupItem
-                      style={{ cursor: "pointer" }}
                       key={`listItem-${index}`}>
                       <Row>
                         <Col sm="8">
-                          <h4 onClick={() => history.push(`/users/${item.id}`)}>{item.name}</h4>
+                          <p>{item.text}</p>
                         </Col>
                         <Col sm="4">
+                          <Link
+                            to={`/users/${item.users.id}`}
+                            className="text-dark"
+                            style={{ textDecoration: "none" }}>
+                            <h5>{item.users.name}</h5>
+                          </Link>
+                          <p>{item.updated_at.split('T')[0] + ' ' + item.updated_at.split('T')[1].split('.')[0]}</p>
                           {
-                            item.role === "request"
-                              ?
-                              <>
-                                <Input
-                                  type="select"
-                                  name="select"
-                                  onKeyPress={(e) => console.log(e)}
-                                  onChange={(e) => {
-                                    if (e.target.value === "add collaborator") {
-                                      setRelationship("collaborator")
-                                    } else if (e.target.value === "add co-creator") {
-                                      setRelationship("creator")
-                                    } else {
-                                      setRelationship(e.target.value)
-                                    }}}>
-                                  <option></option>
-                                  <option>add collaborator</option>
-                                  <option>add co-creator</option>
-                                  <option>reject</option>
-                                </Input>
-                                <FontAwesomeIcon
-                                  icon={faSave}
-                                  className="text-success"
-                                  onClick={() => {
-                                    relationship !== "" &&
-                                    saveRelationship(item.id) && 
-                                    getIdeaUsers();
-                                  }}
-                                />
-                              </>
-                              :
-                              <h5>{item.role}</h5>
+                            item.users.id === user.id &&
+                            <div className="text-right">
+                              <FontAwesomeIcon
+                                icon={faTrashAlt}
+                                className="text-success"
+                                onClick={() => {
+                                  deleteComment(item.id) && getComments();
+                                }}
+                              />
+                            </div>
                           }
                         </Col>
                       </Row>
@@ -332,28 +442,6 @@ function Idea() {
   return (
     <Row>
       <Col sm="3">
-        <img
-          alt=""
-          className="img-fluid"
-          style={{ height: "auto", width: "100%" }}
-          src={ideaData.image_url || "https://images.unsplash.com/photo-1529310399831-ed472b81d589?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=634&q=80"} />
-        {
-          currentUserOwnsIdea &&
-          <FontAwesomeIcon
-            icon={faPencilAlt}
-            className="text-success"
-            onClick={() => {
-              let newUrl = prompt("Please enter a link to your new picture.");
-              if (newUrl) {
-                if (isValidUrl(newUrl)) {
-                  editData("image_url", newUrl) && getIdeaById();
-                } else {
-                  alert("Whoops, that doesn't look like a valid link!");
-                }
-              }
-            }}
-          />
-        }
         {
           !currentUserOwnsIdea &&
           <h4>{ideaData.name}</h4>
@@ -393,6 +481,28 @@ function Idea() {
             </div>
           </>
         }
+        <img
+          alt=""
+          className="img-fluid"
+          style={{ height: "auto", width: "100%" }}
+          src={ideaData.image_url || "https://images.unsplash.com/photo-1529310399831-ed472b81d589?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=634&q=80"} />
+        {
+          currentUserOwnsIdea &&
+          <FontAwesomeIcon
+            icon={faPencilAlt}
+            className="text-success"
+            onClick={() => {
+              let newUrl = prompt("Please enter a link to your new picture.");
+              if (newUrl) {
+                if (isValidUrl(newUrl)) {
+                  editData("image_url", newUrl) && getIdeaById();
+                } else {
+                  alert("Whoops, that doesn't look like a valid link!");
+                }
+              }
+            }}
+          />
+        }
         {
           !currentUserOwnsIdea
           && !currentUserIsCollaborator
@@ -400,7 +510,7 @@ function Idea() {
           &&
           <Button
             className="btn-success"
-            onClick={() => requestCollab()}
+            onClick={() => requestCollab() && getIdeaUsers()}
             disabled={collabRequested}>
             {
               collabRequested
@@ -414,7 +524,7 @@ function Idea() {
         <Nav
           justified
           tabs
-          className="bg-light">
+          className="bg-light fixed-bottom">
           {
             views.map((item, index) => {
               return (
