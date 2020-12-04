@@ -8,6 +8,7 @@ import Editable from "./Editable";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { faSave } from '@fortawesome/free-solid-svg-icons'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 function Idea() {
   const { user } = useApp();
@@ -27,6 +28,8 @@ function Idea() {
   const [newDescription, setNewDescription] = useState("");
   const [editingStatus, setEditingStatus] = useState(false);
   const [newStatus, setNewStatus] = useState("");
+  const [addingComment, setAddingComment] = useState(false);
+  const [newComment, setNewComment] = useState("");
   const [relationship, setRelationship] = useState("");
   const views = ["About", "People", "Discussion"];
 
@@ -146,6 +149,20 @@ function Idea() {
     );
   }
 
+  async function addComment() {
+    await axiosCall(
+      "post",
+      "/comments/add",
+      console.log,
+      {
+        idea_id: ideaId,
+        user_id: user.id,
+        text: newComment
+      },
+      postHeaders
+    );
+  }
+
   function editNameKeyPress(e) {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -167,6 +184,14 @@ function Idea() {
       e.preventDefault();
       editData("status", newStatus) && getIdeaById();
       setEditingStatus(!editingStatus);
+    }
+  }
+
+  function addCommentKeyPress(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      newComment !== "" && addComment() && getComments();
+      setAddingComment(!addingComment);
     }
   }
 
@@ -336,28 +361,46 @@ function Idea() {
         )
       case "Discussion":
         return (
-          <ListGroup
-          flush
-          className='text-left'>
-          {
-            comments.map((item, index) => {
-              return (
-                <ListGroupItem
-                  key={`listItem-${index}`}>
-                  <Row>
-                    <Col sm="8">
-                      <p>{item.text}</p>
-                    </Col>
-                    <Col sm="4">
-                    <h5>{item.users.name}</h5>
-                    <p>{item.updated_at}</p>
-                    </Col>
-                  </Row>
-                </ListGroupItem>
-              )
-            })
-          }
-        </ListGroup>
+          <>
+            <FontAwesomeIcon
+              icon={addingComment ? faSave : faPlus}
+              size="2x"
+              className="text-success"
+              onClick={() => {
+                addingComment && newComment != "" && addComment();
+                setAddingComment(!addingComment);
+              }}
+            />
+            {
+              addingComment &&
+              <textarea
+                onChange={(e) => setNewComment(e.target.value)}
+                onKeyPress={(e) => addCommentKeyPress(e)}
+                style={{ width: "100%" }} />
+            }
+            <ListGroup
+              flush
+              className='text-left'>
+              {
+                comments.map((item, index) => {
+                  return (
+                    <ListGroupItem
+                      key={`listItem-${index}`}>
+                      <Row>
+                        <Col sm="8">
+                          <p>{item.text}</p>
+                        </Col>
+                        <Col sm="4">
+                          <h5>{item.users.name}</h5>
+                          <p>{item.updated_at}</p>
+                        </Col>
+                      </Row>
+                    </ListGroupItem>
+                  )
+                })
+              }
+            </ListGroup>
+          </>
         )
       default:
         return (
