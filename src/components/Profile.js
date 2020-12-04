@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Button, Row, Col, Nav, NavItem, NavLink } from "reactstrap";
+import { Row, Col, Nav, NavItem, NavLink } from "reactstrap";
 import { useHistory, useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
+import { zipCodeBaseKey } from "../utilities/apiKeys";
 import List from "./List";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
@@ -11,6 +12,7 @@ import { faSave } from '@fortawesome/free-solid-svg-icons'
 
 function Profile() {
   const { token } = useAuth();
+  const { user } = useApp();
 
   const [userProfile, setUserProfile] = useState({});
   const [view, setView] = useState("About");
@@ -20,12 +22,14 @@ function Profile() {
   const [newBio, setNewBio] = useState("");
   const [editingPronouns, setEditingPronouns] = useState(false);
   const [newPronouns, setNewPronouns] = useState("");
+  const [editingLocation, setEditingLocation] = useState(false);
+  const [newPostalCode, setNewPostalCode] = useState("");
+  const [newCountryCode, setNewCountryCode] = useState("");
   const views = ["About", "Ideas", "Collabs"];
 
-  const app = useApp();
 
   let { userProfileId } = useParams();
-  let currentUserProfile = app.user.id == userProfileId;
+  let currentUserProfile = user.id == userProfileId;
 
   let history = useHistory();
 
@@ -54,11 +58,23 @@ function Profile() {
         "/users/update",
         console.log,
         {
-          id: app.user.id,
+          id: user.id,
           [key]: value
         },
         postHeaders
       );
+  }
+
+  async function getLocationData() {
+    let response = await axiosCall(
+      "get",
+      `&codes=${newPostalCode}&country=${newCountryCode}`,
+      console.log,
+      {},
+      postHeaders,
+      `https://app.zipcodebase.com/api/v1/search?apikey=${zipCodeBaseKey}`
+    );
+    return response;
   }
 
   function editNameKeyPress(e) {
@@ -182,6 +198,54 @@ function Profile() {
                 </textarea>
               </>
             }
+            <h5>Location</h5>
+            {
+              !currentUserProfile &&
+              <p>{userProfile.location_id}</p>
+            }
+            {
+              currentUserProfile && !editingLocation &&
+              <>
+                <div>
+                  <FontAwesomeIcon
+                    icon={faPencilAlt}
+                    className="text-success"
+                    onClick={() => setEditingLocation(!editingLocation)}
+                  />
+                </div>
+                <p>{userProfile.location_id}</p>
+              </>
+            }
+            {
+              currentUserProfile && editingLocation &&
+              <>
+                <div>
+                  <FontAwesomeIcon
+                    icon={faSave}
+                    className="text-success"
+                    onClick={() => {
+                      getLocationData();
+                      setEditingLocation(!editingLocation);
+                    }}
+                  />
+                </div>
+                <input
+                  type="text"
+                  onChange={(e) => setNewPostalCode(e.target.value)}
+                  maxLength={64}
+                  style={{ width: "20%" }}
+                  placeholder="Postal code">
+                </input>
+                <input
+                  type="text"
+                  onChange={(e) => setNewCountryCode(e.target.value)}
+                  maxLength={64}
+                  style={{ width: "20%" }}
+                  placeholder="Country code">
+                </input>
+              </>
+
+            }
           </>
         )
       case "Ideas":
@@ -204,28 +268,6 @@ function Profile() {
   return (
     <Row>
       <Col sm="3">
-        <img
-          alt=""
-          className="img-fluid"
-          style={{ height: "auto", width: "100%" }}
-          src={userProfile.image_url || "https://images.unsplash.com/photo-1490059830487-2f86fddb2b4b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80"} />
-        {
-          currentUserProfile &&
-          <FontAwesomeIcon
-            icon={faPencilAlt}
-            className="text-success"
-            onClick={() => {
-              let newUrl = prompt("Please enter a link to your new profile picture.");
-              if (newUrl) {
-                if (isValidUrl(newUrl)) {
-                  editProfile("image_url", newUrl) && getUserById();
-                } else {
-                  alert("Whoops, that doesn't look like a valid link!");
-                }
-              }
-            }}
-          />
-        }
         {
           !currentUserProfile &&
           <h4>{userProfile.name}</h4>
@@ -264,6 +306,28 @@ function Profile() {
               />
             </div>
           </>
+        }
+        <img
+          alt=""
+          className="img-fluid"
+          style={{ height: "auto", width: "100%" }}
+          src={userProfile.image_url || "https://images.unsplash.com/photo-1490059830487-2f86fddb2b4b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80"} />
+        {
+          currentUserProfile &&
+          <FontAwesomeIcon
+            icon={faPencilAlt}
+            className="text-success"
+            onClick={() => {
+              let newUrl = prompt("Please enter a link to your new profile picture.");
+              if (newUrl) {
+                if (isValidUrl(newUrl)) {
+                  editProfile("image_url", newUrl) && getUserById();
+                } else {
+                  alert("Whoops, that doesn't look like a valid link!");
+                }
+              }
+            }}
+          />
         }
       </Col>
       <Col sm="9" style={{ textAlign: "left" }}>
