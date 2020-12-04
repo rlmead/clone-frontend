@@ -27,7 +27,7 @@ function Header() {
     <Navbar
       expand="md"
       light
-      className="navbar-default navbar-fixed-top">
+      className="navbar-default sticky-top bg-light">
       <Container>
         <Link
           to="/"
