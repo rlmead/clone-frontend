@@ -412,28 +412,6 @@ function Idea() {
   return (
     <Row>
       <Col sm="3">
-        <img
-          alt=""
-          className="img-fluid"
-          style={{ height: "auto", width: "100%" }}
-          src={ideaData.image_url || "https://images.unsplash.com/photo-1529310399831-ed472b81d589?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=634&q=80"} />
-        {
-          currentUserOwnsIdea &&
-          <FontAwesomeIcon
-            icon={faPencilAlt}
-            className="text-success"
-            onClick={() => {
-              let newUrl = prompt("Please enter a link to your new picture.");
-              if (newUrl) {
-                if (isValidUrl(newUrl)) {
-                  editData("image_url", newUrl) && getIdeaById();
-                } else {
-                  alert("Whoops, that doesn't look like a valid link!");
-                }
-              }
-            }}
-          />
-        }
         {
           !currentUserOwnsIdea &&
           <h4>{ideaData.name}</h4>
@@ -473,6 +451,28 @@ function Idea() {
             </div>
           </>
         }
+        <img
+          alt=""
+          className="img-fluid"
+          style={{ height: "auto", width: "100%" }}
+          src={ideaData.image_url || "https://images.unsplash.com/photo-1529310399831-ed472b81d589?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=634&q=80"} />
+        {
+          currentUserOwnsIdea &&
+          <FontAwesomeIcon
+            icon={faPencilAlt}
+            className="text-success"
+            onClick={() => {
+              let newUrl = prompt("Please enter a link to your new picture.");
+              if (newUrl) {
+                if (isValidUrl(newUrl)) {
+                  editData("image_url", newUrl) && getIdeaById();
+                } else {
+                  alert("Whoops, that doesn't look like a valid link!");
+                }
+              }
+            }}
+          />
+        }
         {
           !currentUserOwnsIdea
           && !currentUserIsCollaborator
@@ -494,7 +494,7 @@ function Idea() {
         <Nav
           justified
           tabs
-          className="bg-light">
+          className="bg-light fixed-bottom">
           {
             views.map((item, index) => {
               return (

@@ -270,7 +270,7 @@ function Profile() {
         <Nav
           justified
           tabs
-          className="bg-light">
+          className="bg-light fixed-bottom">
           {
             views.map((item, index) => {
               return (

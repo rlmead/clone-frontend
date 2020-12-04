@@ -28,7 +28,7 @@ function Header() {
     <Navbar
       expand="md"
       light
-      className="navbar-default sticky-top bg-light">
+      className="navbar-default sticky-top bg-light mb-3">
       <Container>
         <Link
           to="/"
