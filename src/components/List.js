@@ -61,6 +61,18 @@ function List(props) {
         locationString &&
         <h3>Ideas in {locationString.split("-").join(", ")}</h3>
       }
+      {
+        props.type === "locations" &&
+          <h3>Locations</h3>
+      }
+      {
+        (props.type === "ideas" && !profileList) &&
+          <h3>Ideas</h3>
+      }
+      {
+        props.type === "users" &&
+          <h3>Users</h3>
+      }
       <ListGroup
         flush
         className='text-left'>
