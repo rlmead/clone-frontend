@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col, Nav, NavItem, NavLink } from "reactstrap";
-import { useHistory, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
@@ -90,14 +90,12 @@ function Profile() {
       if (localData.length > 0) {
         // if postal code is in local database,
         // use existing id
-        console.log("found local data");
         editProfile("location_id", localData[0].id) && getUserById();
         setNewPostalCode("");
         setNewCountryCode("");
       } else {
         // if it's not there:
         // getLocationData
-        console.log("getting api data");
         getLocationData();
         setParsingLocationData(true);
       }
@@ -276,7 +274,12 @@ function Profile() {
             }
             {
               (!currentUserProfile && userProfile.location) &&
-              <p>{`${userProfile.location.city}, ${userProfile.location.state}, ${userProfile.location.country_code}`}</p>
+              <Link
+                    to={`/locations/${userProfile.location.city}_${userProfile.location.state}_${userProfile.location.country_code}`}
+                    className="text-dark"
+                    style={{ textDecoration: "none" }}>
+                <p>{`${userProfile.location.city}, ${userProfile.location.state}, ${userProfile.location.country_code}`}</p>
+              </Link>
             }
             {
               (currentUserProfile && !editingLocation) &&
@@ -294,7 +297,12 @@ function Profile() {
                 }
                 {
                   (userProfile.location && !parsingLocationData) &&
-                  <p>{`${userProfile.location.city}, ${userProfile.location.state}, ${userProfile.location.country_code} `}</p>
+                  <Link
+                    to={`/locations/${userProfile.location.city}_${userProfile.location.state}_${userProfile.location.country_code}`}
+                    className="text-dark"
+                    style={{ textDecoration: "none" }}>
+                    <p>{`${userProfile.location.city}, ${userProfile.location.state}, ${userProfile.location.country_code} `}</p>
+                  </Link>
                 }
               </>
             }

@@ -33,6 +33,9 @@ function App() {
                 <Route path={`/users`}>
                   <List type="users" route="/users" />
                 </Route>
+                <Route path={`/locations/:locationString`}>
+                  <List type="ideas" route="/locations" />
+                </Route>
                 <Route path={`/ideas/new`}>
                   <IdeaForm />
                 </Route>

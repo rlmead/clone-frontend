@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ListGroup, ListGroupItem, Row, Col } from 'reactstrap';
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
 
@@ -8,6 +8,8 @@ function List(props) {
   let history = useHistory();
   const { token } = useAuth();
   const [listData, setListData] = useState([]);
+
+  let { locationString } = useParams();
 
   let profileList =
     (props.route === "/users/get_creations"
@@ -18,7 +20,7 @@ function List(props) {
   async function getList() {
     let response = await axiosCall(
       profileList ? "post" : "get",
-      `${props.route}`,
+      props.route === "/locations" ? props.route+"/"+locationString : props.route,
       parseListData,
       props.data || {},
       {
@@ -55,7 +57,10 @@ function List(props) {
 
   return (
     <>
-      {/* dynamically render the list */}
+      {
+        locationString &&
+        <h3>Ideas in {locationString.split("_").join(", ")}</h3>
+      }
       <ListGroup
         flush
         className='text-left'>
