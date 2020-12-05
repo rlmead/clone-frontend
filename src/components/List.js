@@ -13,14 +13,14 @@ function List(props) {
 
   let profileList =
     (props.route === "/users/get_creations"
-    || props.route === "/users/get_collaborations");
+      || props.route === "/users/get_collaborations");
 
   let initialLoad = false;
 
   async function getList() {
     let response = await axiosCall(
       profileList ? "post" : "get",
-      props.route === "/locations" ? props.route+"/"+locationString : props.route,
+      locationString ? props.route + "/" + locationString : props.route,
       parseListData,
       props.data || {},
       {
@@ -70,18 +70,31 @@ function List(props) {
               <ListGroupItem
                 className={item.status === "closed" ? "bg-secondary" : ""}
                 style={{ cursor: "pointer" }}
-                onClick={() => history.push(`/${props.type}/${item.id}`)}
+                onClick={() => {
+                  props.type === "locations"
+                    ? history.push(`/locations/${item.city}-${item.state}-${item.country_code}`)
+                    : history.push(`/${props.type}/${item.id}`)
+                }}
                 key={`listItem-${index}`}>
                 <Row>
-                  <Col sm="2">
-                    <img
-                      className='img-fluid'
-                      src={item.image_url || defaultImage}
-                      alt="">
-                    </img>
-                  </Col>
+                  {
+                    props.type !== "locations" &&
+                    <Col sm="2">
+                      <img
+                        className='img-fluid'
+                        src={item.image_url || defaultImage}
+                        alt="">
+                      </img>
+                    </Col>
+                  }
                   <Col sm="10">
-                    <h3>{item.name}</h3>
+                    <h3>
+                      {
+                        props.type === "locations"
+                          ? `${item.country_code}, ${item.state}, ${item.city}`
+                          : item.name
+                      }
+                    </h3>
                   </Col>
                 </Row>
               </ListGroupItem>
