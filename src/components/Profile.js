@@ -24,10 +24,11 @@ function Profile() {
   const [newBio, setNewBio] = useState("");
   const [editingPronouns, setEditingPronouns] = useState(false);
   const [newPronouns, setNewPronouns] = useState("");
+  const [editingLocation, setEditingLocation] = useState(false);
   const views = ["About", "Ideas", "Collabs"];
 
   let { userProfileId } = useParams();
-  let currentUserProfile = user.id == userProfileId;
+  let currentUserProfile = toString(user.id) === toString(userProfileId);
 
   let postHeaders = {
     "Accept": "application/json",
@@ -48,7 +49,7 @@ function Profile() {
   }
 
   async function editProfile(key, value) {
-    value != "" &&
+    value !== "" &&
       await axiosCall(
         "post",
         "/users/update",
@@ -99,12 +100,15 @@ function Profile() {
   }, [userProfileId])
 
   useEffect(() => {
-    editProfile("location_id", loc.newLocationId) && getUserById();
+    (loc.newLocationId !== "" && editingLocation) &&
+      editProfile("location_id", loc.newLocationId) && getUserById();
+    setEditingLocation(false);
   }, [loc.newLocationId])
 
   useEffect(() => {
-    loc.localData.length > 0 &&
-    editProfile("location_id", loc.localData[0].id) && getUserById();
+    (loc.localData.length > 0 && editingLocation) &&
+      editProfile("location_id", loc.localData[0].id) && getUserById();
+    setEditingLocation(false);
   }, [loc.localData])
 
   function switchView(view) {
@@ -198,20 +202,20 @@ function Profile() {
             {
               (!currentUserProfile && userProfile.location) &&
               <Link
-                to={`/locations/${userProfile.location.city}_${userProfile.location.state}_${userProfile.location.country_code}`}
+                to={`/locations/${userProfile.location.city}-${userProfile.location.state}-${userProfile.location.country_code}`}
                 className="text-dark"
                 style={{ textDecoration: "none" }}>
                 <p>{`${userProfile.location.city}, ${userProfile.location.state}, ${userProfile.location.country_code}`}</p>
               </Link>
             }
             {
-              (currentUserProfile && !loc.editingLocation) &&
+              (currentUserProfile && !editingLocation) &&
               <>
                 <div>
                   <FontAwesomeIcon
                     icon={faPencilAlt}
                     className="text-success"
-                    onClick={() => loc.setEditingLocation(!loc.editingLocation)}
+                    onClick={() => setEditingLocation(!editingLocation)}
                   />
                 </div>
                 {
@@ -221,7 +225,7 @@ function Profile() {
                 {
                   (userProfile.location && !loc.parsingLocationData) &&
                   <Link
-                    to={`/locations/${userProfile.location.city}_${userProfile.location.state}_${userProfile.location.country_code}`}
+                    to={`/locations/${userProfile.location.city}-${userProfile.location.state}-${userProfile.location.country_code}`}
                     className="text-dark"
                     style={{ textDecoration: "none" }}>
                     <p>{`${userProfile.location.city}, ${userProfile.location.state}, ${userProfile.location.country_code} `}</p>
@@ -230,7 +234,7 @@ function Profile() {
               </>
             }
             {
-              currentUserProfile && loc.editingLocation &&
+              currentUserProfile && editingLocation &&
               <>
                 <div>
                   <FontAwesomeIcon
@@ -238,7 +242,7 @@ function Profile() {
                     className="text-success"
                     onClick={() => {
                       (loc.newPostalCode && loc.newCountryCode)
-                        ? loc.handleLocationInput() && loc.setEditingLocation(!loc.editingLocation)
+                        ? loc.handleLocationInput() && setEditingLocation(!editingLocation)
                         : alert("Please enter both a postal code and a country code");
                     }}
                   />
@@ -264,13 +268,6 @@ function Profile() {
                     })
                   }
                 </Input>
-                {/* <input
-                  type="text"
-                  onChange={(e) => loc.setNewCountryCode(e.target.value)}
-                  maxLength={64}
-                  style={{ width: "20%" }}
-                  placeholder="Country code">
-                </input> */}
               </>
 
             }

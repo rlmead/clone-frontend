@@ -17,13 +17,13 @@ export const useLocation = () => {
 };
 
 function useLocationProvider() {
-  const [editingLocation, setEditingLocation] = useState(false);
+  const [editingProfile, setEditingProfile] = useState(false);
+  const [gettingLocationData, setGettingLocationData] = useState(false);
+  const [parsingLocationData, setParsingLocationData] = useState(false);
   const [newPostalCode, setNewPostalCode] = useState("");
   const [newCountryCode, setNewCountryCode] = useState("");
   const [newLocationId, setNewLocationId] = useState("");
-  const [localData, setLocalData] = useState("");
-  const [gettingLocationData, setGettingLocationData] = useState(false);
-  const [parsingLocationData, setParsingLocationData] = useState(false);
+  const [localData, setLocalData] = useState({});
   const [apiData, setApiData] = useState({});
 
   let { token } = useAuth();
@@ -112,8 +112,6 @@ function useLocationProvider() {
   }
 
   return {
-    editingLocation,
-    setEditingLocation,
     parsingLocationData,
     newPostalCode,
     setNewPostalCode,
@@ -121,8 +119,10 @@ function useLocationProvider() {
     setNewCountryCode,
     handleLocationInput,
     localData,
-    gettingLocationData,
-    getLocationData,
-    newLocationId
+    setLocalData,
+    newLocationId,
+    setNewLocationId,
+    editingProfile,
+    setEditingProfile
   }
 }

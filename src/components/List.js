@@ -59,7 +59,7 @@ function List(props) {
     <>
       {
         locationString &&
-        <h3>Ideas in {locationString.split("_").join(", ")}</h3>
+        <h3>Ideas in {locationString.split("-").join(", ")}</h3>
       }
       <ListGroup
         flush

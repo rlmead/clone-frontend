@@ -4,6 +4,8 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
+import { useLocation } from "../utilities/LocationContext";
+import { countryCodes } from "../utilities/countryCodes";
 import Editable from "./Editable";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
@@ -14,6 +16,7 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 function Idea() {
   const { user } = useApp();
   const { token } = useAuth();
+  const loc = useLocation();
 
   let { ideaId } = useParams();
 
@@ -28,6 +31,7 @@ function Idea() {
   const [editingDescription, setEditingDescription] = useState(false);
   const [newDescription, setNewDescription] = useState("");
   const [editingStatus, setEditingStatus] = useState(false);
+  const [editingLocation, setEditingLocation] = useState(false);
   const [newStatus, setNewStatus] = useState("");
   const [addingComment, setAddingComment] = useState(false);
   const [newComment, setNewComment] = useState("");
@@ -223,6 +227,17 @@ function Idea() {
     getComments();
   }, [ideaId])
 
+  // useEffect(() => {
+  //   loc.newLocationId !== "" &&
+  //     editData("location_id", loc.newLocationId) && getIdeaById();
+  // }, [loc.newLocationId])
+
+  // useEffect(() => {
+  //   loc.localData.length > 0 &&
+  //     editData("location_id", loc.localData[0].id) && getIdeaById();
+  // }, [loc.localData])
+
+
   function switchView(view) {
     switch (view) {
       case "About":
@@ -301,11 +316,87 @@ function Idea() {
                 <Input
                   type="select"
                   name="select"
+                  style={{ width: "20%" }}
                   onKeyPress={(e) => editStatusKeyPress(e)}
                   onChange={(e) => e.target.value !== "" && setNewStatus(e.target.value)}>
                   <option></option>
                   <option>open</option>
                   <option>closed</option>
+                </Input>
+              </>
+            }
+            {
+              (currentUserOwnsIdea || ideaData.location) &&
+              <h5>Location</h5>
+            }
+            {
+              (!currentUserOwnsIdea && ideaData.location) &&
+              <Link
+                to={`/locations/${ideaData.location.city}-${ideaData.location.state}-${ideaData.location.country_code}`}
+                className="text-dark"
+                style={{ textDecoration: "none" }}>
+                <p>{`${ideaData.location.city}, ${ideaData.location.state}, ${ideaData.location.country_code}`}</p>
+              </Link>
+            }
+            {
+              (currentUserOwnsIdea && !editingLocation) &&
+              <>
+                <div>
+                  <FontAwesomeIcon
+                    icon={faPencilAlt}
+                    className="text-success"
+                    onClick={() => setEditingLocation(!editingLocation)}
+                  />
+                </div>
+                {
+                  loc.parsingLocationData &&
+                  <p>Loading location data...</p>
+                }
+                {
+                  (ideaData.location && !loc.parsingLocationData) &&
+                  <Link
+                    to={`/locations/${ideaData.location.city}-${ideaData.location.state}-${ideaData.location.country_code}`}
+                    className="text-dark"
+                    style={{ textDecoration: "none" }}>
+                    <p>{`${ideaData.location.city}, ${ideaData.location.state}, ${ideaData.location.country_code} `}</p>
+                  </Link>
+                }
+              </>
+            }
+            {
+              currentUserOwnsIdea && editingLocation &&
+              <>
+                <div>
+                  <FontAwesomeIcon
+                    icon={faSave}
+                    className="text-success"
+                    onClick={() => {
+                      (loc.newPostalCode && loc.newCountryCode)
+                        ? loc.handleLocationInput() && setEditingLocation(!editingLocation)
+                        : alert("Please enter both a postal code and a country code");
+                    }}
+                  />
+                </div>
+                <input
+                  type="text"
+                  onChange={(e) => loc.setNewPostalCode(e.target.value)}
+                  maxLength={64}
+                  style={{ width: "20%" }}
+                  placeholder="Postal code">
+                </input>
+                <Input
+                  type="select"
+                  name="select"
+                  style={{ width: "20%" }}
+                  onKeyPress={(e) => console.log(e)}
+                  onChange={(e) => {
+                    loc.setNewCountryCode(e.target.value)
+                  }}>
+                  {
+                    countryCodes.map((item, index) => {
+                      return (<option key={`country-${index}`}>{item}</option>)
+                    })
+                  }
                 </Input>
               </>
             }
