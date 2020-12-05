@@ -66,7 +66,7 @@ function List(props) {
           <h3>Locations</h3>
       }
       {
-        (props.type === "ideas" && !profileList) &&
+        (props.type === "ideas" && !profileList && !locationString) &&
           <h3>Ideas</h3>
       }
       {
