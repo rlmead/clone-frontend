@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Nav, NavItem, NavLink } from "reactstrap";
+import { Row, Col, Input, Nav, NavItem, NavLink } from "reactstrap";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
+import { countryCodes } from "../utilities/countryCodes";
 import { axiosCall } from "../utilities/axiosCall";
 import { zipCodeBaseKey } from "../utilities/apiKeys";
 import List from "./List";
@@ -275,9 +276,9 @@ function Profile() {
             {
               (!currentUserProfile && userProfile.location) &&
               <Link
-                    to={`/locations/${userProfile.location.city}_${userProfile.location.state}_${userProfile.location.country_code}`}
-                    className="text-dark"
-                    style={{ textDecoration: "none" }}>
+                to={`/locations/${userProfile.location.city}_${userProfile.location.state}_${userProfile.location.country_code}`}
+                className="text-dark"
+                style={{ textDecoration: "none" }}>
                 <p>{`${userProfile.location.city}, ${userProfile.location.state}, ${userProfile.location.country_code}`}</p>
               </Link>
             }
@@ -315,9 +316,8 @@ function Profile() {
                     className="text-success"
                     onClick={() => {
                       (newPostalCode && newCountryCode)
-                        ? handleLocationInput()
-                        : alert("no location data entered");
-                      setEditingLocation(!editingLocation);
+                        ? handleLocationInput() && setEditingLocation(!editingLocation)
+                        : alert("Please enter both a postal code and a country code");
                     }}
                   />
                 </div>
@@ -328,13 +328,27 @@ function Profile() {
                   style={{ width: "20%" }}
                   placeholder="Postal code">
                 </input>
-                <input
+                <Input
+                  type="select"
+                  name="select"
+                  style={{ width: "20%" }}
+                  onKeyPress={(e) => console.log(e)}
+                  onChange={(e) => {
+                    setNewCountryCode(e.target.value)
+                  }}>
+                  {
+                    countryCodes.map((item, index) => {
+                      return (<option key={`country-${index}`}>{item}</option>)
+                    })
+                  }
+                </Input>
+                {/* <input
                   type="text"
                   onChange={(e) => setNewCountryCode(e.target.value)}
                   maxLength={64}
                   style={{ width: "20%" }}
                   placeholder="Country code">
-                </input>
+                </input> */}
               </>
 
             }
