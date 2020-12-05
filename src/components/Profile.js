@@ -215,7 +215,7 @@ function Profile() {
                   <FontAwesomeIcon
                     icon={faPencilAlt}
                     className="text-success"
-                    onClick={() => setEditingLocation(!editingLocation)}
+                    onClick={() => setEditingLocation(true)}
                   />
                 </div>
                 {
@@ -242,7 +242,7 @@ function Profile() {
                     className="text-success"
                     onClick={() => {
                       (loc.newPostalCode && loc.newCountryCode)
-                        ? loc.handleLocationInput() && setEditingLocation(!editingLocation)
+                        ? loc.handleLocationInput()
                         : alert("Please enter both a postal code and a country code");
                     }}
                   />

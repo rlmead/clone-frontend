@@ -227,16 +227,21 @@ function Idea() {
     getComments();
   }, [ideaId])
 
-  // useEffect(() => {
-  //   loc.newLocationId !== "" &&
-  //     editData("location_id", loc.newLocationId) && getIdeaById();
-  // }, [loc.newLocationId])
+  useEffect(() => {
+    if (loc.newLocationId !== "" && editingLocation) {
+      console.log("found new location id");
+      editData("location_id", loc.newLocationId) && getIdeaById();
+    }
+    setEditingLocation(false);
+  }, [loc.newLocationId])
 
-  // useEffect(() => {
-  //   loc.localData.length > 0 &&
-  //     editData("location_id", loc.localData[0].id) && getIdeaById();
-  // }, [loc.localData])
-
+  useEffect(() => {
+    if (loc.localData.length > 0 && editingLocation) {
+      console.log("found new local data");
+      editData("location_id", loc.localData[0].id) && getIdeaById();
+    }
+    setEditingLocation(false);
+  }, [loc.localData])
 
   function switchView(view) {
     switch (view) {
@@ -345,7 +350,7 @@ function Idea() {
                   <FontAwesomeIcon
                     icon={faPencilAlt}
                     className="text-success"
-                    onClick={() => setEditingLocation(!editingLocation)}
+                    onClick={() => setEditingLocation(true)}
                   />
                 </div>
                 {
@@ -372,7 +377,7 @@ function Idea() {
                     className="text-success"
                     onClick={() => {
                       (loc.newPostalCode && loc.newCountryCode)
-                        ? loc.handleLocationInput() && setEditingLocation(!editingLocation)
+                        ? loc.handleLocationInput()
                         : alert("Please enter both a postal code and a country code");
                     }}
                   />
@@ -471,7 +476,7 @@ function Idea() {
               size="2x"
               className="text-success"
               onClick={() => {
-                addingComment && newComment != "" && addComment();
+                addingComment && newComment !== "" && addComment();
                 setAddingComment(!addingComment);
               }}
             />
