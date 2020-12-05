@@ -25,6 +25,10 @@ function Profile() {
   const [editingLocation, setEditingLocation] = useState(false);
   const [newPostalCode, setNewPostalCode] = useState("");
   const [newCountryCode, setNewCountryCode] = useState("");
+  const [localData, setLocalData] = useState("");
+  const [gettingLocationData, setGettingLocationData] = useState(false);
+  const [parsingLocationData, setParsingLocationData] = useState(false);
+  const [apiData, setApiData] = useState({});
   const views = ["About", "Ideas", "Collabs"];
 
 
@@ -65,11 +69,79 @@ function Profile() {
       );
   }
 
+  async function handleLocationInput() {
+    setGettingLocationData(true);
+    // check local db for postcode + country
+    await axiosCall(
+      "post",
+      "/locations/get_by_postal_code",
+      setLocalData,
+      {
+        postal_code: newPostalCode,
+        country_code: newCountryCode
+      },
+      postHeaders
+    );
+  }
+
+  useEffect(() => {
+    if (gettingLocationData) {
+      setGettingLocationData(false);
+      if (localData.length > 0) {
+        // if postal code is in local database,
+        // use existing id
+        console.log("found local data");
+        editProfile("location_id", localData[0].id) && getUserById();
+        setNewPostalCode("");
+        setNewCountryCode("");
+      } else {
+        // if it's not there:
+        // getLocationData
+        console.log("getting api data");
+        getLocationData();
+        setParsingLocationData(true);
+      }
+    }
+  }, [localData])
+
+  useEffect(() => {
+    // parse location api data
+    if (parsingLocationData) {
+      if (Object.keys(apiData).length > 0) {
+        let apiObject = apiData.results[Object.keys(apiData.results)[0]][0];
+        // add location to local db and get id back
+        axiosCall(
+          "post",
+          "/locations/add",
+          tagNewLocation,
+          {
+            postal_code: apiObject.postal_code,
+            city: apiObject.city,
+            state: apiObject.state,
+            country_code: apiObject.country_code,
+            meta: JSON.stringify(apiObject)
+          },
+          postHeaders
+        );
+        setParsingLocationData(false);
+      } else {
+        alert("Whoops, no such postal code found in the database!")
+      }
+    }
+  }, [apiData])
+
+  function tagNewLocation(result) {
+    let newLocationId = result.data.id;
+    editProfile("location_id", newLocationId) && getUserById();
+    setNewPostalCode("");
+    setNewCountryCode("");
+  }
+
   async function getLocationData() {
     let response = await axiosCall(
       "get",
-      `&codes=${newPostalCode}&country=${newCountryCode}`,
-      console.log,
+      `&codes=${newPostalCode.split(" ").join("%20")}&country=${newCountryCode}`,
+      setApiData,
       {},
       postHeaders,
       `https://app.zipcodebase.com/api/v1/search?apikey=${zipCodeBaseKey}`
@@ -198,13 +270,16 @@ function Profile() {
                 </textarea>
               </>
             }
-            <h5>Location</h5>
             {
-              !currentUserProfile &&
-              <p>{userProfile.location_id}</p>
+              (currentUserProfile || userProfile.location) &&
+              <h5>Location</h5>
             }
             {
-              currentUserProfile && !editingLocation &&
+              (!currentUserProfile && userProfile.location) &&
+              <p>{`${userProfile.location.city}, ${userProfile.location.state}, ${userProfile.location.country_code}`}</p>
+            }
+            {
+              (currentUserProfile && !editingLocation) &&
               <>
                 <div>
                   <FontAwesomeIcon
@@ -213,7 +288,14 @@ function Profile() {
                     onClick={() => setEditingLocation(!editingLocation)}
                   />
                 </div>
-                <p>{userProfile.location_id}</p>
+                {
+                  parsingLocationData &&
+                  <p>Loading location data...</p>
+                }
+                {
+                  (userProfile.location && !parsingLocationData) &&
+                  <p>{`${userProfile.location.city}, ${userProfile.location.state}, ${userProfile.location.country_code} `}</p>
+                }
               </>
             }
             {
@@ -224,7 +306,9 @@ function Profile() {
                     icon={faSave}
                     className="text-success"
                     onClick={() => {
-                      getLocationData();
+                      (newPostalCode && newCountryCode)
+                        ? handleLocationInput()
+                        : alert("no location data entered");
                       setEditingLocation(!editingLocation);
                     }}
                   />

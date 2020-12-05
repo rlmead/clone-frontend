@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext, createContext } from "react";
 import { useApp } from "./AppContext";
 import { axiosCall } from "./axiosCall";
+import { clientSecret } from "./apiKeys";
 
 const authContext = createContext({});
 
@@ -99,7 +100,7 @@ function useAuthProvider() {
       {
         grant_type: "password",
         client_id: "2",
-        client_secret: "N4nEljq8gsfZ3R6qIZ5BqKdvptRR6uOBA2YahPb2",
+        client_secret: clientSecret,
         password,
         username,
         scope: ""
