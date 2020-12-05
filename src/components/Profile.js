@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col, Input, Nav, NavItem, NavLink } from "reactstrap";
-import { Link, useHistory, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
+import { useLocation } from "../utilities/LocationContext";
 import { countryCodes } from "../utilities/countryCodes";
 import { axiosCall } from "../utilities/axiosCall";
-import { zipCodeBaseKey } from "../utilities/apiKeys";
 import List from "./List";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
@@ -14,6 +14,7 @@ import { faSave } from '@fortawesome/free-solid-svg-icons'
 function Profile() {
   const { token } = useAuth();
   const { user } = useApp();
+  const loc = useLocation();
 
   const [userProfile, setUserProfile] = useState({});
   const [view, setView] = useState("About");
@@ -23,20 +24,10 @@ function Profile() {
   const [newBio, setNewBio] = useState("");
   const [editingPronouns, setEditingPronouns] = useState(false);
   const [newPronouns, setNewPronouns] = useState("");
-  const [editingLocation, setEditingLocation] = useState(false);
-  const [newPostalCode, setNewPostalCode] = useState("");
-  const [newCountryCode, setNewCountryCode] = useState("");
-  const [localData, setLocalData] = useState("");
-  const [gettingLocationData, setGettingLocationData] = useState(false);
-  const [parsingLocationData, setParsingLocationData] = useState(false);
-  const [apiData, setApiData] = useState({});
   const views = ["About", "Ideas", "Collabs"];
-
 
   let { userProfileId } = useParams();
   let currentUserProfile = user.id == userProfileId;
-
-  let history = useHistory();
 
   let postHeaders = {
     "Accept": "application/json",
@@ -68,84 +59,6 @@ function Profile() {
         },
         postHeaders
       );
-  }
-
-  async function handleLocationInput() {
-    setGettingLocationData(true);
-    // check local db for postcode + country
-    await axiosCall(
-      "post",
-      "/locations/get_by_postal_code",
-      setLocalData,
-      {
-        postal_code: newPostalCode,
-        country_code: newCountryCode
-      },
-      postHeaders
-    );
-  }
-
-  useEffect(() => {
-    if (gettingLocationData) {
-      setGettingLocationData(false);
-      if (localData.length > 0) {
-        // if postal code is in local database,
-        // use existing id
-        editProfile("location_id", localData[0].id) && getUserById();
-        setNewPostalCode("");
-        setNewCountryCode("");
-      } else {
-        // if it's not there:
-        // getLocationData
-        getLocationData();
-        setParsingLocationData(true);
-      }
-    }
-  }, [localData])
-
-  useEffect(() => {
-    // parse location api data
-    if (parsingLocationData) {
-      if (Object.keys(apiData).length > 0) {
-        let apiObject = apiData.results[Object.keys(apiData.results)[0]][0];
-        // add location to local db and get id back
-        axiosCall(
-          "post",
-          "/locations/add",
-          tagNewLocation,
-          {
-            postal_code: apiObject.postal_code,
-            city: apiObject.city,
-            state: apiObject.state,
-            country_code: apiObject.country_code,
-            meta: JSON.stringify(apiObject)
-          },
-          postHeaders
-        );
-        setParsingLocationData(false);
-      } else {
-        alert("Whoops, no such postal code found in the database!")
-      }
-    }
-  }, [apiData])
-
-  function tagNewLocation(result) {
-    let newLocationId = result.data.id;
-    editProfile("location_id", newLocationId) && getUserById();
-    setNewPostalCode("");
-    setNewCountryCode("");
-  }
-
-  async function getLocationData() {
-    let response = await axiosCall(
-      "get",
-      `&codes=${newPostalCode.split(" ").join("%20")}&country=${newCountryCode}`,
-      setApiData,
-      {},
-      postHeaders,
-      `https://app.zipcodebase.com/api/v1/search?apikey=${zipCodeBaseKey}`
-    );
-    return response;
   }
 
   function editNameKeyPress(e) {
@@ -184,6 +97,15 @@ function Profile() {
   useEffect(() => {
     getUserById();
   }, [userProfileId])
+
+  useEffect(() => {
+    editProfile("location_id", loc.newLocationId) && getUserById();
+  }, [loc.newLocationId])
+
+  useEffect(() => {
+    loc.localData.length > 0 &&
+    editProfile("location_id", loc.localData[0].id) && getUserById();
+  }, [loc.localData])
 
   function switchView(view) {
     switch (view) {
@@ -283,21 +205,21 @@ function Profile() {
               </Link>
             }
             {
-              (currentUserProfile && !editingLocation) &&
+              (currentUserProfile && !loc.editingLocation) &&
               <>
                 <div>
                   <FontAwesomeIcon
                     icon={faPencilAlt}
                     className="text-success"
-                    onClick={() => setEditingLocation(!editingLocation)}
+                    onClick={() => loc.setEditingLocation(!loc.editingLocation)}
                   />
                 </div>
                 {
-                  parsingLocationData &&
+                  loc.parsingLocationData &&
                   <p>Loading location data...</p>
                 }
                 {
-                  (userProfile.location && !parsingLocationData) &&
+                  (userProfile.location && !loc.parsingLocationData) &&
                   <Link
                     to={`/locations/${userProfile.location.city}_${userProfile.location.state}_${userProfile.location.country_code}`}
                     className="text-dark"
@@ -308,22 +230,22 @@ function Profile() {
               </>
             }
             {
-              currentUserProfile && editingLocation &&
+              currentUserProfile && loc.editingLocation &&
               <>
                 <div>
                   <FontAwesomeIcon
                     icon={faSave}
                     className="text-success"
                     onClick={() => {
-                      (newPostalCode && newCountryCode)
-                        ? handleLocationInput() && setEditingLocation(!editingLocation)
+                      (loc.newPostalCode && loc.newCountryCode)
+                        ? loc.handleLocationInput() && loc.setEditingLocation(!loc.editingLocation)
                         : alert("Please enter both a postal code and a country code");
                     }}
                   />
                 </div>
                 <input
                   type="text"
-                  onChange={(e) => setNewPostalCode(e.target.value)}
+                  onChange={(e) => loc.setNewPostalCode(e.target.value)}
                   maxLength={64}
                   style={{ width: "20%" }}
                   placeholder="Postal code">
@@ -334,7 +256,7 @@ function Profile() {
                   style={{ width: "20%" }}
                   onKeyPress={(e) => console.log(e)}
                   onChange={(e) => {
-                    setNewCountryCode(e.target.value)
+                    loc.setNewCountryCode(e.target.value)
                   }}>
                   {
                     countryCodes.map((item, index) => {
@@ -344,7 +266,7 @@ function Profile() {
                 </Input>
                 {/* <input
                   type="text"
-                  onChange={(e) => setNewCountryCode(e.target.value)}
+                  onChange={(e) => loc.setNewCountryCode(e.target.value)}
                   maxLength={64}
                   style={{ width: "20%" }}
                   placeholder="Country code">
