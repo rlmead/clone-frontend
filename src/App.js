@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Container } from "reactstrap";
 import { AppProvider } from "./utilities/AppContext";
 import { AuthProvider } from "./utilities/AuthContext";
+import { LocationProvider } from "./utilities/LocationContext";
 import Header from "./components/Header";
 import Public from "./components/Public";
 import Profile from "./components/Profile";
@@ -17,34 +18,42 @@ function App() {
     <div className="App">
       <AppProvider>
         <AuthProvider>
-          <Router>
-            <Header />
-            <Container>
-              <Switch>
-                <Route exact path="/">
-                  <Public />
-                </Route>
-                <Route path="/public/:view">
-                  <Public />
-                </Route>
-                <Route path={`/users/:userProfileId`}>
-                  <Profile />
-                </Route>
-                <Route path={`/users`}>
-                  <List type="users" route="/users" />
-                </Route>
-                <Route path={`/ideas/new`}>
-                  <IdeaForm />
-                </Route>
-                <Route path={`/ideas/:ideaId`}>
-                  <Idea />
-                </Route>
-                <Route path={`/ideas`}>
-                  <List type="ideas" route="/ideas" />
-                </Route>
-              </Switch>
-            </Container>
-          </Router>
+          <LocationProvider>
+            <Router>
+              <Header />
+              <Container>
+                <Switch>
+                  <Route exact path="/">
+                    <Public />
+                  </Route>
+                  <Route path="/public/:view">
+                    <Public />
+                  </Route>
+                  <Route path={`/users/:userProfileId`}>
+                    <Profile />
+                  </Route>
+                  <Route path={`/users`}>
+                    <List type="users" route="/users" />
+                  </Route>
+                  <Route exact path={`/locations`}>
+                    <List type="locations" route="/locations" />
+                  </Route>
+                  <Route path={`/locations/:locationString`}>
+                    <List type="ideas" route="/locations" />
+                  </Route>
+                  <Route path={`/ideas/new`}>
+                    <IdeaForm />
+                  </Route>
+                  <Route path={`/ideas/:ideaId`}>
+                    <Idea />
+                  </Route>
+                  <Route path={`/ideas`}>
+                    <List type="ideas" route="/ideas" />
+                  </Route>
+                </Switch>
+              </Container>
+            </Router>
+          </LocationProvider>
         </AuthProvider>
       </AppProvider>
     </div>
