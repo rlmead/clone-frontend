@@ -40,11 +40,11 @@ function App() {
                   <PrivateRoute path={`/users/:userProfileId`}>
                     <Profile />
                   </PrivateRoute>
-                  <PrivateRoute path={`/ideas/:ideaId`}>
-                    <Idea />
-                  </PrivateRoute>
                   <PrivateRoute path={`/ideas/new`}>
                     <IdeaForm />
+                  </PrivateRoute>
+                  <PrivateRoute path={`/ideas/:ideaId`}>
+                    <Idea />
                   </PrivateRoute>
                 </Switch>
               </Container>
