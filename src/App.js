@@ -31,21 +31,21 @@ function App() {
                   <Route path="/public/:view">
                     <Public />
                   </Route>
-                  <PrivateRoute path={`/users/:userProfileId`}>
-                    <Profile />
-                  </PrivateRoute>
-                  <Route path={`/locations/:locationString`}>
-                    <List type="ideas" route="/locations" />
-                  </Route>
-                  <Route path={`/ideas/new`}>
-                    <IdeaForm />
-                  </Route>
-                  <Route path={`/ideas/:ideaId`}>
-                    <Idea />
-                  </Route>
                   <Route path={`/browse`}>
                     <Browse />
                   </Route>
+                  <Route path={`/locations/:locationString`}>
+                    <List type="ideas" route="/locations" />
+                  </Route>
+                  <PrivateRoute path={`/users/:userProfileId`}>
+                    <Profile />
+                  </PrivateRoute>
+                  <PrivateRoute path={`/ideas/new`}>
+                    <IdeaForm />
+                  </PrivateRoute>
+                  <PrivateRoute path={`/ideas/:ideaId`}>
+                    <Idea />
+                  </PrivateRoute>
                 </Switch>
               </Container>
             </Router>

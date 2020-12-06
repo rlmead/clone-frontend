@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Jumbotron, Row, Col, Input, Button, Card, Label } from "reactstrap";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams, useLocation } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 
 function Public() {
-  const { user, setEmail } = useApp();
+  const { setEmail } = useApp();
   const auth = useAuth();
 
+  let location = useLocation();
   let history = useHistory();
+
+  let { from } = location.state || { from: { pathname: "/" } };
 
   let { view } = useParams();
 
@@ -18,7 +21,7 @@ function Public() {
   const [passwordConf, setPasswordConf] = useState("");
 
   useEffect(() => {
-    // auth.justLoggedIn && history.push(`/users/${user.id}`);
+    auth.justLoggedIn && history.replace(from);
     auth.setJustLoggedIn(false);
   }, [auth.justLoggedIn])
 
