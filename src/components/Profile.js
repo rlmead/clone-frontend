@@ -82,7 +82,7 @@ function Profile() {
     ]
   }
 
-  function switchView(view) {
+  function switchView() {
     switch (view) {
       case "About":
         return (
@@ -115,10 +115,6 @@ function Profile() {
       case "Collabs":
         return (
           <List type="ideas" route="/users/get_collaborations" data={{ id: userProfileId }} />
-        )
-      default:
-        return (
-          <p>under construction</p>
         )
     }
   };
@@ -167,7 +163,7 @@ function Profile() {
               })
             }
           </Nav>
-          {switchView(view)}
+          {switchView()}
         </Col>
       </Row >
       :

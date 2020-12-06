@@ -10,6 +10,7 @@ import Header from "./components/Header";
 import Public from "./components/Public";
 import Profile from "./components/Profile";
 import Idea from "./components/Idea";
+import Browse from "./components/Browse";
 import IdeaForm from "./components/IdeaForm";
 import List from "./components/List";
 
@@ -32,12 +33,6 @@ function App() {
                   <Route path={`/users/:userProfileId`}>
                     <Profile />
                   </Route>
-                  <Route path={`/users`}>
-                    <List type="users" route="/users" />
-                  </Route>
-                  <Route exact path={`/locations`}>
-                    <List type="locations" route="/locations" />
-                  </Route>
                   <Route path={`/locations/:locationString`}>
                     <List type="ideas" route="/locations" />
                   </Route>
@@ -47,8 +42,8 @@ function App() {
                   <Route path={`/ideas/:ideaId`}>
                     <Idea />
                   </Route>
-                  <Route path={`/ideas`}>
-                    <List type="ideas" route="/ideas" />
+                  <Route path={`/browse`}>
+                    <Browse />
                   </Route>
                 </Switch>
               </Container>

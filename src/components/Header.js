@@ -13,7 +13,7 @@ function Header() {
 
   let navItems = token
     ? [
-      { to: "/ideas", text: "Browse ideas" },
+      { to: "/browse", text: "Browse ideas" },
       { to: "/ideas/new", text: "Add idea" },
       { to: `/users/${user.id}`, text: `${user.name}'s profile` },
       { to: "/public/logout", text: "Log out", onClick: () => logOut() }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Row, Col, Nav, NavItem, NavLink, Input, ListGroup, ListGroupItem } from "reactstrap";
+import { Button, Row, Col, Nav, NavItem, NavLink, ListGroup, ListGroupItem } from "reactstrap";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
@@ -163,7 +163,7 @@ function Idea() {
     ]
   }
 
-  function switchView(view) {
+  function switchView() {
     switch (view) {
       case "About":
         return (
@@ -281,10 +281,6 @@ function Idea() {
             </ListGroup>
           </>
         )
-      default:
-        return (
-          <p>under construction</p>
-        )
     }
   };
 
@@ -345,7 +341,7 @@ function Idea() {
               })
             }
           </Nav>
-          {switchView(view)}
+          {switchView()}
         </Col>
       </Row >
       :
