@@ -31,18 +31,22 @@ function Public() {
       : auth.setStorage(window.sessionStorage);
   }
 
+  let usernameRe = /^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/;
+
   async function signUp() {
     if (password !== passwordConf) {
       alert("Your passwords don't match! Please try again.");
     } else if (password.length < 8) {
       alert("Please use a password that's at least 8 characters long.");
+    } else if (!usernameRe.test(localUsername)) {
+      alert("Please enter a username between 8 and 20 alphanumeric characters. Your username can include . and _, but not at the beginning or end.")
     } else {
       setUsername(localUsername);
       let error = await auth.signUp(name, localUsername, password);
       if (error) {
         switch (error.response.status) {
           case 500:
-            alert("There's already an account associated with this username! Please use a different username, or log in instead.");
+            alert("Looks like there's already an account with that username!");
             break;
           case 422:
             alert("Please enter a valid username.");
