@@ -7,7 +7,6 @@ import { axiosCall } from "../utilities/axiosCall";
 import { countryCodes } from "../utilities/countryCodes";
 import Editable from "./Editable";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { faSave } from '@fortawesome/free-solid-svg-icons'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
@@ -24,8 +23,6 @@ function Idea() {
   const [ideaUsers, setIdeaUsers] = useState([]);
   const [comments, setComments] = useState([]);
   const [view, setView] = useState("About");
-  const [editingName, setEditingName] = useState(false);
-  const [newName, setNewName] = useState("");
   const [addingComment, setAddingComment] = useState(false);
   const [newComment, setNewComment] = useState("");
   const views = ["About", "People", "Discussion"];
@@ -104,20 +101,6 @@ function Idea() {
     return response;
   }
 
-  async function editData(key, value) {
-    value !== "" &&
-      await axiosCall(
-        "post",
-        "/ideas/update",
-        console.log,
-        {
-          id: ideaId,
-          [key]: value
-        },
-        postHeaders
-      );
-  }
-
   async function requestCollab() {
     await axiosCall(
       "post",
@@ -164,15 +147,6 @@ function Idea() {
       newComment !== "" && addComment() && getComments();
       setAddingComment(!addingComment);
     }
-  }
-
-  function isValidUrl(string) {
-    try {
-      new URL(string);
-    } catch (_) {
-      return false;
-    }
-    return true;
   }
 
   useEffect(() => {
@@ -321,66 +295,22 @@ function Idea() {
   return (
     <Row>
       <Col sm="3">
-        {
-          !currentUserOwnsIdea &&
-          <h4>{ideaData.name}</h4>
-        }
-        {
-          currentUserOwnsIdea && !editingName &&
-          <>
-            <h4>{ideaData.name}</h4>
-            <div>
-              <FontAwesomeIcon
-                icon={faPencilAlt}
-                className="text-success"
-                onClick={() => setEditingName(!editingName)}
-              />
-            </div>
-          </>
-        }
-        {
-          currentUserOwnsIdea && editingName &&
-          <>
-            <textarea
-              onChange={(e) => setNewName(e.target.value)}
-              maxLength={255}
-              style={{ width: "100%" }}>
-              {ideaData.name}
-            </textarea>
-            <div>
-              <FontAwesomeIcon
-                icon={faSave}
-                className="text-success"
-                onClick={() => {
-                  editData("name", newName) && getIdeaById();
-                  setEditingName(!editingName);
-                }}
-              />
-            </div>
-          </>
-        }
-        <img
-          alt=""
-          className="img-fluid"
-          style={{ height: "auto", width: "100%" }}
-          src={ideaData.image_url || "https://images.unsplash.com/photo-1529310399831-ed472b81d589?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=634&q=80"} />
-        {
-          currentUserOwnsIdea &&
-          <FontAwesomeIcon
-            icon={faPencilAlt}
-            className="text-success"
-            onClick={() => {
-              let newUrl = prompt("Please enter a link to your new picture.");
-              if (newUrl) {
-                if (isValidUrl(newUrl)) {
-                  editData("image_url", newUrl) && getIdeaById();
-                } else {
-                  alert("Whoops, that doesn't look like a valid link!");
-                }
-              }
-            }}
-          />
-        }
+        <Editable
+          canEdit={currentUserOwnsIdea}
+          staticElementType="h4"
+          table="ideas"
+          rowId={ideaId}
+          field="name"
+          content={ideaData.name}
+          refreshFunction={getIdeaById} />
+        <Editable
+          canEdit={currentUserOwnsIdea}
+          staticElementType="img"
+          table="ideas"
+          rowId={ideaId}
+          field="image_url"
+          content={ideaData.image_url}
+          refreshFunction={getIdeaById} />
         {
           !currentUserOwnsIdea
           && !currentUserIsCollaborator

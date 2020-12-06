@@ -25,7 +25,7 @@ function Editable(props) {
   const [savingUpdate, setSavingUpdate] = useState(false);
   const [justUpdated, setJustUpdated] = useState(false);
   const [newValue, setNewValue] = useState("");
-
+  
   useEffect(() => {
     if (savingUpdate) {
       if (props.inputElementType === "collabRequest") {
@@ -33,6 +33,8 @@ function Editable(props) {
           saveRelationship(props.ideaId, props.userId, newValue, token);
           setJustUpdated(true);
         }
+      } else if (props.staticElementType === "img" && !isValidUrl(newValue)) {
+        alert("Whoops, that doesn't look like a valid link!");
       } else if (newValue !== "") {
         editData(props.table, props.rowId, props.field, newValue, token);
         setNewValue("");
@@ -77,9 +79,36 @@ function Editable(props) {
     }
   }
 
+  function isValidUrl(string) {
+    try {
+      new URL(string);
+    } catch (_) {
+      return false;
+    }
+    return true;
+  }
+
   function switchStaticView() {
     switch (props.staticElementType) {
-      case "h5":
+      case "img":
+        let image_url;
+        if (props.content) {
+          image_url = props.content;
+        } else if (props.table === "ideas") {
+          image_url = "https://images.unsplash.com/photo-1529310399831-ed472b81d589?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=634&q=80"
+        }
+        return (
+          <img
+          alt=""
+          className="img-fluid"
+          style={{ height: "auto", width: "100%" }}
+          src={image_url} />
+        )
+      case "h4":
+        return (
+          <h4>{props.content}</h4>
+        )
+      case "h4":
         return (
           <h5>{props.content}</h5>
         )
