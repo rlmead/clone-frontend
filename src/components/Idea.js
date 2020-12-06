@@ -289,63 +289,71 @@ function Idea() {
   };
 
   return (
-    <Row>
-      <Col sm="3">
-        {
-          editables.main.map((item, index) => {
-            return (
-              <>
-                <Editable
-                  key={`editable-main-${index}`}
-                  canEdit={currentUserOwnsIdea}
-                  table="ideas"
-                  rowId={ideaId}
-                  refreshFunction={getIdeaById}
-                  staticElementType={item.staticElementType}
-                  field={item.field}
-                  content={item.content} />
-              </>
-            )
-          })
-        }
-        {
-          !currentUserOwnsIdea && !currentUserIsCollaborator && ideaData.status === "open" &&
-          <Button
-            className="btn-success"
-            onClick={() => requestCollab() && getIdeaUsers()}
-            disabled={collabRequested}>
-            {
-              collabRequested
-                ? "Collaboration Requested"
-                : "Request to Collaborate"
-            }
-          </Button>
-        }
-      </Col>
-      <Col sm="9" style={{ textAlign: "left" }}>
-        <Nav
-          justified
-          tabs
-          className="bg-light fixed-bottom">
+    (Object.keys(ideaData).length > 0)
+      ?
+      <Row>
+        <Col sm="3">
           {
-            views.map((item, index) => {
+            editables.main.map((item, index) => {
               return (
-                <NavItem
-                  key={"button-" + index}>
-                  <NavLink
-                    className={(view === item) ? "active" : ""}
-                    id={item}
-                    onClick={() => setView(item)}>
-                    <h5>{item}</h5>
-                  </NavLink>
-                </NavItem>
+                <>
+                  <Editable
+                    key={`editable-main-${index}`}
+                    canEdit={currentUserOwnsIdea}
+                    table="ideas"
+                    rowId={ideaId}
+                    refreshFunction={getIdeaById}
+                    staticElementType={item.staticElementType}
+                    field={item.field}
+                    content={item.content} />
+                </>
               )
             })
           }
-        </Nav>
-        {switchView(view)}
-      </Col>
-    </Row >
+          {
+            !currentUserOwnsIdea && !currentUserIsCollaborator && ideaData.status === "open" &&
+            <Button
+              className="btn-success"
+              onClick={() => requestCollab() && getIdeaUsers()}
+              disabled={collabRequested}>
+              {
+                collabRequested
+                  ? "Collaboration Requested"
+                  : "Request to Collaborate"
+              }
+            </Button>
+          }
+        </Col>
+        <Col sm="9" style={{ textAlign: "left" }}>
+          <Nav
+            justified
+            tabs
+            className="bg-light fixed-bottom">
+            {
+              views.map((item, index) => {
+                return (
+                  <NavItem
+                    key={"button-" + index}>
+                    <NavLink
+                      className={(view === item) ? "active" : ""}
+                      id={item}
+                      onClick={() => setView(item)}>
+                      <h5>{item}</h5>
+                    </NavLink>
+                  </NavItem>
+                )
+              })
+            }
+          </Nav>
+          {switchView(view)}
+        </Col>
+      </Row >
+      :
+      <Row>
+        <Col>
+          <h3 className="text-left">Loading...</h3>
+        </Col>
+      </Row>
   )
 }
 

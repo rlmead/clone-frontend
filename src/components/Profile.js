@@ -107,68 +107,76 @@ function Profile() {
           })
         )
       case "Ideas":
-    return (
-      <>
-        <List type="ideas" route="/users/get_creations" data={{ id: userProfileId }} />
-      </>
-    )
+        return (
+          <>
+            <List type="ideas" route="/users/get_creations" data={{ id: userProfileId }} />
+          </>
+        )
       case "Collabs":
-    return (
-      <List type="ideas" route="/users/get_collaborations" data={{ id: userProfileId }} />
-    )
+        return (
+          <List type="ideas" route="/users/get_collaborations" data={{ id: userProfileId }} />
+        )
       default:
-    return (
-      <p>under construction</p>
-    )
-  }
-};
+        return (
+          <p>under construction</p>
+        )
+    }
+  };
 
-return (
-  <Row>
-    <Col sm="3">
-      {
-        editables.main.map((item, index) => {
-          return (
-            <>
-              <Editable
-                key={`editable-main-${index}`}
-                canEdit={currentUserProfile}
-                table="users"
-                rowId={user.id}
-                refreshFunction={getUserById}
-                staticElementType={item.staticElementType}
-                field={item.field}
-                content={item.content} />
-            </>
-          )
-        })
-      }
-    </Col>
-    <Col sm="9" style={{ textAlign: "left" }}>
-      <Nav
-        justified
-        tabs
-        className="bg-light fixed-bottom">
-        {
-          views.map((item, index) => {
-            return (
-              <NavItem
-                key={"button-" + index}>
-                <NavLink
-                  className={(view === item) ? "active" : ""}
-                  id={item}
-                  onClick={() => setView(item)}>
-                  <h5>{item}</h5>
-                </NavLink>
-              </NavItem>
-            )
-          })
-        }
-      </Nav>
-      {switchView(view)}
-    </Col>
-  </Row >
-)
+  return (
+    (Object.keys(userProfile).length > 0)
+      ?
+      <Row>
+        <Col sm="3">
+          {
+            editables.main.map((item, index) => {
+              return (
+                <>
+                  <Editable
+                    key={`editable-main-${index}`}
+                    canEdit={currentUserProfile}
+                    table="users"
+                    rowId={user.id}
+                    refreshFunction={getUserById}
+                    staticElementType={item.staticElementType}
+                    field={item.field}
+                    content={item.content} />
+                </>
+              )
+            })
+          }
+        </Col>
+        <Col sm="9" style={{ textAlign: "left" }}>
+          <Nav
+            justified
+            tabs
+            className="bg-light fixed-bottom">
+            {
+              views.map((item, index) => {
+                return (
+                  <NavItem
+                    key={"button-" + index}>
+                    <NavLink
+                      className={(view === item) ? "active" : ""}
+                      id={item}
+                      onClick={() => setView(item)}>
+                      <h5>{item}</h5>
+                    </NavLink>
+                  </NavItem>
+                )
+              })
+            }
+          </Nav>
+          {switchView(view)}
+        </Col>
+      </Row >
+      :
+      <Row>
+        <Col>
+          <h3 className="text-left">Loading...</h3>
+        </Col>
+      </Row>
+  )
 }
 
 export default Profile;
