@@ -46,7 +46,7 @@ function Profile() {
 
   const editables = {
     main: [
-      { field: "name", staticElementType: "h4", content: userProfile.name },
+      { field: "name", staticElementType: "h3", content: userProfile.name },
       { field: "image_url", staticElementType: "img", content: userProfile.image_url }
     ],
     about: [

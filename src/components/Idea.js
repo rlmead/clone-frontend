@@ -156,7 +156,7 @@ function Idea() {
 
   const editables = {
     main: [
-      { field: "name", staticElementType: "h4", content: ideaData.name },
+      { field: "name", staticElementType: "h5", content: ideaData.name },
       { field: "image_url", staticElementType: "img", content: ideaData.image_url }
     ],
     about: [
