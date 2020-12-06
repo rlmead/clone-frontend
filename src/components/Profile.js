@@ -111,12 +111,12 @@ function Profile() {
       case "Ideas":
         return (
           <>
-            <List type="ideas" route="/users/get_creations" data={{ id: username }} />
+            <List type="ideas" route="/users/get_creations" data={{ id: userProfile.id }} />
           </>
         )
       case "Collabs":
         return (
-          <List type="ideas" route="/users/get_collaborations" data={{ id: username }} />
+          <List type="ideas" route="/users/get_collaborations" data={{ id: userProfile.id }} />
         )
     }
   };

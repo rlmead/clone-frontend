@@ -66,6 +66,7 @@ function Idea() {
       output.push({
         role: input[i].pivot.user_role,
         id: input[i].id,
+        username: input[i].username,
         name: input[i].name
       });
     }
@@ -202,7 +203,7 @@ function Idea() {
                     key={`listItem-${index}`}>
                     <Row>
                       <Col sm="8">
-                        <h4 onClick={() => history.push(`/users/${item.id}`)}>{item.name}</h4>
+                        <h4 onClick={() => history.push(`/users/${item.username}`)}>{item.name}</h4>
                       </Col>
                       <Col sm="4">
                         <Editable
@@ -254,7 +255,7 @@ function Idea() {
                         </Col>
                         <Col sm="4">
                           <Link
-                            to={`/users/${item.users.id}`}
+                            to={`/users/${item.users.username}`}
                             className="text-dark"
                             style={{ textDecoration: "none" }}>
                             <h5>{item.users.name}</h5>
