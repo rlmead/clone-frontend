@@ -42,10 +42,6 @@ function Idea() {
     && ideaUsers.map(item => item.id).includes(user.id)
     && ideaUsers.filter(item => item.id === user.id)[0].role === "request");
 
-  let editables = [
-    { table: "ideas", column: "name", element: "h4" }
-  ]
-
   let postHeaders = {
     "Accept": "application/json",
     "Content-Type": "application/json; charset=utf-8",
@@ -155,40 +151,46 @@ function Idea() {
     getComments();
   }, [ideaId])
 
+  let editables = {
+    main: [
+      {}
+    ],
+    about: [
+      { name: "Description", field: "description", inputElementType: "textarea", content: ideaData.description },
+      { name: "Status", field: "status", inputElementType: "select", content: ideaData.status, inputOptions: ["", "open", "closed"] },
+      { name: (ideaData.location || currentUserOwnsIdea) ? "Location" : null, field: "location_id", inputElementType: "location", inputOptions: countryCodes, staticElementType: "location", locationData: ideaData.location },
+    ]
+  }
+
   function switchView(view) {
     switch (view) {
       case "About":
         return (
           <>
-            <h5>Description</h5>
-            <Editable
-              canEdit={currentUserOwnsIdea}
-              table="ideas"
-              rowId={ideaId}
-              field="description"
-              content={ideaData.description}
-              refreshFunction={getIdeaById} />
-            <h5>Status</h5>
-            <Editable
-              canEdit={currentUserOwnsIdea}
-              inputElementType="select"
-              inputOptions={["", "open", "closed"]}
-              table="ideas"
-              rowId={ideaId}
-              field="status"
-              content={ideaData.status}
-              refreshFunction={getIdeaById} />
-            <h5>Location</h5>
-            <Editable
-              canEdit={currentUserOwnsIdea}
-              staticElementType="location"
-              locationData={ideaData.location ? ideaData.location : {}}
-              inputElementType="location"
-              inputOptions={countryCodes}
-              table="ideas"
-              rowId={ideaId}
-              field="location_id"
-              refreshFunction={getIdeaById} />
+            {
+              editables.about.map((item, index) => {
+                return (
+                  <>
+                  {
+                    item.name &&
+                    <h5>{item.name}</h5>
+                  }
+                    <Editable
+                      key={`editable-about-${index}`}
+                      canEdit={currentUserOwnsIdea}
+                      table="ideas"
+                      rowId={ideaId}
+                      refreshFunction={getIdeaById}
+                      field={item.field}
+                      inputElementType={item.inputElementType}
+                      content={item.content || null}
+                      staticElementType={item.staticElementType || null}
+                      inputOptions={item.inputOptions || null}
+                      locationData={item.locationData || null } />
+                  </>
+                )
+              })
+            }
           </>
         )
       case "People":

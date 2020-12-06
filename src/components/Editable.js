@@ -25,7 +25,7 @@ function Editable(props) {
   const [savingUpdate, setSavingUpdate] = useState(false);
   const [justUpdated, setJustUpdated] = useState(false);
   const [newValue, setNewValue] = useState("");
-  
+
   useEffect(() => {
     if (savingUpdate) {
       if (props.inputElementType === "collabRequest") {
@@ -99,10 +99,10 @@ function Editable(props) {
         }
         return (
           <img
-          alt=""
-          className="img-fluid"
-          style={{ height: "auto", width: "100%" }}
-          src={image_url} />
+            alt=""
+            className="img-fluid"
+            style={{ height: "auto", width: "100%" }}
+            src={image_url} />
         )
       case "h4":
         return (
@@ -114,6 +114,7 @@ function Editable(props) {
         )
       case "location":
         return (
+          props.locationData &&
           <Link
             to={`/locations/${props.locationData.city}-${props.locationData.state}-${props.locationData.country_code}`}
             className="text-dark"
