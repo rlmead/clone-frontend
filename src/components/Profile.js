@@ -4,8 +4,9 @@ import { Link, useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 import { useLocation } from "../utilities/LocationContext";
-import { countryCodes } from "../utilities/countryCodes";
 import { axiosCall } from "../utilities/axiosCall";
+import { countryCodes } from "../utilities/countryCodes";
+import Editable from "./Editable";
 import List from "./List";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
@@ -111,11 +112,24 @@ function Profile() {
     setEditingLocation(false);
   }, [loc.localData])
 
+  const editables = {
+    main: [
+      { field: "name", staticElementType: "h4", content: userProfile.name },
+      { field: "image_url", staticElementType: "img", content: userProfile.image_url }
+    ],
+    // about: [
+    //   { name: "Description", field: "description", inputElementType: "textarea", content: ideaData.description },
+    //   { name: "Status", field: "status", inputElementType: "select", content: ideaData.status, inputOptions: ["", "open", "closed"] },
+    //   { name: (ideaData.location || currentUserOwnsIdea) ? "Location" : null, field: "location_id", inputElementType: "location", inputOptions: countryCodes, staticElementType: "location", locationData: ideaData.location },
+    // ]
+  }
+
   function switchView(view) {
     switch (view) {
       case "About":
         return (
           <>
+
             <h5>Bio</h5>
             {
               !currentUserProfile &&
@@ -293,66 +307,22 @@ function Profile() {
   return (
     <Row>
       <Col sm="3">
-        {
-          !currentUserProfile &&
-          <h4>{userProfile.name}</h4>
-        }
-        {
-          currentUserProfile && !editingName &&
-          <>
-            <h4>{userProfile.name}</h4>
-            <div>
-              <FontAwesomeIcon
-                icon={faPencilAlt}
-                className="text-success"
-                onClick={() => setEditingName(!editingName)}
-              />
-            </div>
-          </>
-        }
-        {
-          currentUserProfile && editingName &&
-          <>
-            <textarea
-              onChange={(e) => setNewName(e.target.value)}
-              onKeyPress={(e) => editNameKeyPress(e)}
-              maxLength={64}
-              style={{ width: "100%" }}>
-              {userProfile.name}
-            </textarea>
-            <div>
-              <FontAwesomeIcon
-                icon={faSave}
-                className="text-success"
-                onClick={() => {
-                  editProfile("name", newName) && getUserById();
-                  setEditingName(!editingName);
-                }}
-              />
-            </div>
-          </>
-        }
-        <img
-          alt=""
-          className="img-fluid"
-          style={{ height: "auto", width: "100%" }}
-          src={userProfile.image_url || "https://images.unsplash.com/photo-1490059830487-2f86fddb2b4b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80"} />
-        {
-          currentUserProfile &&
-          <FontAwesomeIcon
-            icon={faPencilAlt}
-            className="text-success"
-            onClick={() => {
-              let newUrl = prompt("Please enter a link to your new profile picture.");
-              if (newUrl) {
-                if (isValidUrl(newUrl)) {
-                  editProfile("image_url", newUrl) && getUserById();
-                } else {
-                  alert("Whoops, that doesn't look like a valid link!");
-                }
-              }
-            }}
-          />
+      {
+          editables.main.map((item, index) => {
+            return (
+              <>
+                <Editable
+                  key={`editable-main-${index}`}
+                  canEdit={currentUserProfile}
+                  table="users"
+                  rowId={user.id}
+                  refreshFunction={getUserById}
+                  staticElementType={item.staticElementType}
+                  field={item.field}
+                  content={item.content} />
+              </>
+            )
+          })
         }
       </Col>
       <Col sm="9" style={{ textAlign: "left" }}>
