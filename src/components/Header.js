@@ -19,7 +19,7 @@ function Header() {
       { to: "/public/logout", text: "Log out", onClick: () => logOut() }
     ]
     : [
-      { to: "/ideas", text: "Browse ideas" },
+      { to: "/browse", text: "Browse ideas" },
       { to: "/public/signup", text: "Sign up" },
       { to: "/public/login", text: "Log in" }
     ]

@@ -87,67 +87,49 @@ function Public() {
         return (
           <Card
             onKeyPress={signUpKeyPress}>
-            {
-              auth.token
-                ? (
-                  <>
-                    <h3>You're already logged in!</h3>
-                    <Link to="/">
-                      <Button
-                        className="btn-success"
-                        onClick={() => auth.logOut()}>
-                        Log out
-                    </Button>
-                    </Link>
-                  </>
-                ) : (
-                  <>
-                    <h3>Sign Up</h3>
-                    <Input
-                      type="text"
-                      placeholder="Name"
-                      maxLength={64}
-                      onChange={(e) => setName(e.target.value)}
-                    />
-                    <Input
-                      type="text"
-                      placeholder="Email address"
-                      maxLength={64}
-                      onChange={(e) => setLocalEmail(e.target.value)}
-                    />
-                    <Input
-                      type="password"
-                      placeholder="Password"
-                      minLength={8}
-                      maxLength={64}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <Input
-                      type="password"
-                      placeholder="Confirm password"
-                      minLength={8}
-                      maxLength={64}
-                      onChange={(e) => setPasswordConf(e.target.value)}
-                    />
-                    <Label>
-                      <Input
-                        type="checkbox"
-                        onChange={() => changeStorage()} />
+            <h3>Sign Up</h3>
+            <Input
+              type="text"
+              placeholder="Name"
+              maxLength={64}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <Input
+              type="text"
+              placeholder="Email address"
+              maxLength={64}
+              onChange={(e) => setLocalEmail(e.target.value)}
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              minLength={8}
+              maxLength={64}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <Input
+              type="password"
+              placeholder="Confirm password"
+              minLength={8}
+              maxLength={64}
+              onChange={(e) => setPasswordConf(e.target.value)}
+            />
+            <Label>
+              <Input
+                type="checkbox"
+                onChange={() => changeStorage()} />
                       Remember me
-                    </Label>
-                    <Button
-                      className="btn-success"
-                      onClick={() => signUp()}
-                      disabled={
-                        name.length === 0
-                        || email.length === 0
-                        || password.length === 0
-                        || password.length !== passwordConf.length}>
-                      Create Account
-                    </Button>
-                  </>
-                )
-            }
+            </Label>
+            <Button
+              className="btn-success"
+              onClick={() => signUp()}
+              disabled={
+                name.length === 0
+                || email.length === 0
+                || password.length === 0
+                || password.length !== passwordConf.length}>
+              Create Account
+            </Button>
           </Card>
         );
       case "login":
