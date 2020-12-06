@@ -7,6 +7,7 @@ import { AppProvider } from "./utilities/AppContext";
 import { AuthProvider } from "./utilities/AuthContext";
 import { LocationProvider } from "./utilities/LocationContext";
 import Header from "./components/Header";
+import PrivateRoute from "./components/PrivateRoute";
 import Public from "./components/Public";
 import Profile from "./components/Profile";
 import Idea from "./components/Idea";
@@ -30,9 +31,9 @@ function App() {
                   <Route path="/public/:view">
                     <Public />
                   </Route>
-                  <Route path={`/users/:userProfileId`}>
+                  <PrivateRoute path={`/users/:userProfileId`}>
                     <Profile />
-                  </Route>
+                  </PrivateRoute>
                   <Route path={`/locations/:locationString`}>
                     <List type="ideas" route="/locations" />
                   </Route>

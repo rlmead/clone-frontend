@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Jumbotron, Row, Col, Input, Button, Card, Label } from "reactstrap";
-import { Link, useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 
@@ -18,7 +18,7 @@ function Public() {
   const [passwordConf, setPasswordConf] = useState("");
 
   useEffect(() => {
-    auth.justLoggedIn && history.push(`/users/${user.id}`);
+    // auth.justLoggedIn && history.push(`/users/${user.id}`);
     auth.setJustLoggedIn(false);
   }, [auth.justLoggedIn])
 
