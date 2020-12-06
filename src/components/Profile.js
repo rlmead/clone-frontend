@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Input, Nav, NavItem, NavLink } from "reactstrap";
-import { Link, useParams } from "react-router-dom";
+import { Row, Col, Nav, NavItem, NavLink } from "reactstrap";
+import { useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 import { useLocation } from "../utilities/LocationContext";
@@ -8,9 +8,6 @@ import { axiosCall } from "../utilities/axiosCall";
 import { countryCodes } from "../utilities/countryCodes";
 import Editable from "./Editable";
 import List from "./List";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
-import { faSave } from '@fortawesome/free-solid-svg-icons'
 
 function Profile() {
   const { token } = useAuth();
@@ -19,10 +16,6 @@ function Profile() {
 
   const [userProfile, setUserProfile] = useState({});
   const [view, setView] = useState("About");
-  const [editingBio, setEditingBio] = useState(false);
-  const [newBio, setNewBio] = useState("");
-  const [editingPronouns, setEditingPronouns] = useState(false);
-  const [newPronouns, setNewPronouns] = useState("");
   const [editingLocation, setEditingLocation] = useState(false);
   const views = ["About", "Ideas", "Collabs"];
 
@@ -59,22 +52,6 @@ function Profile() {
         },
         postHeaders
       );
-  }
-
-  function editBioKeyPress(e) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      editProfile("bio", newBio) && getUserById();
-      setEditingBio(!editingBio);
-    }
-  }
-
-  function editPronounsKeyPress(e) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      editProfile("pronouns", newPronouns) && getUserById();
-      setEditingPronouns(!editingPronouns);
-    }
   }
 
   useEffect(() => {
