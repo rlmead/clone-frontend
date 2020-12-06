@@ -20,6 +20,7 @@ function Idea() {
   let history = useHistory();
 
   const [ideaData, setIdeaData] = useState({});
+  const [dataLoaded, setDataLoaded] = useState(false);
   const [ideaUsers, setIdeaUsers] = useState([]);
   const [comments, setComments] = useState([]);
   const [view, setView] = useState("About");
@@ -150,6 +151,7 @@ function Idea() {
     getIdeaById();
     getIdeaUsers();
     getComments();
+    setDataLoaded(true);
   }, [ideaId])
 
   const editables = {
@@ -285,9 +287,8 @@ function Idea() {
     }
   };
 
-  return (
-    (Object.keys(ideaData).length > 0)
-      ?
+  if (Object.keys(ideaData).length > 0) {
+    return (
       <Row>
         <Col sm="3">
           {
@@ -345,13 +346,20 @@ function Idea() {
           {switchView()}
         </Col>
       </Row >
-      :
+    )
+  } else if (!dataLoaded) {
+    return (
       <Row>
         <Col>
           <h3 className="text-left">Loading...</h3>
         </Col>
       </Row>
-  )
+    )
+  } else {
+    return (
+      <div />
+    )
+  }
 }
 
 export default Idea;

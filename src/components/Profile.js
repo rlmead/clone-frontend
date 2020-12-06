@@ -3,7 +3,6 @@ import { Row, Col, Nav, NavItem, NavLink } from "reactstrap";
 import { useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
-import { useLocation } from "../utilities/LocationContext";
 import { axiosCall } from "../utilities/axiosCall";
 import { countryCodes } from "../utilities/countryCodes";
 import Editable from "./Editable";
@@ -12,11 +11,10 @@ import List from "./List";
 function Profile() {
   const { token } = useAuth();
   const { user } = useApp();
-  const loc = useLocation();
 
   const [userProfile, setUserProfile] = useState({});
+  const [dataLoaded, setDataLoaded] = useState(false);
   const [view, setView] = useState("About");
-  const [editingLocation, setEditingLocation] = useState(false);
   const views = ["About", "Ideas", "Collabs"];
 
   let { username } = useParams();
@@ -42,35 +40,9 @@ function Profile() {
     return response;
   }
 
-  async function editProfile(key, value) {
-    value !== "" &&
-      await axiosCall(
-        "post",
-        "/users/update",
-        console.log,
-        {
-          id: user.id,
-          [key]: value
-        },
-        postHeaders
-      );
-  }
-
   useEffect(() => {
-    getUserByUsername();
+    getUserByUsername() && setDataLoaded(true);
   }, [username])
-
-  useEffect(() => {
-    (loc.newLocationId !== "" && editingLocation) &&
-      editProfile("location_id", loc.newLocationId) && getUserByUsername();
-    setEditingLocation(false);
-  }, [loc.newLocationId])
-
-  useEffect(() => {
-    (loc.localData.length > 0 && editingLocation) &&
-      editProfile("location_id", loc.localData[0].id) && getUserByUsername();
-    setEditingLocation(false);
-  }, [loc.localData])
 
   const editables = {
     main: [
@@ -121,9 +93,8 @@ function Profile() {
     }
   };
 
-  return (
-    (Object.keys(userProfile).length > 0)
-      ?
+  if (Object.keys(userProfile).length > 0) {
+    return (
       <Row>
         <Col sm="3">
           {
@@ -168,13 +139,20 @@ function Profile() {
           {switchView()}
         </Col>
       </Row >
-      :
+    )
+  } else if (!dataLoaded) {
+    return (
       <Row>
         <Col>
           <h3 className="text-left">Loading...</h3>
         </Col>
       </Row>
-  )
+    )
+  } else {
+    return (
+      <div />
+    )
+  }
 }
 
 export default Profile;
