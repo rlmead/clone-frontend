@@ -19,8 +19,8 @@ function Profile() {
   const [editingLocation, setEditingLocation] = useState(false);
   const views = ["About", "Ideas", "Collabs"];
 
-  let { userProfileId } = useParams();
-  const currentUserProfile = (parseInt(user.id) === parseInt(userProfileId));
+  let { username } = useParams();
+  const currentUserProfile = (parseInt(user.id) === parseInt(username));
 
   let postHeaders = {
     "Accept": "application/json",
@@ -29,12 +29,14 @@ function Profile() {
     "Authorization": `Bearer ${token}`
   };
 
-  async function getUserById() {
+  async function getUserByUsername() {
     let response = await axiosCall(
-      "get",
-      `/users/${userProfileId}`,
+      "post",
+      `/users/get_by_username`,
       setUserProfile,
-      {},
+      {
+        username
+      },
       postHeaders
     );
     return response;
@@ -55,18 +57,18 @@ function Profile() {
   }
 
   useEffect(() => {
-    getUserById();
-  }, [userProfileId])
+    getUserByUsername();
+  }, [username])
 
   useEffect(() => {
     (loc.newLocationId !== "" && editingLocation) &&
-      editProfile("location_id", loc.newLocationId) && getUserById();
+      editProfile("location_id", loc.newLocationId) && getUserByUsername();
     setEditingLocation(false);
   }, [loc.newLocationId])
 
   useEffect(() => {
     (loc.localData.length > 0 && editingLocation) &&
-      editProfile("location_id", loc.localData[0].id) && getUserById();
+      editProfile("location_id", loc.localData[0].id) && getUserByUsername();
     setEditingLocation(false);
   }, [loc.localData])
 
@@ -95,7 +97,7 @@ function Profile() {
                   canEdit={currentUserProfile}
                   table="users"
                   rowId={user.id}
-                  refreshFunction={getUserById}
+                  refreshFunction={getUserByUsername}
                   field={item.field}
                   inputElementType={item.inputElementType}
                   content={item.content || null}
@@ -109,12 +111,12 @@ function Profile() {
       case "Ideas":
         return (
           <>
-            <List type="ideas" route="/users/get_creations" data={{ id: userProfileId }} />
+            <List type="ideas" route="/users/get_creations" data={{ id: username }} />
           </>
         )
       case "Collabs":
         return (
-          <List type="ideas" route="/users/get_collaborations" data={{ id: userProfileId }} />
+          <List type="ideas" route="/users/get_collaborations" data={{ id: username }} />
         )
     }
   };
@@ -133,7 +135,7 @@ function Profile() {
                     canEdit={currentUserProfile}
                     table="users"
                     rowId={user.id}
-                    refreshFunction={getUserById}
+                    refreshFunction={getUserByUsername}
                     staticElementType={item.staticElementType}
                     field={item.field}
                     content={item.content} />

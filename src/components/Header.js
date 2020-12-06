@@ -15,7 +15,7 @@ function Header() {
     ? [
       { to: "/browse", text: "Browse ideas" },
       { to: "/ideas/new", text: "Add idea" },
-      { to: `/users/${user.id}`, text: `${user.name}'s profile` },
+      { to: `/users/${user.username}`, text: `${user.name}'s profile` },
       { to: "/public/logout", text: "Log out", onClick: () => logOut() }
     ]
     : [
