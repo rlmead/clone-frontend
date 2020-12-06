@@ -249,162 +249,34 @@ function Idea() {
         return (
           <>
             <h5>Description</h5>
-            {
-              !currentUserOwnsIdea &&
-              <p>{ideaData.description}</p>
-            }
-            {
-              currentUserOwnsIdea && !editingDescription &&
-              <>
-                <div>
-                  <FontAwesomeIcon
-                    icon={faPencilAlt}
-                    className="text-success"
-                    onClick={() => setEditingDescription(!editingDescription)}
-                  />
-                </div>
-                <p>{ideaData.description}</p>
-              </>
-            }
-            {
-              currentUserOwnsIdea && editingDescription &&
-              <>
-                <div>
-                  <FontAwesomeIcon
-                    icon={faSave}
-                    className="text-success"
-                    onClick={() => {
-                      editData("description", newDescription) && getIdeaById();
-                      setEditingDescription(!editingDescription);
-                    }}
-                  />
-                </div>
-                <textarea
-                  onChange={(e) => setNewDescription(e.target.value)}
-                  onKeyPress={(e) => editDescriptionKeyPress(e)}
-                  style={{ width: "100%" }}>
-                  {ideaData.description}
-                </textarea>
-              </>
-            }
+            <Editable
+              canEdit={currentUserOwnsIdea}
+              table="ideas"
+              rowId={ideaId}
+              field="description"
+              content={ideaData.description}
+              refreshFunction={getIdeaById} />
             <h5>Status</h5>
-            {
-              !currentUserOwnsIdea &&
-              <p>{ideaData.status}</p>
-            }
-            {
-              currentUserOwnsIdea && !editingStatus &&
-              <>
-                <div>
-                  <FontAwesomeIcon
-                    icon={faPencilAlt}
-                    className="text-success"
-                    onClick={() => setEditingStatus(!editingStatus)}
-                  />
-                </div>
-                <p>{ideaData.status}</p>
-              </>
-            }
-            {
-              currentUserOwnsIdea && editingStatus &&
-              <>
-                <div>
-                  <FontAwesomeIcon
-                    icon={faSave}
-                    className="text-success"
-                    onClick={() => {
-                      editData("status", newStatus) && getIdeaById();
-                      setEditingStatus(!editingStatus);
-                    }}
-                  />
-                </div>
-                <Input
-                  type="select"
-                  name="select"
-                  style={{ width: "20%" }}
-                  onKeyPress={(e) => editStatusKeyPress(e)}
-                  onChange={(e) => e.target.value !== "" && setNewStatus(e.target.value)}>
-                  <option></option>
-                  <option>open</option>
-                  <option>closed</option>
-                </Input>
-              </>
-            }
-            {
-              (currentUserOwnsIdea || ideaData.location) &&
-              <h5>Location</h5>
-            }
-            {
-              (!currentUserOwnsIdea && ideaData.location) &&
-              <Link
-                to={`/locations/${ideaData.location.city}-${ideaData.location.state}-${ideaData.location.country_code}`}
-                className="text-dark"
-                style={{ textDecoration: "none" }}>
-                <p>{`${ideaData.location.city}, ${ideaData.location.state}, ${ideaData.location.country_code}`}</p>
-              </Link>
-            }
-            {
-              (currentUserOwnsIdea && !editingLocation) &&
-              <>
-                <div>
-                  <FontAwesomeIcon
-                    icon={faPencilAlt}
-                    className="text-success"
-                    onClick={() => setEditingLocation(true)}
-                  />
-                </div>
-                {
-                  loc.parsingLocationData &&
-                  <p>Loading location data...</p>
-                }
-                {
-                  (ideaData.location && !loc.parsingLocationData) &&
-                  <Link
-                    to={`/locations/${ideaData.location.city}-${ideaData.location.state}-${ideaData.location.country_code}`}
-                    className="text-dark"
-                    style={{ textDecoration: "none" }}>
-                    <p>{`${ideaData.location.city}, ${ideaData.location.state}, ${ideaData.location.country_code} `}</p>
-                  </Link>
-                }
-              </>
-            }
-            {
-              currentUserOwnsIdea && editingLocation &&
-              <>
-                <div>
-                  <FontAwesomeIcon
-                    icon={faSave}
-                    className="text-success"
-                    onClick={() => {
-                      (loc.newPostalCode && loc.newCountryCode)
-                        ? loc.handleLocationInput()
-                        : alert("Please enter both a postal code and a country code");
-                    }}
-                  />
-                </div>
-                <input
-                  type="text"
-                  onChange={(e) => loc.setNewPostalCode(e.target.value)}
-                  maxLength={64}
-                  style={{ width: "20%" }}
-                  placeholder="Postal code">
-                </input>
-                <Input
-                  type="select"
-                  name="select"
-                  style={{ width: "20%" }}
-                  onKeyPress={(e) => console.log(e)}
-                  onChange={(e) => {
-                    loc.setNewCountryCode(e.target.value)
-                  }}>
-                  {
-                    countryCodes.map((item, index) => {
-                      return (<option key={`country-${index}`}>{item}</option>)
-                    })
-                  }
-                </Input>
-              </>
-            }
+            <Editable
+              canEdit={currentUserOwnsIdea}
+              inputElementType="select"
+              inputOptions={["", "open", "closed"]}
+              table="ideas"
+              rowId={ideaId}
+              field="status"
+              content={ideaData.status}
+              refreshFunction={getIdeaById} />
+            <h5>Location</h5>
+            <Editable
+              canEdit={currentUserOwnsIdea}
+              staticElementType="location"
+              locationData={ideaData.location ? ideaData.location : {}}
+              inputElementType="location"
+              inputOptions={countryCodes}
+              table="ideas"
+              rowId={ideaId}
+              field="location_id"
+              refreshFunction={getIdeaById} />
           </>
         )
       case "People":
