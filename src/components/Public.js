@@ -16,7 +16,7 @@ function Public() {
   let { view } = useParams();
 
   const [name, setName] = useState("");
-  const [email, setLocalEmail] = useState("");
+  const [localEmail, setLocalEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConf, setPasswordConf] = useState("");
 
@@ -37,8 +37,8 @@ function Public() {
     } else if (password.length < 8) {
       alert("Please use a password that's at least 8 characters long.");
     } else {
-      setEmail(email);
-      let error = await auth.signUp(name, email, password);
+      setEmail(localEmail);
+      let error = await auth.signUp(name, localEmail, password);
       if (error) {
         switch (error.response.status) {
           case 500:
@@ -59,7 +59,7 @@ function Public() {
     if (e.key === "Enter") {
       e.preventDefault();
       if (name.length !== 0
-        && email.length !== 0
+        && localEmail.length !== 0
         && password.length !== 0
         && password.length === passwordConf.length) {
         signUp();
@@ -68,17 +68,19 @@ function Public() {
   }
 
   async function logIn() {
-    setEmail(email);
-    let error = await auth.logIn(email, password);
+    setEmail(localEmail);
+    let error = await auth.logIn(localEmail, password);
     if (error) {
       alert("Whoops, those credentials didn't work. Please try again, or sign up instead.");
+      setEmail("");
+      setPassword("");
     }
   }
 
   function logInKeyPress(e) {
     if (e.key === "Enter") {
       e.preventDefault();
-      if (email.length !== 0 && password.length !== 0) {
+      if (localEmail.length !== 0 && password.length !== 0) {
         logIn();
       }
     }
@@ -96,39 +98,39 @@ function Public() {
               placeholder="Name"
               maxLength={64}
               onChange={(e) => setName(e.target.value)}
-            />
+              defaultValue={name} />
             <Input
               type="text"
               placeholder="Email address"
               maxLength={64}
               onChange={(e) => setLocalEmail(e.target.value)}
-            />
+              defaultValue={localEmail} />
             <Input
               type="password"
               placeholder="Password"
               minLength={8}
               maxLength={64}
               onChange={(e) => setPassword(e.target.value)}
-            />
+              defaultValue={password} />
             <Input
               type="password"
               placeholder="Confirm password"
               minLength={8}
               maxLength={64}
               onChange={(e) => setPasswordConf(e.target.value)}
-            />
+              defaultValue={passwordConf} />
             <Label>
               <Input
                 type="checkbox"
                 onChange={() => changeStorage()} />
-                      Remember me
+                Remember me
             </Label>
             <Button
               className="btn-success"
               onClick={() => signUp()}
               disabled={
                 name.length === 0
-                || email.length === 0
+                || localEmail.length === 0
                 || password.length === 0
                 || password.length !== passwordConf.length}>
               Create Account
@@ -144,13 +146,15 @@ function Public() {
               type="text"
               placeholder="Email address"
               maxLength={64}
-              onChange={(e) => setLocalEmail(e.target.value)} />
+              onChange={(e) => setLocalEmail(e.target.value)}
+              defaultValue={localEmail} />
             <Input
               type="password"
               placeholder="Password"
               minLength={8}
               maxLength={64}
-              onChange={(e) => setPassword(e.target.value)} />
+              onChange={(e) => setPassword(e.target.value)}
+              defaultValue={password} />
             <Label>
               <Input
                 type="checkbox"
@@ -160,7 +164,7 @@ function Public() {
             <Button
               className="btn-success"
               onClick={() => logIn()}
-              disabled={email.length === 0 || password.length === 0}>
+              disabled={localEmail.length === 0 || password.length === 0}>
               Log in
             </Button>
           </Card>
