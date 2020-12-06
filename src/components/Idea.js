@@ -153,7 +153,8 @@ function Idea() {
 
   let editables = {
     main: [
-      {}
+      { field: "name", staticElementType: "h4", content: ideaData.name },
+      { field: "image_url", staticElementType: "img", content: ideaData.image_url }
     ],
     about: [
       { name: "Description", field: "description", inputElementType: "textarea", content: ideaData.description },
@@ -166,32 +167,25 @@ function Idea() {
     switch (view) {
       case "About":
         return (
-          <>
-            {
-              editables.about.map((item, index) => {
-                return (
-                  <>
-                  {
-                    item.name &&
-                    <h5>{item.name}</h5>
-                  }
-                    <Editable
-                      key={`editable-about-${index}`}
-                      canEdit={currentUserOwnsIdea}
-                      table="ideas"
-                      rowId={ideaId}
-                      refreshFunction={getIdeaById}
-                      field={item.field}
-                      inputElementType={item.inputElementType}
-                      content={item.content || null}
-                      staticElementType={item.staticElementType || null}
-                      inputOptions={item.inputOptions || null}
-                      locationData={item.locationData || null } />
-                  </>
-                )
-              })
-            }
-          </>
+          editables.about.map((item, index) => {
+            return (
+              <>
+                { item.name && <h5>{item.name}</h5>}
+                <Editable
+                  key={`editable-about-${index}`}
+                  canEdit={currentUserOwnsIdea}
+                  table="ideas"
+                  rowId={ideaId}
+                  refreshFunction={getIdeaById}
+                  field={item.field}
+                  inputElementType={item.inputElementType}
+                  content={item.content || null}
+                  staticElementType={item.staticElementType || null}
+                  inputOptions={item.inputOptions || null}
+                  locationData={item.locationData || null} />
+              </>
+            )
+          })
         )
       case "People":
         return (
@@ -297,27 +291,25 @@ function Idea() {
   return (
     <Row>
       <Col sm="3">
-        <Editable
-          canEdit={currentUserOwnsIdea}
-          staticElementType="h4"
-          table="ideas"
-          rowId={ideaId}
-          field="name"
-          content={ideaData.name}
-          refreshFunction={getIdeaById} />
-        <Editable
-          canEdit={currentUserOwnsIdea}
-          staticElementType="img"
-          table="ideas"
-          rowId={ideaId}
-          field="image_url"
-          content={ideaData.image_url}
-          refreshFunction={getIdeaById} />
         {
-          !currentUserOwnsIdea
-          && !currentUserIsCollaborator
-          && ideaData.status === "open"
-          &&
+          editables.main.map((item, index) => {
+            return (
+              <>
+                <Editable
+                  key={`editable-main-${index}`}
+                  canEdit={currentUserOwnsIdea}
+                  table="ideas"
+                  rowId={ideaId}
+                  refreshFunction={getIdeaById}
+                  staticElementType={item.staticElementType}
+                  field={item.field}
+                  content={item.content} />
+              </>
+            )
+          })
+        }
+        {
+          !currentUserOwnsIdea && !currentUserIsCollaborator && ideaData.status === "open" &&
           <Button
             className="btn-success"
             onClick={() => requestCollab() && getIdeaUsers()}
