@@ -5,7 +5,7 @@ import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 
 function Public() {
-  const { setEmail } = useApp();
+  const { setUsername } = useApp();
   const auth = useAuth();
 
   let location = useLocation();
@@ -16,7 +16,7 @@ function Public() {
   let { view } = useParams();
 
   const [name, setName] = useState("");
-  const [localEmail, setLocalEmail] = useState("");
+  const [localUsername, setLocalUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConf, setPasswordConf] = useState("");
 
@@ -37,15 +37,15 @@ function Public() {
     } else if (password.length < 8) {
       alert("Please use a password that's at least 8 characters long.");
     } else {
-      setEmail(localEmail);
-      let error = await auth.signUp(name, localEmail, password);
+      setUsername(localUsername);
+      let error = await auth.signUp(name, localUsername, password);
       if (error) {
         switch (error.response.status) {
           case 500:
-            alert("There's already an account associated with this email address! Please use a different email address, or log in instead.");
+            alert("There's already an account associated with this username! Please use a different username, or log in instead.");
             break;
           case 422:
-            alert("Please enter a valid email address.");
+            alert("Please enter a valid username.");
             break;
           default:
             alert("There was an error getting you signed up. Please try again or contact an administrator.");
@@ -59,7 +59,7 @@ function Public() {
     if (e.key === "Enter") {
       e.preventDefault();
       if (name.length !== 0
-        && localEmail.length !== 0
+        && localUsername.length !== 0
         && password.length !== 0
         && password.length === passwordConf.length) {
         signUp();
@@ -68,11 +68,11 @@ function Public() {
   }
 
   async function logIn() {
-    setEmail(localEmail);
-    let error = await auth.logIn(localEmail, password);
+    setUsername(localUsername);
+    let error = await auth.logIn(localUsername, password);
     if (error) {
       alert("Whoops, those credentials didn't work. Please try again, or sign up instead.");
-      setEmail("");
+      setUsername("");
       setPassword("");
     }
   }
@@ -80,7 +80,7 @@ function Public() {
   function logInKeyPress(e) {
     if (e.key === "Enter") {
       e.preventDefault();
-      if (localEmail.length !== 0 && password.length !== 0) {
+      if (localUsername.length !== 0 && password.length !== 0) {
         logIn();
       }
     }
@@ -101,10 +101,10 @@ function Public() {
               defaultValue={name} />
             <Input
               type="text"
-              placeholder="Email address"
+              placeholder="Username"
               maxLength={64}
-              onChange={(e) => setLocalEmail(e.target.value)}
-              defaultValue={localEmail} />
+              onChange={(e) => setLocalUsername(e.target.value)}
+              defaultValue={localUsername} />
             <Input
               type="password"
               placeholder="Password"
@@ -130,7 +130,7 @@ function Public() {
               onClick={() => signUp()}
               disabled={
                 name.length === 0
-                || localEmail.length === 0
+                || localUsername.length === 0
                 || password.length === 0
                 || password.length !== passwordConf.length}>
               Create Account
@@ -144,10 +144,10 @@ function Public() {
             <h3>Log in</h3>
             <Input
               type="text"
-              placeholder="Email address"
+              placeholder="Username"
               maxLength={64}
-              onChange={(e) => setLocalEmail(e.target.value)}
-              defaultValue={localEmail} />
+              onChange={(e) => setLocalUsername(e.target.value)}
+              defaultValue={localUsername} />
             <Input
               type="password"
               placeholder="Password"
@@ -164,7 +164,7 @@ function Public() {
             <Button
               className="btn-success"
               onClick={() => logIn()}
-              disabled={localEmail.length === 0 || password.length === 0}>
+              disabled={localUsername.length === 0 || password.length === 0}>
               Log in
             </Button>
           </Card>

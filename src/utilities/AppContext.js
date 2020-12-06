@@ -16,7 +16,7 @@ export const useApp = () => {
 
 function useAppProvider() {
   const [user, setUser] = useState({});
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
 
   async function editData(table, id, key, value, token) {
     value !== "" &&
@@ -59,8 +59,8 @@ function useAppProvider() {
   return {
     user,
     setUser,
-    email,
-    setEmail,
+    username,
+    setUsername,
     editData,
     saveRelationship
   };
