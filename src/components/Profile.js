@@ -20,7 +20,7 @@ function Profile() {
   const views = ["About", "Ideas", "Collabs"];
 
   let { username } = useParams();
-  const currentUserProfile = (parseInt(user.id) === parseInt(username));
+  const currentUserProfile = (parseInt(user.id) === parseInt(userProfile.id));
 
   let postHeaders = {
     "Accept": "application/json",
