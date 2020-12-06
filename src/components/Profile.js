@@ -98,239 +98,100 @@ function Profile() {
       { field: "name", staticElementType: "h4", content: userProfile.name },
       { field: "image_url", staticElementType: "img", content: userProfile.image_url }
     ],
-    // about: [
-    //   { name: "Description", field: "description", inputElementType: "textarea", content: ideaData.description },
-    //   { name: "Status", field: "status", inputElementType: "select", content: ideaData.status, inputOptions: ["", "open", "closed"] },
-    //   { name: (ideaData.location || currentUserOwnsIdea) ? "Location" : null, field: "location_id", inputElementType: "location", inputOptions: countryCodes, staticElementType: "location", locationData: ideaData.location },
-    // ]
+    about: [
+      { name: "Bio", field: "bio", inputElementType: "textarea", content: userProfile.bio },
+      { name: "Pronouns", field: "pronouns", inputElementType: "textarea", content: userProfile.pronouns },
+      { name: (userProfile.location || currentUserProfile) ? "Location" : null, field: "location_id", inputElementType: "location", inputOptions: countryCodes, staticElementType: "location", locationData: userProfile.location },
+    ]
   }
 
   function switchView(view) {
     switch (view) {
       case "About":
         return (
-          <>
-
-            <h5>Bio</h5>
-            {
-              !currentUserProfile &&
-              <p>{userProfile.bio}</p>
-            }
-            {
-              currentUserProfile && !editingBio &&
-              <>
-                <div>
-                  <FontAwesomeIcon
-                    icon={faPencilAlt}
-                    className="text-success"
-                    onClick={() => setEditingBio(!editingBio)}
-                  />
-                </div>
-                <p>{userProfile.bio}</p>
-              </>
-            }
-            {
-              currentUserProfile && editingBio &&
-              <>
-                <div>
-                  <FontAwesomeIcon
-                    icon={faSave}
-                    className="text-success"
-                    onClick={() => {
-                      editProfile("bio", newBio) && getUserById();
-                      setEditingBio(!editingBio);
-                    }}
-                  />
-                </div>
-                <textarea
-                  onChange={(e) => setNewBio(e.target.value)}
-                  onKeyPress={(e) => editBioKeyPress(e)}
-                  style={{ width: "100%" }}>
-                  {userProfile.bio}
-                </textarea>
-              </>
-            }
-            <h5>Pronouns</h5>
-            {
-              !currentUserProfile &&
-              <p>{userProfile.pronouns}</p>
-            }
-            {
-              currentUserProfile && !editingPronouns &&
-              <>
-                <div>
-                  <FontAwesomeIcon
-                    icon={faPencilAlt}
-                    className="text-success"
-                    onClick={() => setEditingPronouns(!editingPronouns)}
-                  />
-                </div>
-                <p>{userProfile.pronouns}</p>
-              </>
-            }
-            {
-              currentUserProfile && editingPronouns &&
-              <>
-                <div>
-                  <FontAwesomeIcon
-                    icon={faSave}
-                    className="text-success"
-                    onClick={() => {
-                      editProfile("pronouns", newPronouns) && getUserById();
-                      setEditingPronouns(!editingPronouns);
-                    }}
-                  />
-                </div>
-                <textarea
-                  onChange={(e) => setNewPronouns(e.target.value)}
-                  onKeyPress={(e) => editPronounsKeyPress(e)}
-                  maxLength={64}
-                  style={{ width: "100%" }}>
-                  {userProfile.pronouns}
-                </textarea>
-              </>
-            }
-            {
-              (currentUserProfile || userProfile.location) &&
-              <h5>Location</h5>
-            }
-            {
-              (!currentUserProfile && userProfile.location) &&
-              <Link
-                to={`/locations/${userProfile.location.city}-${userProfile.location.state}-${userProfile.location.country_code}`}
-                className="text-dark"
-                style={{ textDecoration: "none" }}>
-                <p>{`${userProfile.location.city}, ${userProfile.location.state}, ${userProfile.location.country_code}`}</p>
-              </Link>
-            }
-            {
-              (currentUserProfile && !editingLocation) &&
-              <>
-                <div>
-                  <FontAwesomeIcon
-                    icon={faPencilAlt}
-                    className="text-success"
-                    onClick={() => setEditingLocation(true)}
-                  />
-                </div>
-                {
-                  loc.parsingLocationData &&
-                  <p>Loading location data...</p>
-                }
-                {
-                  (userProfile.location && !loc.parsingLocationData) &&
-                  <Link
-                    to={`/locations/${userProfile.location.city}-${userProfile.location.state}-${userProfile.location.country_code}`}
-                    className="text-dark"
-                    style={{ textDecoration: "none" }}>
-                    <p>{`${userProfile.location.city}, ${userProfile.location.state}, ${userProfile.location.country_code} `}</p>
-                  </Link>
-                }
-              </>
-            }
-            {
-              currentUserProfile && editingLocation &&
-              <>
-                <div>
-                  <FontAwesomeIcon
-                    icon={faSave}
-                    className="text-success"
-                    onClick={() => {
-                      (loc.newPostalCode && loc.newCountryCode)
-                        ? loc.handleLocationInput()
-                        : alert("Please enter both a postal code and a country code");
-                    }}
-                  />
-                </div>
-                <input
-                  type="text"
-                  onChange={(e) => loc.setNewPostalCode(e.target.value)}
-                  maxLength={64}
-                  style={{ width: "20%" }}
-                  placeholder="Postal code">
-                </input>
-                <Input
-                  type="select"
-                  name="select"
-                  style={{ width: "20%" }}
-                  onKeyPress={(e) => console.log(e)}
-                  onChange={(e) => {
-                    loc.setNewCountryCode(e.target.value)
-                  }}>
-                  {
-                    countryCodes.map((item, index) => {
-                      return (<option key={`country-${index}`}>{item}</option>)
-                    })
-                  }
-                </Input>
-              </>
-
-            }
-          </>
-        )
-      case "Ideas":
-        return (
-          <>
-            <List type="ideas" route="/users/get_creations" data={{ id: userProfileId }} />
-          </>
-        )
-      case "Collabs":
-        return (
-          <List type="ideas" route="/users/get_collaborations" data={{ id: userProfileId }} />
-        )
-      default:
-        return (
-          <p>under construction</p>
-        )
-    }
-  };
-
-  return (
-    <Row>
-      <Col sm="3">
-      {
-          editables.main.map((item, index) => {
+          editables.about.map((item, index) => {
             return (
               <>
+                { item.name && <h5>{item.name}</h5>}
                 <Editable
-                  key={`editable-main-${index}`}
+                  key={`editable-about-${index}`}
                   canEdit={currentUserProfile}
                   table="users"
                   rowId={user.id}
                   refreshFunction={getUserById}
-                  staticElementType={item.staticElementType}
                   field={item.field}
-                  content={item.content} />
+                  inputElementType={item.inputElementType}
+                  content={item.content || null}
+                  staticElementType={item.staticElementType || null}
+                  inputOptions={item.inputOptions || null}
+                  locationData={item.locationData || null} />
               </>
             )
           })
+        )
+      case "Ideas":
+    return (
+      <>
+        <List type="ideas" route="/users/get_creations" data={{ id: userProfileId }} />
+      </>
+    )
+      case "Collabs":
+    return (
+      <List type="ideas" route="/users/get_collaborations" data={{ id: userProfileId }} />
+    )
+      default:
+    return (
+      <p>under construction</p>
+    )
+  }
+};
+
+return (
+  <Row>
+    <Col sm="3">
+      {
+        editables.main.map((item, index) => {
+          return (
+            <>
+              <Editable
+                key={`editable-main-${index}`}
+                canEdit={currentUserProfile}
+                table="users"
+                rowId={user.id}
+                refreshFunction={getUserById}
+                staticElementType={item.staticElementType}
+                field={item.field}
+                content={item.content} />
+            </>
+          )
+        })
+      }
+    </Col>
+    <Col sm="9" style={{ textAlign: "left" }}>
+      <Nav
+        justified
+        tabs
+        className="bg-light fixed-bottom">
+        {
+          views.map((item, index) => {
+            return (
+              <NavItem
+                key={"button-" + index}>
+                <NavLink
+                  className={(view === item) ? "active" : ""}
+                  id={item}
+                  onClick={() => setView(item)}>
+                  <h5>{item}</h5>
+                </NavLink>
+              </NavItem>
+            )
+          })
         }
-      </Col>
-      <Col sm="9" style={{ textAlign: "left" }}>
-        <Nav
-          justified
-          tabs
-          className="bg-light fixed-bottom">
-          {
-            views.map((item, index) => {
-              return (
-                <NavItem
-                  key={"button-" + index}>
-                  <NavLink
-                    className={(view === item) ? "active" : ""}
-                    id={item}
-                    onClick={() => setView(item)}>
-                    <h5>{item}</h5>
-                  </NavLink>
-                </NavItem>
-              )
-            })
-          }
-        </Nav>
-        {switchView(view)}
-      </Col>
-    </Row >
-  )
+      </Nav>
+      {switchView(view)}
+    </Col>
+  </Row >
+)
 }
 
 export default Profile;
