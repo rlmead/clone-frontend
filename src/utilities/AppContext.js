@@ -37,11 +37,31 @@ function useAppProvider() {
       );
   }
 
+  async function saveRelationship(idea_id, user_id, user_role, token) {
+    await axiosCall(
+      "post",
+      user_role === "reject" ? "/delete_collab" : "/update_collab",
+      console.log,
+      {
+        idea_id,
+        user_id,
+        user_role
+      },
+      {
+        "Accept": "application/json",
+        "Content-Type": "application/json; charset=utf-8",
+        "Access-Control-Allow-Origin": "*",
+        "Authorization": `Bearer ${token}`
+      }
+    );
+  }
+
   return {
     user,
     setUser,
     email,
     setEmail,
-    editData
+    editData,
+    saveRelationship
   };
 }

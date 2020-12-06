@@ -10,7 +10,7 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 
 function Editable(props) {
   const { token } = useAuth();
-  const { editData } = useApp();
+  const { editData, saveRelationship } = useApp();
   const {
     newPostalCode,
     setNewPostalCode,
@@ -28,7 +28,12 @@ function Editable(props) {
 
   useEffect(() => {
     if (savingUpdate) {
-      if (newValue !== "") {
+      if (props.inputElementType === "collabRequest") {
+        if (newValue !== "") {
+          saveRelationship(props.ideaId, props.userId, newValue, token);
+          setJustUpdated(true);
+        }
+      } else if (newValue !== "") {
         editData(props.table, props.rowId, props.field, newValue, token);
         setNewValue("");
         setSavingUpdate(false);
@@ -51,7 +56,7 @@ function Editable(props) {
       setSavingUpdate(false);
     }
   }, [localData])
-  
+
   useEffect(() => {
     if (newLocationId !== "" && savingUpdate) {
       editData(props.table, props.rowId, props.field, newLocationId, token)
@@ -65,9 +70,19 @@ function Editable(props) {
     setJustUpdated(false);
   }, [justUpdated])
 
+  function updateKeyPress(e) {
+    if (e.key === "Enter" && editingElement) {
+      setSavingUpdate(true);
+      setEditingElement(false);
+    }
+  }
 
   function switchStaticView() {
     switch (props.staticElementType) {
+      case "h5":
+        return (
+          <h5>{props.content}</h5>
+        )
       case "location":
         return (
           <Link
@@ -86,6 +101,25 @@ function Editable(props) {
 
   function switchEditingView() {
     switch (props.inputElementType) {
+      case "collabRequest":
+        return (
+          <Input
+            type="select"
+            onChange={(e) => {
+              if (e.target.value === "add collaborator") {
+                setNewValue("collaborator")
+              } else if (e.target.value === "add co-creator") {
+                setNewValue("creator")
+              } else {
+                setNewValue(e.target.value)
+              }
+            }}>
+            <option></option>
+            <option>add collaborator</option>
+            <option>add co-creator</option>
+            <option>reject</option>
+          </Input>
+        )
       case "location":
         return (
           <>
@@ -126,6 +160,7 @@ function Editable(props) {
           <textarea
             defaultValue={props.content}
             onChange={(e) => setNewValue(e.target.value)}
+            onKeyPress={(e) => { props.enterKeyUpdate && updateKeyPress(e) }}
             style={{ width: "100%" }} />
         )
     }

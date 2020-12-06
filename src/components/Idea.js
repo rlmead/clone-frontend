@@ -4,7 +4,6 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
-import { useLocation } from "../utilities/LocationContext";
 import { countryCodes } from "../utilities/countryCodes";
 import Editable from "./Editable";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -16,7 +15,6 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 function Idea() {
   const { user } = useApp();
   const { token } = useAuth();
-  const loc = useLocation();
 
   let { ideaId } = useParams();
 
@@ -28,14 +26,8 @@ function Idea() {
   const [view, setView] = useState("About");
   const [editingName, setEditingName] = useState(false);
   const [newName, setNewName] = useState("");
-  const [editingDescription, setEditingDescription] = useState(false);
-  const [newDescription, setNewDescription] = useState("");
-  const [editingStatus, setEditingStatus] = useState(false);
-  const [editingLocation, setEditingLocation] = useState(false);
-  const [newStatus, setNewStatus] = useState("");
   const [addingComment, setAddingComment] = useState(false);
   const [newComment, setNewComment] = useState("");
-  const [relationship, setRelationship] = useState("");
   const views = ["About", "People", "Discussion"];
 
   let currentUserOwnsIdea = (
@@ -140,20 +132,6 @@ function Idea() {
     );
   }
 
-  async function saveRelationship(relationshipUser) {
-    await axiosCall(
-      "post",
-      relationship === "reject" ? "/delete_collab" : "/update_collab",
-      console.log,
-      {
-        idea_id: ideaId,
-        user_id: relationshipUser,
-        user_role: relationship
-      },
-      postHeaders
-    );
-  }
-
   async function addComment() {
     await axiosCall(
       "post",
@@ -180,30 +158,6 @@ function Idea() {
     );
   }
 
-  function editNameKeyPress(e) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      editData("name", newName) && getIdeaById();
-      setEditingName(!editingName);
-    }
-  }
-
-  function editDescriptionKeyPress(e) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      editData("description", newDescription) && getIdeaById();
-      setEditingDescription(!editingDescription);
-    }
-  }
-
-  function editStatusKeyPress(e) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      editData("status", newStatus) && getIdeaById();
-      setEditingStatus(!editingStatus);
-    }
-  }
-
   function addCommentKeyPress(e) {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -226,22 +180,6 @@ function Idea() {
     getIdeaUsers();
     getComments();
   }, [ideaId])
-
-  useEffect(() => {
-    if (loc.newLocationId !== "" && editingLocation) {
-      console.log("found new location id");
-      editData("location_id", loc.newLocationId) && getIdeaById();
-    }
-    setEditingLocation(false);
-  }, [loc.newLocationId])
-
-  useEffect(() => {
-    if (loc.localData.length > 0 && editingLocation) {
-      console.log("found new local data");
-      editData("location_id", loc.localData[0].id) && getIdeaById();
-    }
-    setEditingLocation(false);
-  }, [loc.localData])
 
   function switchView(view) {
     switch (view) {
@@ -297,41 +235,14 @@ function Idea() {
                         <h4 onClick={() => history.push(`/users/${item.id}`)}>{item.name}</h4>
                       </Col>
                       <Col sm="4">
-                        {
-                          item.role === "request"
-                            ?
-                            <>
-                              <Input
-                                type="select"
-                                name="select"
-                                onKeyPress={(e) => console.log(e)}
-                                onChange={(e) => {
-                                  if (e.target.value === "add collaborator") {
-                                    setRelationship("collaborator")
-                                  } else if (e.target.value === "add co-creator") {
-                                    setRelationship("creator")
-                                  } else {
-                                    setRelationship(e.target.value)
-                                  }
-                                }}>
-                                <option></option>
-                                <option>add collaborator</option>
-                                <option>add co-creator</option>
-                                <option>reject</option>
-                              </Input>
-                              <FontAwesomeIcon
-                                icon={faSave}
-                                className="text-success"
-                                onClick={() => {
-                                  relationship !== "" &&
-                                    saveRelationship(item.id) &&
-                                    getIdeaUsers();
-                                }}
-                              />
-                            </>
-                            :
-                            <h5>{item.role}</h5>
-                        }
+                        <Editable
+                          canEdit={(currentUserOwnsIdea && item.role === "request")}
+                          content={item.role}
+                          staticElementType="h5"
+                          inputElementType="collabRequest"
+                          ideaId={ideaId}
+                          userId={item.id}
+                          refreshFunction={getIdeaUsers} />
                       </Col>
                     </Row>
                   </ListGroupItem>
@@ -432,7 +343,6 @@ function Idea() {
           <>
             <textarea
               onChange={(e) => setNewName(e.target.value)}
-              onKeyPress={(e) => editNameKeyPress(e)}
               maxLength={255}
               style={{ width: "100%" }}>
               {ideaData.name}
