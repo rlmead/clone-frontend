@@ -99,8 +99,8 @@ function Profile() {
       { field: "image_url", staticElementType: "img", content: userProfile.image_url }
     ],
     about: [
-      { name: "Bio", field: "bio", inputElementType: "textarea", content: userProfile.bio },
-      { name: "Pronouns", field: "pronouns", inputElementType: "textarea", content: userProfile.pronouns },
+      { name: (userProfile.bio || currentUserProfile) ? "Bio" : null, field: "bio", inputElementType: "textarea", content: userProfile.bio },
+      { name: (userProfile.pronouns || currentUserProfile) ? "Pronouns" : null, field: "pronouns", inputElementType: "textarea", content: userProfile.pronouns },
       { name: (userProfile.location || currentUserProfile) ? "Location" : null, field: "location_id", inputElementType: "location", inputOptions: countryCodes, staticElementType: "location", locationData: userProfile.location },
     ]
   }

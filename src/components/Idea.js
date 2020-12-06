@@ -157,8 +157,8 @@ function Idea() {
       { field: "image_url", staticElementType: "img", content: ideaData.image_url }
     ],
     about: [
-      { name: "Description", field: "description", inputElementType: "textarea", content: ideaData.description },
-      { name: "Status", field: "status", inputElementType: "select", content: ideaData.status, inputOptions: ["", "open", "closed"] },
+      { name: (ideaData.description || currentUserOwnsIdea) ? "Description" : null, field: "description", inputElementType: "textarea", content: ideaData.description },
+      { name: (ideaData.status || currentUserOwnsIdea) ? "Status" : null, field: "status", inputElementType: "select", content: ideaData.status, inputOptions: ["", "open", "closed"] },
       { name: (ideaData.location || currentUserOwnsIdea) ? "Location" : null, field: "location_id", inputElementType: "location", inputOptions: countryCodes, staticElementType: "location", locationData: ideaData.location },
     ]
   }
