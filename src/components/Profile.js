@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col, Nav, NavItem, NavLink } from "reactstrap";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
@@ -11,13 +11,24 @@ import List from "./List";
 function Profile() {
   const { token } = useAuth();
   const { user } = useApp();
+  let { username, section } = useParams();
+  let history = useHistory();
+
+  if (!section) {
+    section = "About"
+  } else {
+    section = (section.charAt(0).toUpperCase() + section.slice(1).toLowerCase())
+  }
+
+  useEffect(() => {
+    console.log(`section=${section}`)
+  })
 
   const [userProfile, setUserProfile] = useState({});
   const [dataLoaded, setDataLoaded] = useState(false);
-  const [view, setView] = useState("About");
+  const [view, setView] = useState(section);
   const views = ["About", "Ideas", "Collabs"];
 
-  let { username } = useParams();
   const currentUserProfile = (parseInt(user.id) === parseInt(userProfile.id));
 
   let postHeaders = {
@@ -128,7 +139,11 @@ function Profile() {
                     <NavLink
                       className={(view === item) ? "active" : ""}
                       id={item}
-                      onClick={() => setView(item)}>
+                      onClick={() => {
+                        setView(item);
+                        section=item;
+                        history.push(`/users/${username}/${item.toLowerCase()}`)
+                      }}>
                       <h5>{item}</h5>
                     </NavLink>
                   </NavItem>

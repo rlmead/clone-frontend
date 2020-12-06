@@ -14,9 +14,7 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 function Idea() {
   const { user } = useApp();
   const { token } = useAuth();
-
   let { ideaId } = useParams();
-
   let history = useHistory();
 
   const [ideaData, setIdeaData] = useState({});

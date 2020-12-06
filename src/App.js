@@ -37,7 +37,10 @@ function App() {
                   <Route path={`/locations/:locationString`}>
                     <List type="ideas" route="/locations" />
                   </Route>
-                  <PrivateRoute path={`/users/:username`}>
+                  <PrivateRoute path={`/users/:username/:section`}>
+                    <Profile />
+                  </PrivateRoute>
+                  <PrivateRoute path={`/users/:username/`}>
                     <Profile />
                   </PrivateRoute>
                   <PrivateRoute path={`/ideas/new`}>
