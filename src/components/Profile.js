@@ -19,8 +19,6 @@ function Profile() {
 
   const [userProfile, setUserProfile] = useState({});
   const [view, setView] = useState("About");
-  const [editingName, setEditingName] = useState(false);
-  const [newName, setNewName] = useState("");
   const [editingBio, setEditingBio] = useState(false);
   const [newBio, setNewBio] = useState("");
   const [editingPronouns, setEditingPronouns] = useState(false);
@@ -29,7 +27,7 @@ function Profile() {
   const views = ["About", "Ideas", "Collabs"];
 
   let { userProfileId } = useParams();
-  let currentUserProfile = toString(user.id) === toString(userProfileId);
+  const currentUserProfile = (parseInt(user.id) === parseInt(userProfileId));
 
   let postHeaders = {
     "Accept": "application/json",
@@ -63,14 +61,6 @@ function Profile() {
       );
   }
 
-  function editNameKeyPress(e) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      editProfile("name", newName) && getUserById();
-      setEditingName(!editingName);
-    }
-  }
-
   function editBioKeyPress(e) {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -85,15 +75,6 @@ function Profile() {
       editProfile("pronouns", newPronouns) && getUserById();
       setEditingPronouns(!editingPronouns);
     }
-  }
-
-  function isValidUrl(string) {
-    try {
-      new URL(string);
-    } catch (_) {
-      return false;
-    }
-    return true;
   }
 
   useEffect(() => {

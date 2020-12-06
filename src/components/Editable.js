@@ -6,7 +6,7 @@ import { useLocation } from "../utilities/LocationContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { faSave } from '@fortawesome/free-solid-svg-icons'
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import { faTimes } from '@fortawesome/free-solid-svg-icons'
 
 function Editable(props) {
   const { token } = useAuth();
@@ -214,7 +214,7 @@ function Editable(props) {
           {
             editingElement &&
             <FontAwesomeIcon
-              icon={faTrashAlt}
+              icon={faTimes}
               className="text-danger"
               onClick={() => {
                 setNewValue("");
