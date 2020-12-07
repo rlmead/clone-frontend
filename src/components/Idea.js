@@ -14,17 +14,26 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 function Idea() {
   const { user } = useApp();
   const { token } = useAuth();
-  let { ideaId } = useParams();
+  let { ideaId, section } = useParams();
   let history = useHistory();
 
   const [ideaData, setIdeaData] = useState({});
   const [dataLoaded, setDataLoaded] = useState(false);
   const [ideaUsers, setIdeaUsers] = useState([]);
   const [comments, setComments] = useState([]);
-  const [view, setView] = useState("About");
   const [addingComment, setAddingComment] = useState(false);
   const [newComment, setNewComment] = useState("");
   const views = ["About", "People", "Discussion"];
+  const [view, setView] = useState(views[0]);
+
+  useEffect(() => {
+    if (!section) {
+      section = views[0];
+    } else {
+      section = section.charAt(0).toUpperCase() + section.slice(1).toLowerCase();
+    }
+    setView(section);
+  })
 
   let currentUserOwnsIdea = (
     user.id
@@ -333,7 +342,11 @@ function Idea() {
                     <NavLink
                       className={(view === item) ? "active" : ""}
                       id={item}
-                      onClick={() => setView(item)}>
+                      onClick={() => {
+                        setView(item);
+                        section = item;
+                        history.push(`/ideas/${ideaId}/${item.toLowerCase()}`)
+                      }}>
                       <h5>{item}</h5>
                     </NavLink>
                   </NavItem>

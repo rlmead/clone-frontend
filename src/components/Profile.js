@@ -18,12 +18,11 @@ function Profile() {
   
   useEffect(() => {
     if (!section) {
-      section = views[0]
+      section = views[0];
     } else {
-      section = section.charAt(0).toUpperCase() + section.slice(1).toLowerCase()
+      section = section.charAt(0).toUpperCase()+section.slice(1).toLowerCase();
     }
-    setView(section)
-    console.log(`section=${section}`)
+    setView(section);
   })
   
   const [userProfile, setUserProfile] = useState({});

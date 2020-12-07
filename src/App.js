@@ -46,6 +46,9 @@ function App() {
                   <PrivateRoute path={`/ideas/new`}>
                     <IdeaForm />
                   </PrivateRoute>
+                  <PrivateRoute path={`/ideas/:ideaId/:section`}>
+                    <Idea />
+                  </PrivateRoute>
                   <PrivateRoute path={`/ideas/:ideaId`}>
                     <Idea />
                   </PrivateRoute>
