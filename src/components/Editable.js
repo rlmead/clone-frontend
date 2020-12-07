@@ -106,11 +106,15 @@ function Editable(props) {
             style={{ height: "auto", width: "100%" }}
             src={image_url} />
         )
+      case "h3":
+        return (
+          <h3>{props.content}</h3>
+        )
       case "h4":
         return (
           <h4>{props.content}</h4>
         )
-      case "h4":
+      case "h5":
         return (
           <h5>{props.content}</h5>
         )

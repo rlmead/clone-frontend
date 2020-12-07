@@ -17,7 +17,7 @@ export const useAuth = () => {
 };
 
 function useAuthProvider() {
-  const {user, setUser, email} = useApp();
+  const {user, setUser, username} = useApp();
 
   const [storage, setStorage] = useState(window.sessionStorage);
 
@@ -28,7 +28,7 @@ function useAuthProvider() {
 
   useEffect(() => {
     if (token !== "") {
-      let response = getUserByEmail();
+      let response = getUserByUsername();
       if (response) {
         console.log(response)
       };
@@ -60,27 +60,27 @@ function useAuthProvider() {
     }
   }
 
-  async function signUp(name, inputEmail, password) {
+  async function signUp(name, inputUsername, password) {
     let response = await axiosCall(
       "post",
       "/register",
       getToken,
       {
         name,
-        email: inputEmail,
+        username: inputUsername,
         password
       }
     );
     return response;
   }
 
-  async function getUserByEmail() {
+  async function getUserByUsername() {
     let response = await axiosCall(
       "post",
-      "/users/get_by_email",
+      "/users/get_by_username",
       setUser,
       {
-        email
+        username
       },
       {
         "Accept": "application/json",

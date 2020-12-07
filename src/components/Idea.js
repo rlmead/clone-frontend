@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Row, Col, Nav, NavItem, NavLink, Input, ListGroup, ListGroupItem } from "reactstrap";
+import { Button, Row, Col, Nav, NavItem, NavLink, ListGroup, ListGroupItem } from "reactstrap";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
@@ -14,12 +14,11 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 function Idea() {
   const { user } = useApp();
   const { token } = useAuth();
-
   let { ideaId } = useParams();
-
   let history = useHistory();
 
   const [ideaData, setIdeaData] = useState({});
+  const [dataLoaded, setDataLoaded] = useState(false);
   const [ideaUsers, setIdeaUsers] = useState([]);
   const [comments, setComments] = useState([]);
   const [view, setView] = useState("About");
@@ -66,6 +65,7 @@ function Idea() {
       output.push({
         role: input[i].pivot.user_role,
         id: input[i].id,
+        username: input[i].username,
         name: input[i].name
       });
     }
@@ -149,11 +149,12 @@ function Idea() {
     getIdeaById();
     getIdeaUsers();
     getComments();
+    setDataLoaded(true);
   }, [ideaId])
 
   const editables = {
     main: [
-      { field: "name", staticElementType: "h4", content: ideaData.name },
+      { field: "name", staticElementType: "h5", content: ideaData.name },
       { field: "image_url", staticElementType: "img", content: ideaData.image_url }
     ],
     about: [
@@ -163,7 +164,7 @@ function Idea() {
     ]
   }
 
-  function switchView(view) {
+  function switchView() {
     switch (view) {
       case "About":
         return (
@@ -202,7 +203,7 @@ function Idea() {
                     key={`listItem-${index}`}>
                     <Row>
                       <Col sm="8">
-                        <h4 onClick={() => history.push(`/users/${item.id}`)}>{item.name}</h4>
+                        <h4 onClick={() => history.push(`/users/${item.username}`)}>{item.name}</h4>
                       </Col>
                       <Col sm="4">
                         <Editable
@@ -254,7 +255,7 @@ function Idea() {
                         </Col>
                         <Col sm="4">
                           <Link
-                            to={`/users/${item.users.id}`}
+                            to={`/users/${item.users.username}`}
                             className="text-dark"
                             style={{ textDecoration: "none" }}>
                             <h5>{item.users.name}</h5>
@@ -281,72 +282,82 @@ function Idea() {
             </ListGroup>
           </>
         )
-      default:
-        return (
-          <p>under construction</p>
-        )
     }
   };
 
-  return (
-    <Row>
-      <Col sm="3">
-        {
-          editables.main.map((item, index) => {
-            return (
-              <>
-                <Editable
-                  key={`editable-main-${index}`}
-                  canEdit={currentUserOwnsIdea}
-                  table="ideas"
-                  rowId={ideaId}
-                  refreshFunction={getIdeaById}
-                  staticElementType={item.staticElementType}
-                  field={item.field}
-                  content={item.content} />
-              </>
-            )
-          })
-        }
-        {
-          !currentUserOwnsIdea && !currentUserIsCollaborator && ideaData.status === "open" &&
-          <Button
-            className="btn-success"
-            onClick={() => requestCollab() && getIdeaUsers()}
-            disabled={collabRequested}>
-            {
-              collabRequested
-                ? "Collaboration Requested"
-                : "Request to Collaborate"
-            }
-          </Button>
-        }
-      </Col>
-      <Col sm="9" style={{ textAlign: "left" }}>
-        <Nav
-          justified
-          tabs
-          className="bg-light fixed-bottom">
+  if (Object.keys(ideaData).length > 0) {
+    return (
+      <Row>
+        <Col sm="3">
           {
-            views.map((item, index) => {
+            editables.main.map((item, index) => {
               return (
-                <NavItem
-                  key={"button-" + index}>
-                  <NavLink
-                    className={(view === item) ? "active" : ""}
-                    id={item}
-                    onClick={() => setView(item)}>
-                    <h5>{item}</h5>
-                  </NavLink>
-                </NavItem>
+                <>
+                  <Editable
+                    key={`editable-main-${index}`}
+                    canEdit={currentUserOwnsIdea}
+                    table="ideas"
+                    rowId={ideaId}
+                    refreshFunction={getIdeaById}
+                    staticElementType={item.staticElementType}
+                    field={item.field}
+                    content={item.content} />
+                </>
               )
             })
           }
-        </Nav>
-        {switchView(view)}
-      </Col>
-    </Row >
-  )
+          {
+            !currentUserOwnsIdea && !currentUserIsCollaborator && ideaData.status === "open" &&
+            <Button
+              className="btn-success"
+              onClick={() => requestCollab() && getIdeaUsers()}
+              disabled={collabRequested}>
+              {
+                collabRequested
+                  ? "Collaboration Requested"
+                  : "Request to Collaborate"
+              }
+            </Button>
+          }
+        </Col>
+        <Col sm="9" style={{ textAlign: "left" }}>
+          <Nav
+            justified
+            tabs
+            className="bg-light fixed-bottom">
+            {
+              views.map((item, index) => {
+                return (
+                  <NavItem
+                    key={"button-" + index}>
+                    <NavLink
+                      className={(view === item) ? "active" : ""}
+                      id={item}
+                      onClick={() => setView(item)}>
+                      <h5>{item}</h5>
+                    </NavLink>
+                  </NavItem>
+                )
+              })
+            }
+          </Nav>
+          {switchView()}
+        </Col>
+      </Row >
+    )
+  } else if (!dataLoaded) {
+    return (
+      <Row>
+        <Col>
+          <h3 className="text-left">Loading...</h3>
+        </Col>
+      </Row>
+    )
+  } else {
+    return (
+      <div />
+    )
+  }
 }
 
 export default Idea;

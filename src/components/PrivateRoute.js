@@ -1,0 +1,26 @@
+import React from "react";
+import { Route, Redirect, useLocation } from "react-router-dom";
+import { useAuth } from "../utilities/AuthContext";
+
+function PrivateRoute({ children, ...rest }) {
+  const auth = useAuth();
+  return (
+    <Route
+      {...rest}
+      render={({ location }) =>
+        auth.token ? (
+          children
+        ) : (
+            <Redirect
+              to={{
+                pathname: "/public/login",
+                state: { from: location }
+              }}
+            />
+          )
+      }
+    />
+  );
+}
+
+export default PrivateRoute;
