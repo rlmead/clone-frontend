@@ -15,16 +15,16 @@ function Profile() {
   let history = useHistory();
   const views = ["About", "Ideas", "Collabs"];
   const [view, setView] = useState(views[0]);
-  
+
   useEffect(() => {
     if (!section) {
       section = views[0];
     } else {
-      section = section.charAt(0).toUpperCase()+section.slice(1).toLowerCase();
+      section = section.charAt(0).toUpperCase() + section.slice(1).toLowerCase();
     }
     setView(section);
   })
-  
+
   const [userProfile, setUserProfile] = useState({});
   const [dataLoaded, setDataLoaded] = useState(false);
   const currentUserProfile = (parseInt(user.id) === parseInt(userProfile.id));
@@ -115,18 +115,6 @@ function Profile() {
   if (Object.keys(userProfile).length > 0) {
     return (
       <>
-        <Row>
-          <Col className="bg-light">
-            <Editable
-              canEdit={currentUserProfile}
-              table="users"
-              rowId={user.id}
-              refreshFunction={getUserByUsername}
-              staticElementType="h3"
-              field="name"
-              content={userProfile.name} />
-          </Col>
-        </Row>
         <Nav
           justified
           tabs
@@ -152,6 +140,20 @@ function Profile() {
           }
         </Nav>
         {switchView()}
+        <Nav className="fixed-bottom bg-light pt-3 text-right">
+          <Row>
+            <Col>
+              <Editable
+                canEdit={currentUserProfile}
+                table="users"
+                rowId={user.id}
+                refreshFunction={getUserByUsername}
+                staticElementType="h3"
+                field="name"
+                content={userProfile.name} />
+            </Col>
+          </Row>
+        </Nav>
       </>
     )
   } else if (!dataLoaded) {
