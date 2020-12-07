@@ -13,22 +13,21 @@ function Profile() {
   const { user } = useApp();
   let { username, section } = useParams();
   let history = useHistory();
-
-  if (!section) {
-    section = "About"
-  } else {
-    section = (section.charAt(0).toUpperCase() + section.slice(1).toLowerCase())
-  }
-
+  const views = ["About", "Ideas", "Collabs"];
+  const [view, setView] = useState(views[0]);
+  
   useEffect(() => {
+    if (!section) {
+      section = views[0]
+    } else {
+      section = section.charAt(0).toUpperCase() + section.slice(1).toLowerCase()
+    }
+    setView(section)
     console.log(`section=${section}`)
   })
-
+  
   const [userProfile, setUserProfile] = useState({});
   const [dataLoaded, setDataLoaded] = useState(false);
-  const [view, setView] = useState(section);
-  const views = ["About", "Ideas", "Collabs"];
-
   const currentUserProfile = (parseInt(user.id) === parseInt(userProfile.id));
 
   let postHeaders = {
