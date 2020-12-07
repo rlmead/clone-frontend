@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Input } from "reactstrap"; import { useApp } from "../utilities/AppContext";
+import { Input, Row, Col } from "reactstrap";
+import { useApp } from "../utilities/AppContext";
 import { Link } from "react-router-dom";
 import { useAuth } from "../utilities/AuthContext";
 import { useLocation } from "../utilities/LocationContext";
@@ -102,7 +103,7 @@ function Editable(props) {
         return (
           <img
             alt=""
-            className="img-fluid"
+            // className="img-fluid"
             style={{ height: "auto", width: "100%" }}
             src={image_url} />
         )
@@ -203,37 +204,48 @@ function Editable(props) {
   }
 
   return (
-    <>
-      {
-        props.canEdit &&
-        <div>
-          <FontAwesomeIcon
-            icon={editingElement ? faSave : faPencilAlt}
-            className="text-success"
-            onClick={() => {
-              editingElement && setSavingUpdate(true);
-              setEditingElement(!editingElement);
-            }}
-          />
-          {
-            editingElement &&
-            <FontAwesomeIcon
-              icon={faTimes}
-              className="text-danger"
-              onClick={() => {
-                setNewValue("");
-                setEditingElement(false);
-              }}
-            />
-          }
-        </div>
-      }
-      {
-        editingElement
-          ? switchEditingView()
-          : switchStaticView()
-      }
-    </>
+    <Row>
+      <Col xs="1" className="text-right">
+        {
+          props.canEdit &&
+          <>
+            <div>
+              <FontAwesomeIcon
+                icon={editingElement ? faSave : faPencilAlt}
+                size="lg"
+                className="text-success"
+                onClick={() => {
+                  editingElement && setSavingUpdate(true);
+                  setEditingElement(!editingElement);
+                }}
+              />
+            </div>
+            <div>
+              {
+                editingElement &&
+                <FontAwesomeIcon
+                  icon={faTimes}
+                  size=""
+                  className="text-danger"
+                  onClick={() => {
+                    setNewValue("");
+                    setEditingElement(false);
+                  }}
+                />
+              }
+            </div>
+          </>
+        }
+      </Col>
+      <Col xs="11" className="text-left">
+        {
+          editingElement
+            ? switchEditingView()
+            : switchStaticView()
+        }
+      </Col>
+
+    </Row>
   )
 }
 

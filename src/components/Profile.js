@@ -55,41 +55,51 @@ function Profile() {
     getUserByUsername() && setDataLoaded(true);
   }, [username])
 
-  const editables = {
-    main: [
-      { field: "name", staticElementType: "h3", content: userProfile.name },
-      { field: "image_url", staticElementType: "img", content: userProfile.image_url }
-    ],
-    about: [
-      { name: (userProfile.bio || currentUserProfile) ? "Bio" : null, field: "bio", inputElementType: "textarea", content: userProfile.bio },
-      { name: (userProfile.pronouns || currentUserProfile) ? "Pronouns" : null, field: "pronouns", inputElementType: "textarea", content: userProfile.pronouns },
-      { name: (userProfile.location || currentUserProfile) ? "Location" : null, field: "location_id", inputElementType: "location", inputOptions: countryCodes, staticElementType: "location", locationData: userProfile.location },
-    ]
-  }
+  const editables = [
+    { name: (userProfile.bio || currentUserProfile) ? "Bio" : null, field: "bio", inputElementType: "textarea", content: userProfile.bio },
+    { name: (userProfile.pronouns || currentUserProfile) ? "Pronouns" : null, field: "pronouns", inputElementType: "textarea", content: userProfile.pronouns },
+    { name: (userProfile.location || currentUserProfile) ? "Location" : null, field: "location_id", inputElementType: "location", inputOptions: countryCodes, staticElementType: "location", locationData: userProfile.location },
+  ]
 
   function switchView() {
     switch (view) {
       case "About":
         return (
-          editables.about.map((item, index) => {
-            return (
-              <>
-                { item.name && <h5>{item.name}</h5>}
-                <Editable
-                  key={`editable-about-${index}`}
-                  canEdit={currentUserProfile}
-                  table="users"
-                  rowId={user.id}
-                  refreshFunction={getUserByUsername}
-                  field={item.field}
-                  inputElementType={item.inputElementType}
-                  content={item.content || null}
-                  staticElementType={item.staticElementType || null}
-                  inputOptions={item.inputOptions || null}
-                  locationData={item.locationData || null} />
-              </>
-            )
-          })
+          <Row>
+            <Col sm="4">
+              <Editable
+                canEdit={currentUserProfile}
+                table="users"
+                rowId={user.id}
+                refreshFunction={getUserByUsername}
+                staticElementType="img"
+                field="image_url"
+                content={userProfile.image_url} />
+            </Col>
+            <Col sm="8">
+              {
+                editables.map((item, index) => {
+                  return (
+                    <>
+                      {item.name && <h5 className="text-left">{item.name}</h5>}
+                      <Editable
+                        key={`editable-about-${index}`}
+                        canEdit={currentUserProfile}
+                        table="users"
+                        rowId={user.id}
+                        refreshFunction={getUserByUsername}
+                        field={item.field}
+                        inputElementType={item.inputElementType}
+                        content={item.content || null}
+                        staticElementType={item.staticElementType || null}
+                        inputOptions={item.inputOptions || null}
+                        locationData={item.locationData || null} />
+                    </>
+                  )
+                })
+              }
+            </Col>
+          </Row>
         )
       case "Ideas":
         return (
@@ -106,54 +116,45 @@ function Profile() {
 
   if (Object.keys(userProfile).length > 0) {
     return (
-      <Row>
-        <Col sm="3">
+      <>
+        <Row>
+          <Col className="bg-light">
+            <Editable
+              canEdit={currentUserProfile}
+              table="users"
+              rowId={user.id}
+              refreshFunction={getUserByUsername}
+              staticElementType="h3"
+              field="name"
+              content={userProfile.name} />
+          </Col>
+        </Row>
+        <Nav
+          justified
+          tabs
+          className="bg-light mb-3">
           {
-            editables.main.map((item, index) => {
+            views.map((item, index) => {
               return (
-                <>
-                  <Editable
-                    key={`editable-main-${index}`}
-                    canEdit={currentUserProfile}
-                    table="users"
-                    rowId={user.id}
-                    refreshFunction={getUserByUsername}
-                    staticElementType={item.staticElementType}
-                    field={item.field}
-                    content={item.content} />
-                </>
+                <NavItem
+                  key={"button-" + index}>
+                  <NavLink
+                    className={(view === item) ? "active" : ""}
+                    id={item}
+                    onClick={() => {
+                      setView(item);
+                      section = item;
+                      history.push(`/users/${username}/${item.toLowerCase()}`)
+                    }}>
+                    <h5>{item}</h5>
+                  </NavLink>
+                </NavItem>
               )
             })
           }
-        </Col>
-        <Col sm="9" style={{ textAlign: "left" }}>
-          <Nav
-            justified
-            tabs
-            className="bg-light fixed-bottom">
-            {
-              views.map((item, index) => {
-                return (
-                  <NavItem
-                    key={"button-" + index}>
-                    <NavLink
-                      className={(view === item) ? "active" : ""}
-                      id={item}
-                      onClick={() => {
-                        setView(item);
-                        section=item;
-                        history.push(`/users/${username}/${item.toLowerCase()}`)
-                      }}>
-                      <h5>{item}</h5>
-                    </NavLink>
-                  </NavItem>
-                )
-              })
-            }
-          </Nav>
-          {switchView()}
-        </Col>
-      </Row >
+        </Nav>
+        {switchView()}
+      </>
     )
   } else if (!dataLoaded) {
     return (

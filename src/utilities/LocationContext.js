@@ -37,7 +37,6 @@ function useLocationProvider() {
 
   async function handleLocationInput() {
     setGettingLocationData(true);
-    console.log("iiii see your location updates");
     // check local db for postcode + country
     await axiosCall(
       "post",

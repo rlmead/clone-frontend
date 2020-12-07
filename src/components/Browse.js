@@ -24,7 +24,7 @@ function Browse() {
       <Nav
         justified
         tabs
-        className="bg-light fixed-bottom">
+        className="bg-light">
         {
           views.map((item, index) => {
             return (
