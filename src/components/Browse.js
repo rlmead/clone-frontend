@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Nav, NavItem, NavLink } from "reactstrap";
+import { Nav, NavItem, NavLink, Row, Col } from "reactstrap";
 import List from "./List";
 
 function Browse() {
@@ -42,6 +42,13 @@ function Browse() {
         }
       </Nav>
       {switchView()}
+      <Nav className="fixed-bottom bg-light pt-3 text-right">
+        <Row>
+          <Col>
+            <h3>Browse</h3>
+          </Col>
+        </Row>
+      </Nav>
     </>
   )
 }
