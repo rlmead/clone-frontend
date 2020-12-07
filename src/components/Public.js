@@ -19,6 +19,13 @@ function Public() {
   const [localUsername, setLocalUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConf, setPasswordConf] = useState("");
+  
+  useEffect(() => {
+    setName("")
+    setLocalUsername("")
+    setPassword("")
+    setPasswordConf("")
+  }, [view])
 
   useEffect(() => {
     auth.justLoggedIn && history.replace(from);
@@ -102,27 +109,27 @@ function Public() {
               placeholder="Name"
               maxLength={64}
               onChange={(e) => setName(e.target.value)}
-              defaultValue={name} />
+              value={name} />
             <Input
               type="text"
               placeholder="Username"
               maxLength={64}
               onChange={(e) => setLocalUsername(e.target.value)}
-              defaultValue={localUsername} />
+              value={localUsername} />
             <Input
               type="password"
               placeholder="Password"
               minLength={8}
               maxLength={64}
               onChange={(e) => setPassword(e.target.value)}
-              defaultValue={password} />
+              value={password} />
             <Input
               type="password"
               placeholder="Confirm password"
               minLength={8}
               maxLength={64}
               onChange={(e) => setPasswordConf(e.target.value)}
-              defaultValue={passwordConf} />
+              value={passwordConf} />
             <Label>
               <Input
                 type="checkbox"
@@ -151,14 +158,14 @@ function Public() {
               placeholder="Username"
               maxLength={64}
               onChange={(e) => setLocalUsername(e.target.value)}
-              defaultValue={localUsername} />
+              value={localUsername} />
             <Input
               type="password"
               placeholder="Password"
               minLength={8}
               maxLength={64}
               onChange={(e) => setPassword(e.target.value)}
-              defaultValue={password} />
+              value={password} />
             <Label>
               <Input
                 type="checkbox"
