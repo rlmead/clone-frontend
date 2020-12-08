@@ -1,6 +1,4 @@
 import React from "react";
-import "./theme_1607303390260.css";
-import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Container } from "reactstrap";
 import { AppProvider } from "./utilities/AppContext";
