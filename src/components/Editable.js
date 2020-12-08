@@ -128,7 +128,7 @@ function Editable(props) {
           props.locationData &&
           <Link
             to={`/locations/${props.locationData.city}-${props.locationData.state}-${props.locationData.country_code}`}
-            className="text-dark"
+            className="text-primary"
             style={{ textDecoration: "none" }}>
             <p>{`${props.locationData.city}, ${props.locationData.state}, ${props.locationData.country_code}`}</p>
           </Link>

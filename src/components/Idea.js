@@ -333,7 +333,7 @@ function Idea() {
                         <Col sm="4">
                           <Link
                             to={`/users/${item.users.username}`}
-                            className="text-dark"
+                            className="text-primary"
                             style={{ textDecoration: "none" }}>
                             <h5>{item.users.name}</h5>
                           </Link>
