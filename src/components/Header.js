@@ -39,11 +39,11 @@ function Header() {
         <Collapse
           isOpen={isOpen}
           navbar >
-          <Nav className="mr-auto" navbar>
+          <Nav style={{ display: "flex", flexFlow: "row nowrap" }} navbar>
             {
               navItems.map((item, index) => {
                 return(
-                  <NavItem>
+                  <NavItem className="mx-auto">
                     <Link
                       key={`nav-item-${index}`}
                       className="nav-link text-white"
