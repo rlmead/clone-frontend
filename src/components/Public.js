@@ -46,15 +46,26 @@ function Public(props) {
       : auth.setStorage(window.sessionStorage);
   }
 
-  let usernameRe = /^(?=.{4,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/;
+  function checkUsername(input) {
+    if (input.length < 4 || input.length > 20) {
+      return false;
+    }
+    let validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.";
+    for (var i = 0; i < input.length; i++) {
+      if (validChars.indexOf(input[i]) === -1) {
+        return false;
+      }
+      return true
+    }
+  }
 
   async function signUp() {
     if (password !== passwordConf) {
       alert("Your passwords don't match! Please try again.");
     } else if (password.length < 4) {
       alert("Please use a password that's at least 4 characters long.");
-    } else if (!usernameRe.test(localUsername)) {
-      alert("Please enter a username between 4 and 20 alphanumeric characters. Your username can include . and _, but not at the beginning or end.")
+    } else if (!checkUsername(localUsername)) {
+      alert("Please enter a username between 4 and 20 alphanumeric characters. Your username may also include period, underscore, or hyphen.")
     } else {
       setUsername(localUsername);
       let error = await auth.signUp(name, localUsername, password);
@@ -217,9 +228,8 @@ function Public(props) {
       default:
         return (
           <Card className="text-left p-3">
-            <h3>About</h3>
-            <p>Idea Network allows people to share their creative dreams and find the collaborators they need to make their dreams happen.</p>
-            <p>This website is being created by <a href="https://github.com/rlmead">Becky</a>.</p>
+            <h3>Share your creative dreams, and find collaborators who can help you make them happen.</h3>
+            <p>Created by <a href="https://github.com/rlmead">Becky</a>.</p>
           </Card>
         );
     }

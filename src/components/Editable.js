@@ -246,7 +246,7 @@ function Editable(props) {
 
   return (
     < Row >
-      { (props.field !== "name" && props.field !== "image_url") && editButton()}
+      { (props.field !== "name" ) && editButton()}
       <Col xs="11" className={props.field === "name" ? "text-right" : "text-left"}>
         {
           editingElement
@@ -254,7 +254,7 @@ function Editable(props) {
             : switchStaticView()
         }
       </Col>
-      { (props.field === "name" || props.field === "image_url") && editButton()}
+      { (props.field === "name" ) && editButton()}
     </Row >
   )
 }
