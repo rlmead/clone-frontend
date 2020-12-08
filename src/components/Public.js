@@ -4,7 +4,7 @@ import { useHistory, useParams, useLocation } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 
-function Public() {
+function Public(props) {
   const { setUsername } = useApp();
   const auth = useAuth();
 
@@ -26,6 +26,14 @@ function Public() {
     setPassword("")
     setPasswordConf("")
   }, [view])
+
+  let validViews = ["signup", "login", "logout", "about"];
+
+  if (props.view) {
+    view = props.view;
+  } else if (validViews.indexOf(view) === -1) {
+    view = "error";
+  }
 
   useEffect(() => {
     auth.justLoggedIn && history.replace(from);
@@ -186,6 +194,13 @@ function Public() {
         return (
           <Card className="text-center p-3">
             <h3>Goodbye!</h3>
+          </Card>
+        );
+      case "error":
+        return (
+          <Card className="text-center p-3">
+            <h3>404</h3>
+            <p>Nothing found here!</p>
           </Card>
         );
       default:

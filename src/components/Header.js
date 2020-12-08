@@ -16,12 +16,12 @@ function Header() {
       { to: "/browse", text: "Browse ideas" },
       { to: "/ideas/new", text: "Add idea" },
       { to: `/users/${user.username}`, text: `${user.name}'s profile` },
-      { to: "/public/logout", text: "Log out", onClick: () => logOut() }
+      { to: "/logout", text: "Log out", onClick: () => logOut() }
     ]
     : [
       { to: "/browse", text: "Browse ideas" },
-      { to: "/public/signup", text: "Sign up" },
-      { to: "/public/login", text: "Log in" }
+      { to: "/signup", text: "Sign up" },
+      { to: "/login", text: "Log in" }
     ]
 
   return (
