@@ -48,10 +48,10 @@ function List(props) {
   let defaultImage;
   switch (props.type) {
     case "ideas":
-      defaultImage = "https://images.unsplash.com/photo-1529310399831-ed472b81d589?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=634&q=80";
+      defaultImage = "https://images.unsplash.com/photo-1579547621113-e4bb2a19bdd6?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=584&q=80";
       break;
     case "users":
-      defaultImage = "https://images.unsplash.com/photo-1490059830487-2f86fddb2b4b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80";
+      defaultImage = "https://images.unsplash.com/photo-1589030343991-69ea1433b941?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80";
       break;
   }
 
@@ -79,6 +79,15 @@ function List(props) {
                   }}
                   key={`listItem-${index}`}>
                   <Row>
+                    <Col sm="7" className="offset-sm-2">
+                      <h3>
+                        {
+                          props.type === "locations"
+                            ? `${item.country_code}, ${item.state}, ${item.city}`
+                            : item.name
+                        }
+                      </h3>
+                    </Col>
                     {
                       props.type !== "locations" &&
                       <Col sm="2">
@@ -89,15 +98,6 @@ function List(props) {
                         </img>
                       </Col>
                     }
-                    <Col sm="10">
-                      <h3>
-                        {
-                          props.type === "locations"
-                            ? `${item.country_code}, ${item.state}, ${item.city}`
-                            : item.name
-                        }
-                      </h3>
-                    </Col>
                   </Row>
                 </ListGroupItem>
               )

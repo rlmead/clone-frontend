@@ -23,7 +23,7 @@ function App() {
           <LocationProvider>
             <Router>
               <Header />
-              <Container>
+              <Container className="container-fluid">
                 <Switch>
                   <Route exact path="/">
                     <Public />

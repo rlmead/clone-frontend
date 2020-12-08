@@ -96,9 +96,9 @@ function Editable(props) {
         if (props.content) {
           image_url = props.content;
         } else if (props.table === "ideas") {
-          image_url = "https://images.unsplash.com/photo-1529310399831-ed472b81d589?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=634&q=80"
+          image_url = "https://images.unsplash.com/photo-1579547621113-e4bb2a19bdd6?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=584&q=80"
         } else {
-          image_url = "https://images.unsplash.com/photo-1490059830487-2f86fddb2b4b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80"
+          image_url = "https://images.unsplash.com/photo-1589030343991-69ea1433b941?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
         }
         return (
           <img
@@ -106,6 +106,10 @@ function Editable(props) {
             // className="img-fluid"
             style={{ height: "auto", width: "100%" }}
             src={image_url} />
+        )
+      case "h2":
+        return (
+          <h2>{props.content}</h2>
         )
       case "h3":
         return (
@@ -203,9 +207,9 @@ function Editable(props) {
     }
   }
 
-  return (
-    <Row>
-      <Col xs="1" className="text-right">
+  function editButton() {
+    return (
+      <Col xs="1">
         {
           props.canEdit &&
           <>
@@ -237,15 +241,21 @@ function Editable(props) {
           </>
         }
       </Col>
-      <Col xs="11" className="text-left">
+    )
+  }
+
+  return (
+    < Row >
+      { (props.field !== "name" && props.field !== "image_url") && editButton()}
+      <Col xs="11" className={props.field === "name" ? "text-right" : "text-left"}>
         {
           editingElement
             ? switchEditingView()
             : switchStaticView()
         }
       </Col>
-
-    </Row>
+      { (props.field === "name" || props.field === "image_url") && editButton()}
+    </Row >
   )
 }
 

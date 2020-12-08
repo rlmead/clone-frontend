@@ -24,7 +24,7 @@ function Browse() {
       <Nav
         justified
         tabs
-        className="bg-light">
+        className="bg-dark text-white">
         {
           views.map((item, index) => {
             return (
@@ -42,10 +42,12 @@ function Browse() {
         }
       </Nav>
       {switchView()}
-      <Nav className="fixed-bottom bg-light pt-3 text-right">
-        <Row>
+      <div className="m-4 text-white"> . </div>
+      <div className="m-4 text-white"> . </div>
+      <Nav className="fixed-bottom bg-dark text-white pt-3 pr-3">
+        <Row className="ml-auto pr-5">
           <Col>
-            <h3>Browse</h3>
+            <h2>Browse</h2>
           </Col>
         </Row>
       </Nav>

@@ -179,12 +179,14 @@ function Idea() {
                 rowId={ideaId}
                 refreshFunction={getIdeaById}
                 field="image_url"
-                content={ideaData.image_Url}
+                content={ideaData.image_url}
                 staticElementType="img" />
+            </Col>
+            <Col sm="8">
               {
                 !currentUserOwnsIdea && !currentUserIsCollaborator && ideaData.status === "open" &&
                 <Button
-                  className="btn-success"
+                  className="btn-success mt-1 mb-4"
                   onClick={() => requestCollab() && getIdeaUsers()}
                   disabled={collabRequested}>
                   {
@@ -194,8 +196,6 @@ function Idea() {
                   }
                 </Button>
               }
-            </Col>
-            <Col sm="8">
               {
                 editables.map((item, index) => {
                   return (
@@ -232,16 +232,17 @@ function Idea() {
                     || (!currentUserOwnsIdea && item.role !== "request")) &&
                   <ListGroupItem
                     style={{ cursor: "pointer" }}
-                    key={`listItem-${index}`}>
+                    key={`listItem-${index}`}
+                    onClick={() => history.push(`/users/${item.username}`)}>
                     <Row>
-                      <Col sm="8">
-                        <h4 onClick={() => history.push(`/users/${item.username}`)}>{item.name}</h4>
+                      <Col xs="7" className="text-right pr-5">
+                        <h4>{item.name}</h4>
                       </Col>
-                      <Col sm="4">
+                      <Col xs="5">
                         <Editable
                           canEdit={(currentUserOwnsIdea && item.role === "request")}
                           content={item.role}
-                          staticElementType="h5"
+                          staticElementType="h4"
                           inputElementType="collabRequest"
                           ideaId={ideaId}
                           userId={item.id}
@@ -323,7 +324,7 @@ function Idea() {
         <Nav
           justified
           tabs
-          className="bg-light mb-3">
+          className="bg-dark text-white mb-3">
           {
             views.map((item, index) => {
               return (
@@ -345,20 +346,18 @@ function Idea() {
           }
         </Nav>
         {switchView()}
-        <Nav className="fixed-bottom bg-light pt-3 text-right">
-          <Row>
-            <Col>
-              <Editable
-                canEdit={currentUserOwnsIdea}
-                table="ideas"
-                rowId={ideaId}
-                refreshFunction={getIdeaById}
-                field="name"
-                content={ideaData.name}
-                staticElementType="h5" />
-            </Col>
-          </Row>
-        </Nav>
+        <div className="m-4 text-white"> . </div>
+        <div className="m-4 text-white"> . </div>
+        <div className="fixed-bottom bg-dark text-white pt-3">
+          <Editable
+            canEdit={currentUserOwnsIdea}
+            table="ideas"
+            rowId={ideaId}
+            refreshFunction={getIdeaById}
+            field="name"
+            content={ideaData.name}
+            staticElementType="h2" />
+        </div>
       </>
     )
   } else if (!dataLoaded) {

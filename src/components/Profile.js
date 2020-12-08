@@ -63,7 +63,7 @@ function Profile() {
     switch (view) {
       case "About":
         return (
-          <Row>
+          <Row className="bg-white mt-3">
             <Col sm="4">
               <Editable
                 canEdit={currentUserProfile}
@@ -118,7 +118,7 @@ function Profile() {
         <Nav
           justified
           tabs
-          className="bg-light mb-3">
+          className="bg-dark text-white">
           {
             views.map((item, index) => {
               return (
@@ -140,20 +140,18 @@ function Profile() {
           }
         </Nav>
         {switchView()}
-        <Nav className="fixed-bottom bg-light pt-3 text-right">
-          <Row>
-            <Col>
-              <Editable
-                canEdit={currentUserProfile}
-                table="users"
-                rowId={user.id}
-                refreshFunction={getUserByUsername}
-                staticElementType="h3"
-                field="name"
-                content={userProfile.name} />
-            </Col>
-          </Row>
-        </Nav>
+        <div className="m-4 text-white"> . </div>
+        <div className="m-4 text-white"> . </div>
+        <div className="fixed-bottom bg-dark pt-3 pr-3 text-white ml-auto">
+          <Editable
+            canEdit={currentUserProfile}
+            table="users"
+            rowId={user.id}
+            refreshFunction={getUserByUsername}
+            staticElementType="h2"
+            field="name"
+            content={userProfile.name} />
+        </div>
       </>
     )
   } else if (!dataLoaded) {

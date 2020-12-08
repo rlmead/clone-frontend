@@ -28,15 +28,14 @@ function Header() {
     <Navbar
       expand="md"
       light
-      className="navbar-default sticky-top bg-light">
-      <Container>
+      className="navbar-default navbar-dark sticky-top bg-dark">
         <Link
           to="/"
-          className="text-dark"
+          className="text-white"
           style={{ textDecoration: "none" }}>
           <h1>Idea Network</h1>
         </Link>
-        <NavbarToggler onClick={toggle} />
+        <NavbarToggler onClick={toggle} className="white" />
         <Collapse
           isOpen={isOpen}
           navbar >
@@ -46,7 +45,8 @@ function Header() {
                 return(
                   <NavItem>
                     <Link
-                      className="nav-link"
+                      key={`nav-item-${index}`}
+                      className="nav-link text-white"
                       to={item.to}
                       onClick={item.onClick || ""}>
                       {item.text}
@@ -57,7 +57,6 @@ function Header() {
             }
           </Nav>
         </Collapse>
-      </Container>
     </Navbar>
   )
 }
