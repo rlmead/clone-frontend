@@ -45,6 +45,10 @@ function List(props) {
     getList();
     initialLoad = true;
   }, [initialLoad, props.type])
+  
+  useEffect(() => {
+    setListData([]);
+  }, [props.type])
 
   let defaultImage;
   switch (props.type) {
@@ -78,13 +82,13 @@ function List(props) {
                     key={`listItem-${index}`}>
                     <Row>
                       <Col sm="8" className="offset-sm-1">
-                        <h3>
+                        <h5>
                           {
                             props.type === "locations"
                               ? `${item.country_code}, ${item.state}, ${item.city}`
                               : item.name
                           }
-                        </h3>
+                        </h5>
                       </Col>
                       {
                         props.type !== "locations" &&
@@ -108,7 +112,7 @@ function List(props) {
           }
         </>
         :
-        <h3 className="text-left">Loading...</h3>
+        <h4 className="text-left">Loading...</h4>
       }
     </>
   )
