@@ -202,6 +202,12 @@ function Public(props) {
             <h3>Your idea has been deleted.</h3>
           </Card>
         );
+      case "account-deleted":
+        return (
+          <Card className="text-center p-3">
+            <h3>Your account has been deleted.</h3>
+          </Card>
+        );
       case "error":
         return (
           <Card className="text-center p-3">
