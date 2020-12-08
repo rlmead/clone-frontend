@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Nav, NavItem, NavLink } from "reactstrap";
 import { useHistory, useParams } from "react-router-dom";
+import { Row, Col, Nav, NavItem, NavLink } from "reactstrap";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
@@ -9,7 +12,7 @@ import Editable from "./Editable";
 import List from "./List";
 
 function Profile() {
-  const { token } = useAuth();
+  const { token, logOut } = useAuth();
   const { user } = useApp();
   let { username, section } = useParams();
   let history = useHistory();
@@ -27,6 +30,7 @@ function Profile() {
 
   const [userProfile, setUserProfile] = useState({});
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [deletingAccount, setDeletingAccount] = useState(false);
   const currentUserProfile = (parseInt(user.id) === parseInt(userProfile.id));
 
   let postHeaders = {
@@ -95,6 +99,49 @@ function Profile() {
                     </>
                   )
                 })
+              }
+              <div className="text-right p-3">
+                {
+                  (currentUserProfile && deletingAccount) &&
+                  <FontAwesomeIcon
+                    icon={faTimes}
+                    size="lg"
+                    className="text-success"
+                    onClick={() => setDeletingAccount(false)}
+                  />
+                }
+                {
+                  currentUserProfile &&
+                  <FontAwesomeIcon
+                    icon={faTrashAlt}
+                    size="lg"
+                    className="text-danger ml-3"
+                    onClick={() => {
+                      if (deletingAccount) {
+                        axiosCall(
+                          "post",
+                          `/users/delete`,
+                          console.log,
+                          {
+                            id: user.id
+                          },
+                          postHeaders
+                        )
+                          && logOut()
+                          && history.push("/account-deleted");
+                      }
+                      else {
+                        setDeletingAccount(!deletingAccount)
+                      }
+                    }}
+                  />
+                }
+              </div>
+              {
+                deletingAccount &&
+                <div className="bg-danger text-white p-2 text-center">
+                  Are you sure you want to delete your account?
+                </div>
               }
             </Col>
           </Row>

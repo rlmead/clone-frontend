@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Button, Row, Col, Nav, NavItem, NavLink, ListGroup, ListGroupItem } from "reactstrap";
 import { Link, useHistory, useParams } from "react-router-dom";
+import { Button, Row, Col, Nav, NavItem, NavLink, ListGroup, ListGroupItem } from "reactstrap";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSave } from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
 import { countryCodes } from "../utilities/countryCodes";
 import Editable from "./Editable";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSave } from '@fortawesome/free-solid-svg-icons'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
-import { faTimes } from '@fortawesome/free-solid-svg-icons'
 
 function Idea() {
   const { user } = useApp();
