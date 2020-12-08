@@ -46,15 +46,15 @@ function Public(props) {
       : auth.setStorage(window.sessionStorage);
   }
 
-  let usernameRe = /^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/;
+  let usernameRe = /^(?=.{4,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/;
 
   async function signUp() {
     if (password !== passwordConf) {
       alert("Your passwords don't match! Please try again.");
-    } else if (password.length < 8) {
-      alert("Please use a password that's at least 8 characters long.");
+    } else if (password.length < 4) {
+      alert("Please use a password that's at least 4 characters long.");
     } else if (!usernameRe.test(localUsername)) {
-      alert("Please enter a username between 8 and 20 alphanumeric characters. Your username can include . and _, but not at the beginning or end.")
+      alert("Please enter a username between 4 and 20 alphanumeric characters. Your username can include . and _, but not at the beginning or end.")
     } else {
       setUsername(localUsername);
       let error = await auth.signUp(name, localUsername, password);
