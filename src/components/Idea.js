@@ -19,7 +19,6 @@ function Idea() {
   let history = useHistory();
 
   const [ideaData, setIdeaData] = useState({});
-  const [dataLoaded, setDataLoaded] = useState(false);
   const [ideaUsers, setIdeaUsers] = useState([]);
   const [comments, setComments] = useState([]);
   const [addingComment, setAddingComment] = useState(false);
@@ -161,7 +160,6 @@ function Idea() {
     getIdeaById();
     getIdeaUsers();
     getComments();
-    setDataLoaded(true);
   }, [ideaId])
 
   const editables = [
@@ -276,11 +274,12 @@ function Idea() {
                   (currentUserOwnsIdea
                     || (!currentUserOwnsIdea && item.role !== "request")) &&
                   <ListGroupItem
-                    style={{ cursor: "pointer" }}
-                    key={`listItem-${index}`}
-                    onClick={() => history.push(`/users/${item.username}`)}>
+                    key={`listItem-${index}`}>
                     <Row>
-                      <Col xs="7">
+                      <Col
+                        xs="7"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => history.push(`/users/${item.username}`)}>
                         <h4>{item.name}</h4>
                       </Col>
                       <Col xs="5">
@@ -404,14 +403,6 @@ function Idea() {
             staticElementType="h2" />
         </div>
       </>
-    )
-  } else if (!dataLoaded) {
-    return (
-      <Row>
-        <Col>
-          <h3 className="text-left">Loading...</h3>
-        </Col>
-      </Row>
     )
   } else {
     return (

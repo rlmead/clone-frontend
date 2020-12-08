@@ -29,7 +29,6 @@ function Profile() {
   })
 
   const [userProfile, setUserProfile] = useState({});
-  const [dataLoaded, setDataLoaded] = useState(false);
   const [deletingAccount, setDeletingAccount] = useState(false);
   const currentUserProfile = (parseInt(user.id) === parseInt(userProfile.id));
 
@@ -54,7 +53,7 @@ function Profile() {
   }
 
   useEffect(() => {
-    getUserByUsername() && setDataLoaded(true);
+    getUserByUsername();
   }, [username])
 
   const editables = [
@@ -200,14 +199,6 @@ function Profile() {
             content={userProfile.name} />
         </div>
       </>
-    )
-  } else if (!dataLoaded) {
-    return (
-      <Row>
-        <Col>
-          <h3 className="text-left">Loading...</h3>
-        </Col>
-      </Row>
     )
   } else {
     return (
