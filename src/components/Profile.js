@@ -164,7 +164,7 @@ function Profile() {
         <Nav
           justified
           tabs
-          className="bg-primary text-white">
+          className="text-primary">
           {
             views.map((item, index) => {
               return (
@@ -188,7 +188,7 @@ function Profile() {
         {switchView()}
         <div className="m-4 text-white"> . </div>
         <div className="m-4 text-white"> . </div>
-        <div className="fixed-bottom bg-primary pt-3 pr-3 text-white ml-auto">
+        <div className="fixed-bottom text-primary bg-white pt-3 pr-3 ml-auto">
           <Editable
             canEdit={currentUserProfile}
             table="users"

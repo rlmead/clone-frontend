@@ -368,7 +368,7 @@ function Idea() {
         <Nav
           justified
           tabs
-          className="bg-primary text-white mb-3">
+          className="text-primary bg-white mb-3">
           {
             views.map((item, index) => {
               return (
@@ -392,7 +392,7 @@ function Idea() {
         {switchView()}
         <div className="m-4 text-white"> . </div>
         <div className="m-4 text-white"> . </div>
-        <div className="fixed-bottom bg-primary text-white pt-3">
+        <div className="fixed-bottom text-primary bg-white pt-3">
           <Editable
             canEdit={currentUserOwnsIdea}
             table="ideas"
