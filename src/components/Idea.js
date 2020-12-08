@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSave } from '@fortawesome/free-solid-svg-icons'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import { faTimes } from '@fortawesome/free-solid-svg-icons'
 
 function Idea() {
   const { user } = useApp();
@@ -23,6 +24,8 @@ function Idea() {
   const [comments, setComments] = useState([]);
   const [addingComment, setAddingComment] = useState(false);
   const [newComment, setNewComment] = useState("");
+  const [deletingIdea, setDeletingIdea] = useState(false);
+
   const views = ["About", "People", "Discussion"];
   const [view, setView] = useState(views[0]);
 
@@ -217,6 +220,48 @@ function Idea() {
                   )
                 })
               }
+              <div className="text-right p-3">
+                {
+                  (currentUserOwnsIdea && deletingIdea) &&
+                  <FontAwesomeIcon
+                    icon={faTimes}
+                    size="lg"
+                    className="text-success"
+                    onClick={() => setDeletingIdea(false)}
+                  />
+                }
+                {
+                  currentUserOwnsIdea &&
+                  <FontAwesomeIcon
+                    icon={faTrashAlt}
+                    size="lg"
+                    className="text-danger ml-3"
+                    onClick={() => {
+                      if (deletingIdea) {
+                        axiosCall(
+                          "post",
+                          `/ideas/delete`,
+                          console.log,
+                          {
+                            id: ideaId
+                          },
+                          postHeaders
+                        )
+                          && history.push("/idea-deleted");
+                      }
+                      else {
+                        setDeletingIdea(!deletingIdea)
+                      }
+                    }}
+                  />
+                }
+              </div>
+              {
+                deletingIdea &&
+                <div className="bg-danger text-white p-2 text-center">
+                  Are you sure you want to delete this idea?
+                </div>
+              }
             </Col>
           </Row>
         )
@@ -299,7 +344,7 @@ function Idea() {
                             <div className="text-right">
                               <FontAwesomeIcon
                                 icon={faTrashAlt}
-                                className="text-success"
+                                className="text-danger"
                                 onClick={() => {
                                   deleteComment(item.id) && getComments();
                                 }}
@@ -336,7 +381,7 @@ function Idea() {
                     onClick={() => {
                       setView(item);
                       section = item;
-                      history.push(`/ideas/${ideaId}/${item.toLowerCase()}`)
+                      history.push(`/ideas/${ideaId}/${item.toLowerCase()}`);
                     }}>
                     <h5>{item}</h5>
                   </NavLink>
