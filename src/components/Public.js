@@ -27,7 +27,7 @@ function Public(props) {
     setPasswordConf("")
   }, [view])
 
-  let validViews = ["signup", "login", "logout", "about"];
+  let validViews = ["signup", "login", "logout", "about", "idea-deleted"];
 
   if (props.view) {
     view = props.view;
@@ -196,11 +196,16 @@ function Public(props) {
             <h3>Goodbye!</h3>
           </Card>
         );
+      case "idea-deleted":
+        return (
+          <Card className="text-center p-3">
+            <h3>Your idea has been deleted.</h3>
+          </Card>
+        );
       case "error":
         return (
           <Card className="text-center p-3">
-            <h3>404</h3>
-            <p>Nothing found here!</p>
+            <h3>404! Nothing found here!</h3>
           </Card>
         );
       default:
