@@ -48,7 +48,7 @@ function List(props) {
   let defaultImage;
   switch (props.type) {
     case "ideas":
-      defaultImage = "https://images.unsplash.com/photo-1579547621113-e4bb2a19bdd6?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=584&q=80";
+      defaultImage = "https://images.unsplash.com/photo-1579548122080-c35fd6820ecb?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80";
       break;
     case "users":
       defaultImage = "https://images.unsplash.com/photo-1589030343991-69ea1433b941?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80";
@@ -79,7 +79,7 @@ function List(props) {
                   }}
                   key={`listItem-${index}`}>
                   <Row>
-                    <Col sm="7" className="offset-sm-2">
+                    <Col sm="8" className="offset-sm-1">
                       <h3>
                         {
                           props.type === "locations"
@@ -92,7 +92,7 @@ function List(props) {
                       props.type !== "locations" &&
                       <Col sm="2">
                         <img
-                          className='img-fluid'
+                          className='img-fluid rounded'
                           src={item.image_url || defaultImage}
                           alt="">
                         </img>

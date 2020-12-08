@@ -28,7 +28,7 @@ function Header() {
     <Navbar
       expand="md"
       light
-      className="navbar-default navbar-dark sticky-top bg-dark">
+      className="navbar-default navbar-dark sticky-top bg-primary">
         <Link
           to="/"
           className="text-white"

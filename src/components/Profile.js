@@ -63,7 +63,7 @@ function Profile() {
     switch (view) {
       case "About":
         return (
-          <Row className="bg-white mt-3">
+          <Row className="bg-white mt-3 mr-0 ml-0">
             <Col sm="4">
               <Editable
                 canEdit={currentUserProfile}
@@ -118,7 +118,7 @@ function Profile() {
         <Nav
           justified
           tabs
-          className="bg-dark text-white">
+          className="bg-primary text-white">
           {
             views.map((item, index) => {
               return (
@@ -142,7 +142,7 @@ function Profile() {
         {switchView()}
         <div className="m-4 text-white"> . </div>
         <div className="m-4 text-white"> . </div>
-        <div className="fixed-bottom bg-dark pt-3 pr-3 text-white ml-auto">
+        <div className="fixed-bottom bg-primary pt-3 pr-3 text-white ml-auto">
           <Editable
             canEdit={currentUserProfile}
             table="users"

@@ -171,7 +171,7 @@ function Idea() {
     switch (view) {
       case "About":
         return (
-          <Row>
+          <Row className="pl-3">
             <Col sm="4">
               <Editable
                 canEdit={currentUserOwnsIdea}
@@ -235,7 +235,7 @@ function Idea() {
                     key={`listItem-${index}`}
                     onClick={() => history.push(`/users/${item.username}`)}>
                     <Row>
-                      <Col xs="7" className="text-right pr-5">
+                      <Col xs="7">
                         <h4>{item.name}</h4>
                       </Col>
                       <Col xs="5">
@@ -324,7 +324,7 @@ function Idea() {
         <Nav
           justified
           tabs
-          className="bg-dark text-white mb-3">
+          className="bg-primary text-white mb-3">
           {
             views.map((item, index) => {
               return (
@@ -348,7 +348,7 @@ function Idea() {
         {switchView()}
         <div className="m-4 text-white"> . </div>
         <div className="m-4 text-white"> . </div>
-        <div className="fixed-bottom bg-dark text-white pt-3">
+        <div className="fixed-bottom bg-primary text-white pt-3">
           <Editable
             canEdit={currentUserOwnsIdea}
             table="ideas"
