@@ -28,10 +28,10 @@ function Header() {
     <Navbar
       expand="md"
       light
-      className="navbar-default navbar-dark sticky-top bg-primary">
+      className="navbar-default navbar-dark sticky-top text-primary bg-white">
         <Link
           to="/"
-          className="text-white"
+          className="text-primary"
           style={{ textDecoration: "none" }}>
           <h1>Idea Network</h1>
         </Link>
@@ -39,14 +39,14 @@ function Header() {
         <Collapse
           isOpen={isOpen}
           navbar >
-          <Nav className="mr-auto" navbar>
+          <Nav style={{ display: "flex", flexFlow: "row nowrap" }} navbar>
             {
               navItems.map((item, index) => {
                 return(
-                  <NavItem>
+                  <NavItem className="mx-auto">
                     <Link
                       key={`nav-item-${index}`}
-                      className="nav-link text-white"
+                      className="nav-link text-primary"
                       to={item.to}
                       onClick={item.onClick || ""}>
                       {item.text}

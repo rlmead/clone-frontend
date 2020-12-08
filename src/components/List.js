@@ -63,7 +63,7 @@ function List(props) {
   return (
     <>
       { listData.length > 0
-        ?
+      &&
         <>
           <ListGroup
             flush
@@ -111,8 +111,6 @@ function List(props) {
             <Footer text={`Ideas in ${locationString.split("-").join(", ")}`} />
           }
         </>
-        :
-        <h4 className="text-left">Loading...</h4>
       }
     </>
   )

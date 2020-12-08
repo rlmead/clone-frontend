@@ -29,7 +29,6 @@ function Profile() {
   })
 
   const [userProfile, setUserProfile] = useState({});
-  const [dataLoaded, setDataLoaded] = useState(false);
   const [deletingAccount, setDeletingAccount] = useState(false);
   const currentUserProfile = (parseInt(user.id) === parseInt(userProfile.id));
 
@@ -54,7 +53,7 @@ function Profile() {
   }
 
   useEffect(() => {
-    getUserByUsername() && setDataLoaded(true);
+    getUserByUsername();
   }, [username])
 
   const editables = [
@@ -165,7 +164,7 @@ function Profile() {
         <Nav
           justified
           tabs
-          className="bg-primary text-white">
+          className="text-primary">
           {
             views.map((item, index) => {
               return (
@@ -189,7 +188,7 @@ function Profile() {
         {switchView()}
         <div className="m-4 text-white"> . </div>
         <div className="m-4 text-white"> . </div>
-        <div className="fixed-bottom bg-primary pt-3 pr-3 text-white ml-auto">
+        <div className="fixed-bottom text-primary bg-white pt-3 pr-3 ml-auto">
           <Editable
             canEdit={currentUserProfile}
             table="users"
@@ -200,14 +199,6 @@ function Profile() {
             content={userProfile.name} />
         </div>
       </>
-    )
-  } else if (!dataLoaded) {
-    return (
-      <Row>
-        <Col>
-          <h3 className="text-left">Loading...</h3>
-        </Col>
-      </Row>
     )
   } else {
     return (
