@@ -19,7 +19,7 @@ function Public() {
   const [localUsername, setLocalUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConf, setPasswordConf] = useState("");
-  
+
   useEffect(() => {
     setName("")
     setLocalUsername("")
@@ -102,6 +102,7 @@ function Public() {
       case "signup":
         return (
           <Card
+            className="text-center"
             onKeyPress={signUpKeyPress}>
             <h3>Sign Up</h3>
             <Input
@@ -151,6 +152,7 @@ function Public() {
       case "login":
         return (
           <Card
+            className="text-center"
             onKeyPress={logInKeyPress}>
             <h3>Log in</h3>
             <Input
@@ -182,15 +184,15 @@ function Public() {
         );
       case "logout":
         return (
-          <Card>
+          <Card className="text-center p-3">
             <h3>Goodbye!</h3>
           </Card>
         );
       default:
         return (
-          <Card style={{ textAlign: "left" }}>
+          <Card className="text-left p-3">
             <h3>About</h3>
-            <p>The Idea Network allows people to share their creative dreams, and find the collaborators they need to make their dreams happen.</p>
+            <p>Idea Network allows people to share their creative dreams and find the collaborators they need to make their dreams happen.</p>
             <p>This website is being created by <a href="https://github.com/rlmead">Becky</a>.</p>
           </Card>
         );

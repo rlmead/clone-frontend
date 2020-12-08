@@ -257,7 +257,7 @@ function Idea() {
         )
       case "Discussion":
         return (
-          <>
+          <div className="text-center">
             <FontAwesomeIcon
               icon={addingComment ? faSave : faPlus}
               size="2x"
@@ -313,7 +313,7 @@ function Idea() {
                 })
               }
             </ListGroup>
-          </>
+          </div>
         )
     }
   };
