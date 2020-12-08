@@ -3,6 +3,7 @@ import { ListGroup, ListGroupItem, Row, Col } from 'reactstrap';
 import { useHistory, useParams } from "react-router-dom";
 import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
+import Footer from "./Footer";
 
 function List(props) {
   let history = useHistory();
@@ -57,53 +58,55 @@ function List(props) {
 
   return (
     <>
-      {
-        locationString &&
-        <h3 className="text-left">Ideas in {locationString.split("-").join(", ")}</h3>
-      }
       { listData.length > 0
         ?
-        <ListGroup
-          flush
-          className='text-left'>
-          {
-            listData.map((item, index) => {
-              return (
-                <ListGroupItem
-                  className={item.status === "closed" ? "bg-secondary" : ""}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => {
-                    props.type === "locations"
-                      ? history.push(`/locations/${item.city}-${item.state}-${item.country_code}`)
-                      : history.push(`/${props.type}/${item.id}`)
-                  }}
-                  key={`listItem-${index}`}>
-                  <Row>
-                    <Col sm="8" className="offset-sm-1">
-                      <h3>
-                        {
-                          props.type === "locations"
-                            ? `${item.country_code}, ${item.state}, ${item.city}`
-                            : item.name
-                        }
-                      </h3>
-                    </Col>
-                    {
-                      props.type !== "locations" &&
-                      <Col sm="2">
-                        <img
-                          className='img-fluid rounded'
-                          src={item.image_url || defaultImage}
-                          alt="">
-                        </img>
+        <>
+          <ListGroup
+            flush
+            className='text-left'>
+            {
+              listData.map((item, index) => {
+                return (
+                  <ListGroupItem
+                    className={item.status === "closed" ? "bg-secondary" : ""}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      props.type === "locations"
+                        ? history.push(`/locations/${item.city}-${item.state}-${item.country_code}`)
+                        : history.push(`/${props.type}/${item.id}`)
+                    }}
+                    key={`listItem-${index}`}>
+                    <Row>
+                      <Col sm="8" className="offset-sm-1">
+                        <h3>
+                          {
+                            props.type === "locations"
+                              ? `${item.country_code}, ${item.state}, ${item.city}`
+                              : item.name
+                          }
+                        </h3>
                       </Col>
-                    }
-                  </Row>
-                </ListGroupItem>
-              )
-            })
+                      {
+                        props.type !== "locations" &&
+                        <Col sm="2">
+                          <img
+                            className='img-fluid rounded'
+                            src={item.image_url || defaultImage}
+                            alt="">
+                          </img>
+                        </Col>
+                      }
+                    </Row>
+                  </ListGroupItem>
+                )
+              })
+            }
+          </ListGroup>
+          {
+            locationString &&
+            <Footer text={`Ideas in ${locationString.split("-").join(", ")}`} />
           }
-        </ListGroup>
+        </>
         :
         <h3 className="text-left">Loading...</h3>
       }

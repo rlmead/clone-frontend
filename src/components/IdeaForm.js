@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, Nav, Row, Col } from 'reactstrap';
 import { useHistory } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
+import Footer from "./Footer";
 
 function IdeaForm() {
   const { user } = useApp();
@@ -58,9 +59,8 @@ function IdeaForm() {
 
 
   return (
-    <>
-      <h3 className="mt-4">Add a new idea</h3>
-      <Form className="text-left">
+    <div className="text-center">
+      <Form className="text-left p-4">
         <FormGroup>
           <Label>Name</Label>
           <Input
@@ -80,7 +80,8 @@ function IdeaForm() {
         </FormGroup>
       </Form>
       <Button className="btn-success" onClick={() => createIdea()}>+</Button>
-    </>
+      <Footer text="Add a new idea" />
+    </div>
   )
 }
 
