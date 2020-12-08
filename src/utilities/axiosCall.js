@@ -6,6 +6,7 @@ const defaultHeaders = {
 }
 
 export function axiosCall(method, url, func, data = {}, headers = defaultHeaders, apiUrl = "http://localhost:8000") {
+// export function axiosCall(method, url, func, data = {}, headers = defaultHeaders, apiUrl = "https://iiddeeaa.ue.r.appspot.com/") {
   return axios({
     method,
     url: apiUrl + url,

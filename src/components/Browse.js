@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Nav, NavItem, NavLink } from "reactstrap";
+import { Nav, NavItem, NavLink, Row, Col } from "reactstrap";
 import List from "./List";
+import Footer from "./Footer";
 
 function Browse() {
   const [view, setView] = useState("All Ideas");
@@ -24,7 +25,7 @@ function Browse() {
       <Nav
         justified
         tabs
-        className="bg-light fixed-bottom">
+        className="bg-primary text-white">
         {
           views.map((item, index) => {
             return (
@@ -42,6 +43,7 @@ function Browse() {
         }
       </Nav>
       {switchView()}
+      <Footer text="Browse"/>
     </>
   )
 }

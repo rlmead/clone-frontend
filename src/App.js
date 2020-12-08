@@ -1,6 +1,4 @@
 import React from "react";
-import "./theme_1606090074772.css";
-import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Container } from "reactstrap";
 import { AppProvider } from "./utilities/AppContext";
@@ -23,13 +21,10 @@ function App() {
           <LocationProvider>
             <Router>
               <Header />
-              <Container>
+              <Container className="p-0 bg-white">
                 <Switch>
                   <Route exact path="/">
-                    <Public />
-                  </Route>
-                  <Route path="/public/:view">
-                    <Public />
+                    <Public view="about"/>
                   </Route>
                   <Route path={`/browse`}>
                     <Browse />
@@ -46,9 +41,18 @@ function App() {
                   <PrivateRoute path={`/ideas/new`}>
                     <IdeaForm />
                   </PrivateRoute>
+                  <PrivateRoute path={`/ideas/:ideaId/:section`}>
+                    <Idea />
+                  </PrivateRoute>
                   <PrivateRoute path={`/ideas/:ideaId`}>
                     <Idea />
                   </PrivateRoute>
+                  <Route path="/:view">
+                    <Public/>
+                  </Route>
+                  <Route>
+                    <Public/>
+                  </Route>
                 </Switch>
               </Container>
             </Router>

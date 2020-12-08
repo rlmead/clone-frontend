@@ -14,17 +14,26 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 function Idea() {
   const { user } = useApp();
   const { token } = useAuth();
-  let { ideaId } = useParams();
+  let { ideaId, section } = useParams();
   let history = useHistory();
 
   const [ideaData, setIdeaData] = useState({});
   const [dataLoaded, setDataLoaded] = useState(false);
   const [ideaUsers, setIdeaUsers] = useState([]);
   const [comments, setComments] = useState([]);
-  const [view, setView] = useState("About");
   const [addingComment, setAddingComment] = useState(false);
   const [newComment, setNewComment] = useState("");
   const views = ["About", "People", "Discussion"];
+  const [view, setView] = useState(views[0]);
+
+  useEffect(() => {
+    if (!section) {
+      section = views[0];
+    } else {
+      section = section.charAt(0).toUpperCase() + section.slice(1).toLowerCase();
+    }
+    setView(section);
+  })
 
   let currentUserOwnsIdea = (
     user.id
@@ -152,41 +161,64 @@ function Idea() {
     setDataLoaded(true);
   }, [ideaId])
 
-  const editables = {
-    main: [
-      { field: "name", staticElementType: "h5", content: ideaData.name },
-      { field: "image_url", staticElementType: "img", content: ideaData.image_url }
-    ],
-    about: [
-      { name: (ideaData.description || currentUserOwnsIdea) ? "Description" : null, field: "description", inputElementType: "textarea", content: ideaData.description },
-      { name: (ideaData.status || currentUserOwnsIdea) ? "Status" : null, field: "status", inputElementType: "select", content: ideaData.status, inputOptions: ["", "open", "closed"] },
-      { name: (ideaData.location || currentUserOwnsIdea) ? "Location" : null, field: "location_id", inputElementType: "location", inputOptions: countryCodes, staticElementType: "location", locationData: ideaData.location },
-    ]
-  }
+  const editables = [
+    { name: (ideaData.description || currentUserOwnsIdea) ? "Description" : null, field: "description", inputElementType: "textarea", content: ideaData.description },
+    { name: (ideaData.status || currentUserOwnsIdea) ? "Status" : null, field: "status", inputElementType: "select", content: ideaData.status, inputOptions: ["", "open", "closed"] },
+    { name: (ideaData.location || currentUserOwnsIdea) ? "Location" : null, field: "location_id", inputElementType: "location", inputOptions: countryCodes, staticElementType: "location", locationData: ideaData.location },
+  ]
 
   function switchView() {
     switch (view) {
       case "About":
         return (
-          editables.about.map((item, index) => {
-            return (
-              <>
-                { item.name && <h5>{item.name}</h5>}
-                <Editable
-                  key={`editable-about-${index}`}
-                  canEdit={currentUserOwnsIdea}
-                  table="ideas"
-                  rowId={ideaId}
-                  refreshFunction={getIdeaById}
-                  field={item.field}
-                  inputElementType={item.inputElementType}
-                  content={item.content || null}
-                  staticElementType={item.staticElementType || null}
-                  inputOptions={item.inputOptions || null}
-                  locationData={item.locationData || null} />
-              </>
-            )
-          })
+          <Row className="pl-3">
+            <Col sm="4">
+              <Editable
+                canEdit={currentUserOwnsIdea}
+                table="ideas"
+                rowId={ideaId}
+                refreshFunction={getIdeaById}
+                field="image_url"
+                content={ideaData.image_url}
+                staticElementType="img" />
+            </Col>
+            <Col sm="8">
+              {
+                !currentUserOwnsIdea && !currentUserIsCollaborator && ideaData.status === "open" &&
+                <Button
+                  className="btn-success mt-1 mb-4"
+                  onClick={() => requestCollab() && getIdeaUsers()}
+                  disabled={collabRequested}>
+                  {
+                    collabRequested
+                      ? "Collaboration Requested"
+                      : "Request to Collaborate"
+                  }
+                </Button>
+              }
+              {
+                editables.map((item, index) => {
+                  return (
+                    <>
+                      {item.name && <h5 className="text-left">{item.name}</h5>}
+                      <Editable
+                        key={`editable-about-${index}`}
+                        canEdit={currentUserOwnsIdea}
+                        table="ideas"
+                        rowId={ideaId}
+                        refreshFunction={getIdeaById}
+                        field={item.field}
+                        inputElementType={item.inputElementType}
+                        content={item.content || null}
+                        staticElementType={item.staticElementType || null}
+                        inputOptions={item.inputOptions || null}
+                        locationData={item.locationData || null} />
+                    </>
+                  )
+                })
+              }
+            </Col>
+          </Row>
         )
       case "People":
         return (
@@ -200,16 +232,17 @@ function Idea() {
                     || (!currentUserOwnsIdea && item.role !== "request")) &&
                   <ListGroupItem
                     style={{ cursor: "pointer" }}
-                    key={`listItem-${index}`}>
+                    key={`listItem-${index}`}
+                    onClick={() => history.push(`/users/${item.username}`)}>
                     <Row>
-                      <Col sm="8">
-                        <h4 onClick={() => history.push(`/users/${item.username}`)}>{item.name}</h4>
+                      <Col xs="7">
+                        <h4>{item.name}</h4>
                       </Col>
-                      <Col sm="4">
+                      <Col xs="5">
                         <Editable
                           canEdit={(currentUserOwnsIdea && item.role === "request")}
                           content={item.role}
-                          staticElementType="h5"
+                          staticElementType="h4"
                           inputElementType="collabRequest"
                           ideaId={ideaId}
                           userId={item.id}
@@ -224,7 +257,7 @@ function Idea() {
         )
       case "Discussion":
         return (
-          <>
+          <div className="text-center">
             <FontAwesomeIcon
               icon={addingComment ? faSave : faPlus}
               size="2x"
@@ -280,70 +313,52 @@ function Idea() {
                 })
               }
             </ListGroup>
-          </>
+          </div>
         )
     }
   };
 
   if (Object.keys(ideaData).length > 0) {
     return (
-      <Row>
-        <Col sm="3">
+      <>
+        <Nav
+          justified
+          tabs
+          className="bg-primary text-white mb-3">
           {
-            editables.main.map((item, index) => {
+            views.map((item, index) => {
               return (
-                <>
-                  <Editable
-                    key={`editable-main-${index}`}
-                    canEdit={currentUserOwnsIdea}
-                    table="ideas"
-                    rowId={ideaId}
-                    refreshFunction={getIdeaById}
-                    staticElementType={item.staticElementType}
-                    field={item.field}
-                    content={item.content} />
-                </>
+                <NavItem
+                  key={"button-" + index}>
+                  <NavLink
+                    className={(view === item) ? "active" : ""}
+                    id={item}
+                    onClick={() => {
+                      setView(item);
+                      section = item;
+                      history.push(`/ideas/${ideaId}/${item.toLowerCase()}`)
+                    }}>
+                    <h5>{item}</h5>
+                  </NavLink>
+                </NavItem>
               )
             })
           }
-          {
-            !currentUserOwnsIdea && !currentUserIsCollaborator && ideaData.status === "open" &&
-            <Button
-              className="btn-success"
-              onClick={() => requestCollab() && getIdeaUsers()}
-              disabled={collabRequested}>
-              {
-                collabRequested
-                  ? "Collaboration Requested"
-                  : "Request to Collaborate"
-              }
-            </Button>
-          }
-        </Col>
-        <Col sm="9" style={{ textAlign: "left" }}>
-          <Nav
-            justified
-            tabs
-            className="bg-light fixed-bottom">
-            {
-              views.map((item, index) => {
-                return (
-                  <NavItem
-                    key={"button-" + index}>
-                    <NavLink
-                      className={(view === item) ? "active" : ""}
-                      id={item}
-                      onClick={() => setView(item)}>
-                      <h5>{item}</h5>
-                    </NavLink>
-                  </NavItem>
-                )
-              })
-            }
-          </Nav>
-          {switchView()}
-        </Col>
-      </Row >
+        </Nav>
+        {switchView()}
+        <div className="m-4 text-white"> . </div>
+        <div className="m-4 text-white"> . </div>
+        <div className="fixed-bottom bg-primary text-white pt-3">
+          <Editable
+            canEdit={currentUserOwnsIdea}
+            table="ideas"
+            rowId={ideaId}
+            refreshFunction={getIdeaById}
+            field="name"
+            content={ideaData.name}
+            staticElementType="h2" />
+        </div>
+      </>
     )
   } else if (!dataLoaded) {
     return (

@@ -4,7 +4,7 @@ import { useHistory, useParams, useLocation } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 
-function Public() {
+function Public(props) {
   const { setUsername } = useApp();
   const auth = useAuth();
 
@@ -19,6 +19,21 @@ function Public() {
   const [localUsername, setLocalUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConf, setPasswordConf] = useState("");
+
+  useEffect(() => {
+    setName("")
+    setLocalUsername("")
+    setPassword("")
+    setPasswordConf("")
+  }, [view])
+
+  let validViews = ["signup", "login", "logout", "about"];
+
+  if (props.view) {
+    view = props.view;
+  } else if (validViews.indexOf(view) === -1) {
+    view = "error";
+  }
 
   useEffect(() => {
     auth.justLoggedIn && history.replace(from);
@@ -95,6 +110,7 @@ function Public() {
       case "signup":
         return (
           <Card
+            className="text-center"
             onKeyPress={signUpKeyPress}>
             <h3>Sign Up</h3>
             <Input
@@ -102,27 +118,27 @@ function Public() {
               placeholder="Name"
               maxLength={64}
               onChange={(e) => setName(e.target.value)}
-              defaultValue={name} />
+              value={name} />
             <Input
               type="text"
               placeholder="Username"
               maxLength={64}
               onChange={(e) => setLocalUsername(e.target.value)}
-              defaultValue={localUsername} />
+              value={localUsername} />
             <Input
               type="password"
               placeholder="Password"
               minLength={8}
               maxLength={64}
               onChange={(e) => setPassword(e.target.value)}
-              defaultValue={password} />
+              value={password} />
             <Input
               type="password"
               placeholder="Confirm password"
               minLength={8}
               maxLength={64}
               onChange={(e) => setPasswordConf(e.target.value)}
-              defaultValue={passwordConf} />
+              value={passwordConf} />
             <Label>
               <Input
                 type="checkbox"
@@ -144,6 +160,7 @@ function Public() {
       case "login":
         return (
           <Card
+            className="text-center"
             onKeyPress={logInKeyPress}>
             <h3>Log in</h3>
             <Input
@@ -151,14 +168,14 @@ function Public() {
               placeholder="Username"
               maxLength={64}
               onChange={(e) => setLocalUsername(e.target.value)}
-              defaultValue={localUsername} />
+              value={localUsername} />
             <Input
               type="password"
               placeholder="Password"
               minLength={8}
               maxLength={64}
               onChange={(e) => setPassword(e.target.value)}
-              defaultValue={password} />
+              value={password} />
             <Label>
               <Input
                 type="checkbox"
@@ -175,15 +192,22 @@ function Public() {
         );
       case "logout":
         return (
-          <Card>
+          <Card className="text-center p-3">
             <h3>Goodbye!</h3>
+          </Card>
+        );
+      case "error":
+        return (
+          <Card className="text-center p-3">
+            <h3>404</h3>
+            <p>Nothing found here!</p>
           </Card>
         );
       default:
         return (
-          <Card style={{ textAlign: "left" }}>
+          <Card className="text-left p-3">
             <h3>About</h3>
-            <p>The Idea Network allows people to share their creative dreams, and find the collaborators they need to make their dreams happen.</p>
+            <p>Idea Network allows people to share their creative dreams and find the collaborators they need to make their dreams happen.</p>
             <p>This website is being created by <a href="https://github.com/rlmead">Becky</a>.</p>
           </Card>
         );
@@ -192,6 +216,7 @@ function Public() {
 
   return (
     <Jumbotron
+      className="mt-4 card"
       style={{ backgroundImage: "url(https://images.unsplash.com/photo-1545494097-1545e22ee878?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxzZWFyY2h8OHx8Z2xpdHRlcnxlbnwwfHwwfA%3D%3D&auto=format&fit=crop&w=800&q=60)", backgroundSize: "100%", opacity: "0.8" }}>
       <Row>
         <Col sm={{ size: 10, offset: 1 }}>
