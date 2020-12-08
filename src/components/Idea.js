@@ -161,41 +161,64 @@ function Idea() {
     setDataLoaded(true);
   }, [ideaId])
 
-  const editables = {
-    main: [
-      { field: "name", staticElementType: "h5", content: ideaData.name },
-      { field: "image_url", staticElementType: "img", content: ideaData.image_url }
-    ],
-    about: [
-      { name: (ideaData.description || currentUserOwnsIdea) ? "Description" : null, field: "description", inputElementType: "textarea", content: ideaData.description },
-      { name: (ideaData.status || currentUserOwnsIdea) ? "Status" : null, field: "status", inputElementType: "select", content: ideaData.status, inputOptions: ["", "open", "closed"] },
-      { name: (ideaData.location || currentUserOwnsIdea) ? "Location" : null, field: "location_id", inputElementType: "location", inputOptions: countryCodes, staticElementType: "location", locationData: ideaData.location },
-    ]
-  }
+  const editables = [
+    { name: (ideaData.description || currentUserOwnsIdea) ? "Description" : null, field: "description", inputElementType: "textarea", content: ideaData.description },
+    { name: (ideaData.status || currentUserOwnsIdea) ? "Status" : null, field: "status", inputElementType: "select", content: ideaData.status, inputOptions: ["", "open", "closed"] },
+    { name: (ideaData.location || currentUserOwnsIdea) ? "Location" : null, field: "location_id", inputElementType: "location", inputOptions: countryCodes, staticElementType: "location", locationData: ideaData.location },
+  ]
 
   function switchView() {
     switch (view) {
       case "About":
         return (
-          editables.about.map((item, index) => {
-            return (
-              <>
-                { item.name && <h5>{item.name}</h5>}
-                <Editable
-                  key={`editable-about-${index}`}
-                  canEdit={currentUserOwnsIdea}
-                  table="ideas"
-                  rowId={ideaId}
-                  refreshFunction={getIdeaById}
-                  field={item.field}
-                  inputElementType={item.inputElementType}
-                  content={item.content || null}
-                  staticElementType={item.staticElementType || null}
-                  inputOptions={item.inputOptions || null}
-                  locationData={item.locationData || null} />
-              </>
-            )
-          })
+          <Row>
+            <Col sm="4">
+              <Editable
+                canEdit={currentUserOwnsIdea}
+                table="ideas"
+                rowId={ideaId}
+                refreshFunction={getIdeaById}
+                field="image_url"
+                content={ideaData.image_Url}
+                staticElementType="img" />
+              {
+                !currentUserOwnsIdea && !currentUserIsCollaborator && ideaData.status === "open" &&
+                <Button
+                  className="btn-success"
+                  onClick={() => requestCollab() && getIdeaUsers()}
+                  disabled={collabRequested}>
+                  {
+                    collabRequested
+                      ? "Collaboration Requested"
+                      : "Request to Collaborate"
+                  }
+                </Button>
+              }
+            </Col>
+            <Col sm="8">
+              {
+                editables.map((item, index) => {
+                  return (
+                    <>
+                      {item.name && <h5 className="text-left">{item.name}</h5>}
+                      <Editable
+                        key={`editable-about-${index}`}
+                        canEdit={currentUserOwnsIdea}
+                        table="ideas"
+                        rowId={ideaId}
+                        refreshFunction={getIdeaById}
+                        field={item.field}
+                        inputElementType={item.inputElementType}
+                        content={item.content || null}
+                        staticElementType={item.staticElementType || null}
+                        inputOptions={item.inputOptions || null}
+                        locationData={item.locationData || null} />
+                    </>
+                  )
+                })
+              }
+            </Col>
+          </Row>
         )
       case "People":
         return (
@@ -296,67 +319,47 @@ function Idea() {
 
   if (Object.keys(ideaData).length > 0) {
     return (
-      <Row>
-        <Col sm="3">
+      <>
+        <Nav
+          justified
+          tabs
+          className="bg-light mb-3">
           {
-            editables.main.map((item, index) => {
+            views.map((item, index) => {
               return (
-                <>
-                  <Editable
-                    key={`editable-main-${index}`}
-                    canEdit={currentUserOwnsIdea}
-                    table="ideas"
-                    rowId={ideaId}
-                    refreshFunction={getIdeaById}
-                    staticElementType={item.staticElementType}
-                    field={item.field}
-                    content={item.content} />
-                </>
+                <NavItem
+                  key={"button-" + index}>
+                  <NavLink
+                    className={(view === item) ? "active" : ""}
+                    id={item}
+                    onClick={() => {
+                      setView(item);
+                      section = item;
+                      history.push(`/ideas/${ideaId}/${item.toLowerCase()}`)
+                    }}>
+                    <h5>{item}</h5>
+                  </NavLink>
+                </NavItem>
               )
             })
           }
-          {
-            !currentUserOwnsIdea && !currentUserIsCollaborator && ideaData.status === "open" &&
-            <Button
-              className="btn-success"
-              onClick={() => requestCollab() && getIdeaUsers()}
-              disabled={collabRequested}>
-              {
-                collabRequested
-                  ? "Collaboration Requested"
-                  : "Request to Collaborate"
-              }
-            </Button>
-          }
-        </Col>
-        <Col sm="9" style={{ textAlign: "left" }}>
-          <Nav
-            justified
-            tabs
-            className="bg-light fixed-bottom">
-            {
-              views.map((item, index) => {
-                return (
-                  <NavItem
-                    key={"button-" + index}>
-                    <NavLink
-                      className={(view === item) ? "active" : ""}
-                      id={item}
-                      onClick={() => {
-                        setView(item);
-                        section = item;
-                        history.push(`/ideas/${ideaId}/${item.toLowerCase()}`)
-                      }}>
-                      <h5>{item}</h5>
-                    </NavLink>
-                  </NavItem>
-                )
-              })
-            }
-          </Nav>
-          {switchView()}
-        </Col>
-      </Row >
+        </Nav>
+        {switchView()}
+        <Nav className="fixed-bottom bg-light pt-3 text-right">
+          <Row>
+            <Col>
+              <Editable
+                canEdit={currentUserOwnsIdea}
+                table="ideas"
+                rowId={ideaId}
+                refreshFunction={getIdeaById}
+                field="name"
+                content={ideaData.name}
+                staticElementType="h5" />
+            </Col>
+          </Row>
+        </Nav>
+      </>
     )
   } else if (!dataLoaded) {
     return (
