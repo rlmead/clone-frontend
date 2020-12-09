@@ -27,6 +27,7 @@ function Idea() {
   const [deletingIdea, setDeletingIdea] = useState(false);
   const [commentResult, setCommentResult] = useState(false);
   const [requestResult, setRequestResult] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const views = ["About", "People", "Discussion"];
   const [view, setView] = useState(views[0]);
@@ -47,6 +48,10 @@ function Idea() {
   useEffect(() => {
     getIdeaUsers();
   }, [requestResult])
+
+  useEffect(() => {
+    setLoading(false);
+  }, [comments])
 
   let currentUserOwnsIdea = (
     user.id
@@ -134,6 +139,7 @@ function Idea() {
   }
 
   async function addComment() {
+    setLoading(true);
     await axiosCall(
       "post",
       "/comments/add",
@@ -148,6 +154,7 @@ function Idea() {
   }
 
   async function deleteComment(commentId) {
+    setLoading(true);
     await axiosCall(
       "post",
       "/comments/delete",
@@ -323,6 +330,11 @@ function Idea() {
                 setAddingComment(!addingComment);
               }}
             />
+            {
+              loading &&
+              <Spinners />
+            }
+
             {
               addingComment &&
               <textarea
