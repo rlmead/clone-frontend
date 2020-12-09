@@ -304,6 +304,7 @@ function Idea() {
           <div className="text-center">
             <FontAwesomeIcon
               icon={addingComment ? faSave : faPlus}
+              style={{ cursor: "pointer" }}
               size="2x"
               className="text-success"
               onClick={() => {
