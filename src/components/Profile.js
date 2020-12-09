@@ -204,8 +204,9 @@ function Profile() {
   } else {
     return (
       <>
-        <div className="mt-4" />
-        <Spinners />
+        <div className="mt-4">
+          <Spinners />
+        </div>
       </>
     )
   }
