@@ -3,6 +3,7 @@ import { ListGroup, ListGroupItem, Row, Col } from 'reactstrap';
 import { useHistory, useParams } from "react-router-dom";
 import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
+import Spinners from "./Spinners";
 import Footer from "./Footer";
 
 function List(props) {
@@ -46,7 +47,7 @@ function List(props) {
     getList();
     initialLoad = true;
   }, [initialLoad, props.type])
-  
+
   let defaultImage;
   switch (props.type) {
     case "ideas":
@@ -60,7 +61,7 @@ function List(props) {
   return (
     <>
       { listData.length > 0
-      &&
+        ?
         <>
           <ListGroup
             flush
@@ -108,6 +109,10 @@ function List(props) {
             <Footer text={`Ideas in ${locationString.split("-").join(", ")}`} />
           }
         </>
+        :
+        <div className="mt-4" >
+        <Spinners />
+        </div>
       }
     </>
   )
