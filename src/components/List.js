@@ -42,14 +42,11 @@ function List(props) {
   }
 
   useEffect(() => {
+    setListData([]);
     getList();
     initialLoad = true;
   }, [initialLoad, props.type])
   
-  useEffect(() => {
-    setListData([]);
-  }, [props.type])
-
   let defaultImage;
   switch (props.type) {
     case "ideas":
