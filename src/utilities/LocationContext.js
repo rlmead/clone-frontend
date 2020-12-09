@@ -76,16 +76,14 @@ function useLocationProvider() {
     }
   }, [apiData])
 
-  async function getLocationData() {
-    let response = await axiosCall(
-      "get",
-      `&codes=${newPostalCode.split(" ").join("%20")}&country=${newCountryCode}`,
-      setApiData,
-      {},
-      postHeaders,
-      `https://app.zipcodebase.com/api/v1/search?apikey=${zipCodeBaseKey}`
-    );
-    return response;
+  var zipCodeRequest = require('request');
+  var options = {
+    url: `https://app.zipcodebase.com/api/v1/search?apikey=${zipCodeBaseKey}&codes=${newPostalCode.split(" ").join("%20")}&country=${newCountryCode}`
+  };
+  function zipCodeCallback(error, response, body) {
+    if (!error && response.statusCode == 200) {
+      setApiData(JSON.parse(body));
+    }
   }
 
   useEffect(() => {
@@ -98,7 +96,8 @@ function useLocationProvider() {
         setNewCountryCode("");
       } else {
         // if it's not there:
-        getLocationData();
+        // getLocationData();
+        zipCodeRequest(options, zipCodeCallback);
         setParsingLocationData(true);
       }
     }
