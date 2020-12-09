@@ -24,6 +24,8 @@ function Idea() {
   const [addingComment, setAddingComment] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [deletingIdea, setDeletingIdea] = useState(false);
+  const [commentResult, setCommentResult] = useState(false);
+  const [requestResult, setRequestResult] = useState(false);
 
   const views = ["About", "People", "Discussion"];
   const [view, setView] = useState(views[0]);
@@ -36,6 +38,14 @@ function Idea() {
     }
     setView(section);
   })
+
+  useEffect(() => {
+    getComments();
+  }, [commentResult])
+
+  useEffect(() => {
+    getIdeaUsers();
+  }, [requestResult])
 
   let currentUserOwnsIdea = (
     user.id
@@ -112,7 +122,7 @@ function Idea() {
     await axiosCall(
       "post",
       "/request_collab",
-      console.log,
+      setRequestResult,
       {
         idea_id: ideaId,
         user_id: user.id,
@@ -126,7 +136,7 @@ function Idea() {
     await axiosCall(
       "post",
       "/comments/add",
-      console.log,
+      setCommentResult,
       {
         idea_id: ideaId,
         user_id: user.id,
@@ -140,7 +150,7 @@ function Idea() {
     await axiosCall(
       "post",
       "/comments/delete",
-      console.log,
+      setCommentResult,
       {
         id: commentId
       },
@@ -151,7 +161,7 @@ function Idea() {
   function addCommentKeyPress(e) {
     if (e.key === "Enter") {
       e.preventDefault();
-      newComment !== "" && addComment() && getComments();
+      newComment !== "" && addComment();
       setAddingComment(!addingComment);
     }
   }
@@ -187,8 +197,8 @@ function Idea() {
               {
                 !currentUserOwnsIdea && !currentUserIsCollaborator && ideaData.status === "open" &&
                 <Button
-                  className="btn-success mt-1 mb-4"
-                  onClick={() => requestCollab() && getIdeaUsers()}
+                  className="btn-success mt-1 mb-4 text-primary"
+                  onClick={() => requestCollab()}
                   disabled={collabRequested}>
                   {
                     collabRequested
@@ -308,7 +318,7 @@ function Idea() {
               size="2x"
               className="text-success"
               onClick={() => {
-                addingComment && newComment !== "" && addComment();
+                (addingComment && newComment !== "") && addComment();
                 setAddingComment(!addingComment);
               }}
             />
@@ -346,7 +356,7 @@ function Idea() {
                                 icon={faTrashAlt}
                                 className="text-danger"
                                 onClick={() => {
-                                  deleteComment(item.id) && getComments();
+                                  deleteComment(item.id);
                                 }}
                               />
                             </div>
