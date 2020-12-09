@@ -36,11 +36,11 @@ function Editable(props) {
         }
       } else if (props.staticElementType === "img" && !isValidUrl(newValue)) {
         alert("Whoops, that doesn't look like a valid link!");
+        setLoading(false);
       } else if (newValue !== "") {
         editData(props.table, props.rowId, props.field, newValue, token);
         setNewValue("");
         setSavingUpdate(false);
-        setLoading(false);
       } else if (newPostalCode !== "" && newCountryCode !== "") {
         setResponse(handleLocationInput());
       } else if (props.staticElementType === "location") {
@@ -78,7 +78,7 @@ useEffect(() => {
   function updateKeyPress(e) {
     if (e.key === "Enter" && editingElement) {
       setSavingUpdate(true);
-      setLoading(false);
+      setLoading(true);
       setEditingElement(false);
     }
   }
@@ -214,7 +214,7 @@ useEffect(() => {
     return (
       <Col xs="1">
         {
-          props.canEdit &&
+          (props.canEdit && !loading) &&
           <>
             <div>
               <FontAwesomeIcon
@@ -222,7 +222,8 @@ useEffect(() => {
                 size="lg"
                 className="text-success"
                 onClick={() => {
-                  editingElement && setSavingUpdate(true) && setLoading(true);
+                  editingElement && setSavingUpdate(true);
+                  editingElement && setLoading(true);
                   setEditingElement(!editingElement);
                 }}
               />
