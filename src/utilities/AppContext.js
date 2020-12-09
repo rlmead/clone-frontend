@@ -17,13 +17,14 @@ export const useApp = () => {
 function useAppProvider() {
   const [user, setUser] = useState({});
   const [username, setUsername] = useState("");
+  const [response, setResponse] = useState({});
 
   async function editData(table, id, key, value, token) {
     value !== "" &&
       await axiosCall(
         "post",
         `/${table}/update`,
-        console.log,
+        setResponse,
         {
           id,
           [key]: value
@@ -41,7 +42,7 @@ function useAppProvider() {
     await axiosCall(
       "post",
       user_role === "reject" ? "/delete_collab" : "/update_collab",
-      console.log,
+      setResponse,
       {
         idea_id,
         user_id,
@@ -62,6 +63,8 @@ function useAppProvider() {
     username,
     setUsername,
     editData,
-    saveRelationship
+    saveRelationship,
+    response,
+    setResponse
   };
 }

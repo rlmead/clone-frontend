@@ -11,7 +11,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons'
 
 function Editable(props) {
   const { token } = useAuth();
-  const { editData, saveRelationship } = useApp();
+  const { editData, saveRelationship, response, setResponse } = useApp();
   const {
     newPostalCode,
     setNewPostalCode,
@@ -25,18 +25,17 @@ function Editable(props) {
   const [editingElement, setEditingElement] = useState(false);
   const [savingUpdate, setSavingUpdate] = useState(false);
   const [newValue, setNewValue] = useState("");
-  const [response, setResponse] = useState({});
 
   useEffect(() => {
     if (savingUpdate) {
       if (props.inputElementType === "collabRequest") {
         if (newValue !== "") {
-          setResponse(saveRelationship(props.ideaId, props.userId, newValue, token));
+          saveRelationship(props.ideaId, props.userId, newValue, token);
         }
       } else if (props.staticElementType === "img" && !isValidUrl(newValue)) {
         alert("Whoops, that doesn't look like a valid link!");
       } else if (newValue !== "") {
-        setResponse(editData(props.table, props.rowId, props.field, newValue, token));
+        editData(props.table, props.rowId, props.field, newValue, token);
         setNewValue("");
         setSavingUpdate(false);
       } else if (newPostalCode !== "" && newCountryCode !== "") {
@@ -52,14 +51,14 @@ function Editable(props) {
 
   useEffect(() => {
     if (localData.length > 0 && savingUpdate) {
-      setResponse(editData(props.table, props.rowId, props.field, localData[0].id, token));
+      editData(props.table, props.rowId, props.field, localData[0].id, token);
       setSavingUpdate(false);
     }
   }, [localData])
 
   useEffect(() => {
     if (newLocationId !== "" && savingUpdate) {
-      setResponse(editData(props.table, props.rowId, props.field, newLocationId, token));
+      editData(props.table, props.rowId, props.field, newLocationId, token);
       setSavingUpdate(false);
     }
   }, [newLocationId])
