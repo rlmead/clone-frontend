@@ -4,6 +4,7 @@ import { useApp } from "../utilities/AppContext";
 import { Link } from "react-router-dom";
 import { useAuth } from "../utilities/AuthContext";
 import { useLocation } from "../utilities/LocationContext";
+import Spinners from "./Spinners";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { faSave } from '@fortawesome/free-solid-svg-icons'
@@ -25,6 +26,7 @@ function Editable(props) {
   const [editingElement, setEditingElement] = useState(false);
   const [savingUpdate, setSavingUpdate] = useState(false);
   const [newValue, setNewValue] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (savingUpdate) {
@@ -38,6 +40,7 @@ function Editable(props) {
         editData(props.table, props.rowId, props.field, newValue, token);
         setNewValue("");
         setSavingUpdate(false);
+        setLoading(false);
       } else if (newPostalCode !== "" && newCountryCode !== "") {
         setResponse(handleLocationInput());
       } else if (props.staticElementType === "location") {
@@ -45,9 +48,14 @@ function Editable(props) {
         setNewPostalCode("");
         setNewCountryCode("");
         setSavingUpdate(false);
+        setLoading(false);
       }
     }
   }, [savingUpdate])
+
+useEffect(() => {
+  console.log(loading);
+}, [loading])
 
   useEffect(() => {
     if (localData.length > 0 && savingUpdate) {
@@ -64,12 +72,13 @@ function Editable(props) {
   }, [newLocationId])
 
   useEffect(() => {
-    props.refreshFunction();
+    props.refreshFunction() && setLoading(false);
   }, [response])
 
   function updateKeyPress(e) {
     if (e.key === "Enter" && editingElement) {
       setSavingUpdate(true);
+      setLoading(false);
       setEditingElement(false);
     }
   }
@@ -213,7 +222,7 @@ function Editable(props) {
                 size="lg"
                 className="text-success"
                 onClick={() => {
-                  editingElement && setSavingUpdate(true);
+                  editingElement && setSavingUpdate(true) && setLoading(true);
                   setEditingElement(!editingElement);
                 }}
               />
@@ -239,15 +248,19 @@ function Editable(props) {
 
   return (
     < Row >
-      { (props.field !== "name" ) && editButton()}
-      <Col xs="11" className={props.field === "name" ? "text-right" : "text-left"}>
-        {
-          editingElement
-            ? switchEditingView()
-            : switchStaticView()
-        }
-      </Col>
-      { (props.field === "name" ) && editButton()}
+      <>
+        { (props.field !== "name") && editButton()}
+        <Col xs="11" className={props.field === "name" ? "text-right" : "text-left"}>
+          {
+            loading
+              ? <Spinners />
+              : (editingElement
+                ? switchEditingView()
+                : switchStaticView())
+          }
+        </Col>
+        { (props.field === "name") && editButton()}
+      </>
     </Row >
   )
 }

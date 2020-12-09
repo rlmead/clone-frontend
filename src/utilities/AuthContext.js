@@ -17,7 +17,7 @@ export const useAuth = () => {
 };
 
 function useAuthProvider() {
-  const {user, setUser, username} = useApp();
+  const {user, setUser, username, setUsername} = useApp();
 
   const [storage, setStorage] = useState(window.sessionStorage);
 
@@ -112,6 +112,7 @@ function useAuthProvider() {
   async function logOut() {
     setToken("");
     setUser({});
+    setUsername("");
     setJustLoggedIn(false);
     window.localStorage.clear();
     window.sessionStorage.clear();

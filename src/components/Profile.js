@@ -10,6 +10,7 @@ import { axiosCall } from "../utilities/axiosCall";
 import { countryCodes } from "../utilities/countryCodes";
 import Editable from "./Editable";
 import List from "./List";
+import Spinners from "./Spinners";
 
 function Profile() {
   const { token, logOut } = useAuth();
@@ -202,7 +203,11 @@ function Profile() {
     )
   } else {
     return (
-      <div />
+      <>
+        <div className="mt-4">
+          <Spinners />
+        </div>
+      </>
     )
   }
 }

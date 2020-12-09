@@ -6,12 +6,12 @@ import { useAuth } from "../utilities/AuthContext";
 
 function Header() {
   const { user } = useApp();
-  const { token, logOut } = useAuth();
+  const { logOut } = useAuth();
 
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
-  let navItems = token
+  let navItems = user.username
     ? [
       { to: "/browse", text: "Browse" },
       { to: "/ideas/new", text: "Add idea" },
