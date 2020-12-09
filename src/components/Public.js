@@ -44,7 +44,6 @@ function Public(props) {
 
   useEffect(() => {
     username ? setLoading(true) : setLoading(false);
-    console.log(username);
   }, [username])
 
   function changeStorage() {
