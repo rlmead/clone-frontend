@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, FormGroup, Label, Input, Nav, Row, Col } from 'reactstrap';
+import { Form, FormGroup, Label, Input } from 'reactstrap';
 import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -7,6 +7,7 @@ import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
 import Footer from "./Footer";
+import Spinners from "./Spinners";
 
 function IdeaForm() {
   const { user } = useApp();
@@ -16,6 +17,7 @@ function IdeaForm() {
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false);
   const [id, setId] = useState("");
 
   function getIdeaId(input) {
@@ -34,6 +36,7 @@ function IdeaForm() {
   ]
 
   async function createIdea() {
+    setLoading(true);
     let response = await axiosCall(
       "post",
       "/ideas/create",
@@ -81,13 +84,19 @@ function IdeaForm() {
           />
         </FormGroup>
       </Form>
-      <FontAwesomeIcon
-        icon={faPlus}
-        style={{ cursor: "pointer" }}
-        size="2x"
-        className="text-success"
-        onClick={() => createIdea()}
-      />
+      {
+        loading
+          ?
+          <Spinners />
+          :
+          <FontAwesomeIcon
+            icon={faPlus}
+            style={{ cursor: "pointer" }}
+            size="2x"
+            className="text-success"
+            onClick={() => createIdea()}
+          />
+      }
       <Footer text="Add a new idea" />
     </div>
   )
