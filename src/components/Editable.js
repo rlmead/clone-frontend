@@ -222,7 +222,8 @@ useEffect(() => {
                 size="lg"
                 className="text-success"
                 onClick={() => {
-                  editingElement && setSavingUpdate(true) && setLoading(true);
+                  editingElement && setSavingUpdate(true);
+                  editingElement && setLoading(true);
                   setEditingElement(!editingElement);
                 }}
               />
