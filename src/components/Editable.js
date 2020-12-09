@@ -24,25 +24,27 @@ function Editable(props) {
 
   const [editingElement, setEditingElement] = useState(false);
   const [savingUpdate, setSavingUpdate] = useState(false);
-  const [justUpdated, setJustUpdated] = useState(false);
+  // const [justUpdated, setJustUpdated] = useState(false);
   const [newValue, setNewValue] = useState("");
+  const [response, setResponse] = useState({});
 
   useEffect(() => {
     if (savingUpdate) {
       if (props.inputElementType === "collabRequest") {
         if (newValue !== "") {
-          saveRelationship(props.ideaId, props.userId, newValue, token);
-          setJustUpdated(true);
+          setResponse(saveRelationship(props.ideaId, props.userId, newValue, token));
+          // setJustUpdated(true);
         }
       } else if (props.staticElementType === "img" && !isValidUrl(newValue)) {
         alert("Whoops, that doesn't look like a valid link!");
       } else if (newValue !== "") {
-        editData(props.table, props.rowId, props.field, newValue, token);
+        setResponse(editData(props.table, props.rowId, props.field, newValue, token));
         setNewValue("");
         setSavingUpdate(false);
-        setJustUpdated(true);
+        // setJustUpdated(true);
       } else if (newPostalCode !== "" && newCountryCode !== "") {
-        handleLocationInput() && setJustUpdated(true);
+        setResponse(handleLocationInput());
+        //  && setJustUpdated(true);
       } else if (props.staticElementType === "location") {
         alert("Please enter both a postal code and a country code");
         setNewPostalCode("");
@@ -54,24 +56,25 @@ function Editable(props) {
 
   useEffect(() => {
     if (localData.length > 0 && savingUpdate) {
-      editData(props.table, props.rowId, props.field, localData[0].id, token)
-      setJustUpdated(true);
+      setResponse(editData(props.table, props.rowId, props.field, localData[0].id, token));
+      // setJustUpdated(true);
       setSavingUpdate(false);
     }
   }, [localData])
 
   useEffect(() => {
     if (newLocationId !== "" && savingUpdate) {
-      editData(props.table, props.rowId, props.field, newLocationId, token)
-      setJustUpdated(true);
+      setResponse(editData(props.table, props.rowId, props.field, newLocationId, token));
+      // setJustUpdated(true);
       setSavingUpdate(false);
     }
   }, [newLocationId])
 
   useEffect(() => {
-    justUpdated && props.refreshFunction();
-    setJustUpdated(false);
-  }, [justUpdated])
+    // justUpdated && 
+    props.refreshFunction();
+    // setJustUpdated(false);
+  }, [response])
 
   function updateKeyPress(e) {
     if (e.key === "Enter" && editingElement) {
