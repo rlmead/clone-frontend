@@ -11,6 +11,7 @@ import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
 import { countryCodes } from "../utilities/countryCodes";
 import Editable from "./Editable";
+import Spinners from "./Spinners";
 
 function Idea() {
   const { user } = useApp();
@@ -417,7 +418,9 @@ function Idea() {
     )
   } else {
     return (
-      <div />
+      <div className="mt-4">
+        <Spinners />
+      </div>
     )
   }
 }
