@@ -13,13 +13,13 @@ function Header() {
 
   let navItems = token
     ? [
-      { to: "/browse", text: "Browse ideas" },
+      { to: "/browse", text: "Browse" },
       { to: "/ideas/new", text: "Add idea" },
       { to: `/users/${user.username}`, text: `${user.name}'s profile` },
       { to: "/logout", text: "Log out", onClick: () => logOut() }
     ]
     : [
-      { to: "/browse", text: "Browse ideas" },
+      { to: "/browse", text: "Browse" },
       { to: "/signup", text: "Sign up" },
       { to: "/login", text: "Log in" }
     ]
@@ -28,14 +28,14 @@ function Header() {
     <Navbar
       expand="md"
       light
-      className="navbar-default navbar-dark sticky-top text-primary bg-white">
+      className="navbar-default navbar-light sticky-top text-primary bg-white">
         <Link
           to="/"
           className="text-primary"
           style={{ textDecoration: "none" }}>
           <h1>Idea Network</h1>
         </Link>
-        <NavbarToggler onClick={toggle} className="white" />
+        <NavbarToggler onClick={toggle} />
         <Collapse
           isOpen={isOpen}
           navbar >

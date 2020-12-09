@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Button, Form, FormGroup, Label, Input, Nav, Row, Col } from 'reactstrap';
 import { useHistory } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
 import { axiosCall } from "../utilities/axiosCall";
@@ -79,7 +81,13 @@ function IdeaForm() {
           />
         </FormGroup>
       </Form>
-      <Button className="btn-success" onClick={() => createIdea()}>+</Button>
+      <FontAwesomeIcon
+        icon={faPlus}
+        style={{ cursor: "pointer" }}
+        size="2x"
+        className="text-success"
+        onClick={() => createIdea()}
+      />
       <Footer text="Add a new idea" />
     </div>
   )

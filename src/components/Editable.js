@@ -24,25 +24,23 @@ function Editable(props) {
 
   const [editingElement, setEditingElement] = useState(false);
   const [savingUpdate, setSavingUpdate] = useState(false);
-  const [justUpdated, setJustUpdated] = useState(false);
   const [newValue, setNewValue] = useState("");
+  const [response, setResponse] = useState({});
 
   useEffect(() => {
     if (savingUpdate) {
       if (props.inputElementType === "collabRequest") {
         if (newValue !== "") {
-          saveRelationship(props.ideaId, props.userId, newValue, token);
-          setJustUpdated(true);
+          setResponse(saveRelationship(props.ideaId, props.userId, newValue, token));
         }
       } else if (props.staticElementType === "img" && !isValidUrl(newValue)) {
         alert("Whoops, that doesn't look like a valid link!");
       } else if (newValue !== "") {
-        editData(props.table, props.rowId, props.field, newValue, token);
+        setResponse(editData(props.table, props.rowId, props.field, newValue, token));
         setNewValue("");
         setSavingUpdate(false);
-        setJustUpdated(true);
       } else if (newPostalCode !== "" && newCountryCode !== "") {
-        handleLocationInput() && setJustUpdated(true);
+        setResponse(handleLocationInput());
       } else if (props.staticElementType === "location") {
         alert("Please enter both a postal code and a country code");
         setNewPostalCode("");
@@ -54,24 +52,21 @@ function Editable(props) {
 
   useEffect(() => {
     if (localData.length > 0 && savingUpdate) {
-      editData(props.table, props.rowId, props.field, localData[0].id, token)
-      setJustUpdated(true);
+      setResponse(editData(props.table, props.rowId, props.field, localData[0].id, token));
       setSavingUpdate(false);
     }
   }, [localData])
 
   useEffect(() => {
     if (newLocationId !== "" && savingUpdate) {
-      editData(props.table, props.rowId, props.field, newLocationId, token)
-      setJustUpdated(true);
+      setResponse(editData(props.table, props.rowId, props.field, newLocationId, token));
       setSavingUpdate(false);
     }
   }, [newLocationId])
 
   useEffect(() => {
-    justUpdated && props.refreshFunction();
-    setJustUpdated(false);
-  }, [justUpdated])
+    props.refreshFunction();
+  }, [response])
 
   function updateKeyPress(e) {
     if (e.key === "Enter" && editingElement) {
@@ -128,7 +123,7 @@ function Editable(props) {
           props.locationData &&
           <Link
             to={`/locations/${props.locationData.city}-${props.locationData.state}-${props.locationData.country_code}`}
-            className="text-dark"
+            className="text-primary"
             style={{ textDecoration: "none" }}>
             <p>{`${props.locationData.city}, ${props.locationData.state}, ${props.locationData.country_code}`}</p>
           </Link>
@@ -229,7 +224,6 @@ function Editable(props) {
                 editingElement &&
                 <FontAwesomeIcon
                   icon={faTimes}
-                  size=""
                   className="text-danger"
                   onClick={() => {
                     setNewValue("");
@@ -246,7 +240,7 @@ function Editable(props) {
 
   return (
     < Row >
-      { (props.field !== "name" && props.field !== "image_url") && editButton()}
+      { (props.field !== "name" ) && editButton()}
       <Col xs="11" className={props.field === "name" ? "text-right" : "text-left"}>
         {
           editingElement
@@ -254,7 +248,7 @@ function Editable(props) {
             : switchStaticView()
         }
       </Col>
-      { (props.field === "name" || props.field === "image_url") && editButton()}
+      { (props.field === "name" ) && editButton()}
     </Row >
   )
 }

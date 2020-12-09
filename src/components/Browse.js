@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Nav, NavItem, NavLink, Row, Col } from "reactstrap";
+import { Nav, NavItem, NavLink } from "reactstrap";
 import List from "./List";
 import Footer from "./Footer";
 
@@ -25,7 +25,7 @@ function Browse() {
       <Nav
         justified
         tabs
-        className="bg-primary text-white">
+        className="bg-white text-primary">
         {
           views.map((item, index) => {
             return (
