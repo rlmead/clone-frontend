@@ -24,7 +24,6 @@ function Editable(props) {
 
   const [editingElement, setEditingElement] = useState(false);
   const [savingUpdate, setSavingUpdate] = useState(false);
-  // const [justUpdated, setJustUpdated] = useState(false);
   const [newValue, setNewValue] = useState("");
   const [response, setResponse] = useState({});
 
@@ -33,7 +32,6 @@ function Editable(props) {
       if (props.inputElementType === "collabRequest") {
         if (newValue !== "") {
           setResponse(saveRelationship(props.ideaId, props.userId, newValue, token));
-          // setJustUpdated(true);
         }
       } else if (props.staticElementType === "img" && !isValidUrl(newValue)) {
         alert("Whoops, that doesn't look like a valid link!");
@@ -41,10 +39,8 @@ function Editable(props) {
         setResponse(editData(props.table, props.rowId, props.field, newValue, token));
         setNewValue("");
         setSavingUpdate(false);
-        // setJustUpdated(true);
       } else if (newPostalCode !== "" && newCountryCode !== "") {
         setResponse(handleLocationInput());
-        //  && setJustUpdated(true);
       } else if (props.staticElementType === "location") {
         alert("Please enter both a postal code and a country code");
         setNewPostalCode("");
@@ -57,7 +53,6 @@ function Editable(props) {
   useEffect(() => {
     if (localData.length > 0 && savingUpdate) {
       setResponse(editData(props.table, props.rowId, props.field, localData[0].id, token));
-      // setJustUpdated(true);
       setSavingUpdate(false);
     }
   }, [localData])
@@ -65,15 +60,12 @@ function Editable(props) {
   useEffect(() => {
     if (newLocationId !== "" && savingUpdate) {
       setResponse(editData(props.table, props.rowId, props.field, newLocationId, token));
-      // setJustUpdated(true);
       setSavingUpdate(false);
     }
   }, [newLocationId])
 
   useEffect(() => {
-    // justUpdated && 
     props.refreshFunction();
-    // setJustUpdated(false);
   }, [response])
 
   function updateKeyPress(e) {
