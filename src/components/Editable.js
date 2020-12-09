@@ -229,7 +229,6 @@ function Editable(props) {
                 editingElement &&
                 <FontAwesomeIcon
                   icon={faTimes}
-                  size=""
                   className="text-danger"
                   onClick={() => {
                     setNewValue("");
