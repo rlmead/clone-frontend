@@ -3,9 +3,10 @@ import { Jumbotron, Row, Col, Input, Button, Card, Label } from "reactstrap";
 import { useHistory, useParams, useLocation } from "react-router-dom";
 import { useApp } from "../utilities/AppContext";
 import { useAuth } from "../utilities/AuthContext";
+import Spinners from "./Spinners";
 
 function Public(props) {
-  const { setUsername } = useApp();
+  const { username, setUsername } = useApp();
   const auth = useAuth();
 
   let location = useLocation();
@@ -19,6 +20,7 @@ function Public(props) {
   const [localUsername, setLocalUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConf, setPasswordConf] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setName("")
@@ -39,6 +41,11 @@ function Public(props) {
     auth.justLoggedIn && history.replace(from);
     auth.setJustLoggedIn(false);
   }, [auth.justLoggedIn])
+
+  useEffect(() => {
+    username ? setLoading(true) : setLoading(false);
+    console.log(username);
+  }, [username])
 
   function changeStorage() {
     auth.storage === window.sessionStorage
@@ -70,6 +77,8 @@ function Public(props) {
       setUsername(localUsername);
       let error = await auth.signUp(name, localUsername, password);
       if (error) {
+        setUsername("");
+        setPassword("");
         switch (error.response.status) {
           case 500:
             alert("Looks like there's already an account with that username!");
@@ -156,16 +165,20 @@ function Public(props) {
                 onChange={() => changeStorage()} />
                 Remember me
             </Label>
-            <Button
-              className="btn-success"
-              onClick={() => signUp()}
-              disabled={
-                name.length === 0
-                || localUsername.length === 0
-                || password.length === 0
-                || password.length !== passwordConf.length}>
-              Create Account
+            {
+              loading
+                ? <Spinners />
+                : <Button
+                  className="btn-success"
+                  onClick={() => signUp()}
+                  disabled={
+                    name.length === 0
+                    || localUsername.length === 0
+                    || password.length === 0
+                    || password.length !== passwordConf.length}>
+                  Create Account
             </Button>
+            }
           </Card>
         );
       case "login":
@@ -193,12 +206,16 @@ function Public(props) {
                 onChange={() => changeStorage()} />
                 Remember me
             </Label>
-            <Button
-              className="btn-success"
-              onClick={() => logIn()}
-              disabled={localUsername.length === 0 || password.length === 0}>
-              Log in
+            {
+              loading
+                ? <Spinners />
+                : <Button
+                  className="btn-success"
+                  onClick={() => logIn()}
+                  disabled={localUsername.length === 0 || password.length === 0}>
+                  Log in
             </Button>
+            }
           </Card>
         );
       case "logout":
@@ -236,15 +253,17 @@ function Public(props) {
   };
 
   return (
-    <Jumbotron
-      className="mt-4 card"
-      style={{ backgroundImage: "url(https://images.unsplash.com/photo-1545494097-1545e22ee878?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxzZWFyY2h8OHx8Z2xpdHRlcnxlbnwwfHwwfA%3D%3D&auto=format&fit=crop&w=800&q=60)", backgroundSize: "100%" }}>
-      <Row>
-        <Col sm={{ size: 10, offset: 1 }}>
-          {switchView(view)}
-        </Col>
-      </Row>
-    </Jumbotron>
+    <>
+      <Jumbotron
+        className="mt-4 card"
+        style={{ backgroundImage: "url(https://images.unsplash.com/photo-1545494097-1545e22ee878?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxzZWFyY2h8OHx8Z2xpdHRlcnxlbnwwfHwwfA%3D%3D&auto=format&fit=crop&w=800&q=60)", backgroundSize: "100%" }}>
+        <Row>
+          <Col sm={{ size: 10, offset: 1 }}>
+            {switchView(view)}
+          </Col>
+        </Row>
+      </Jumbotron>
+    </>
   )
 }
 
